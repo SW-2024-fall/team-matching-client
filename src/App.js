@@ -1,20 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import SignUpPage from "./pages/auth/SignUpPage";
+import PortalAuthPage from "./pages/auth/PortalAuthPage";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>테스트 테스트2</Text>
-      <StatusBar style="auto" />
-    </View>
+      <SignUpPage></SignUpPage>
+    // <PortalAuthPage></PortalAuthPage>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+
