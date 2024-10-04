@@ -1,12 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from 'react-native';
+import CreateMeetingScreen from './pages/CreateMeetingScreen';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>테스트 테스트2</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <CreateMeetingScreen />
+    </SafeAreaView>
   );
 }
 
