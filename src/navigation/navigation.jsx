@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, TabRouter } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { PAGES } from '@navigation/constant';
@@ -8,7 +8,7 @@ import VerifyEmail from '@pages/auth/register/VerifyEmail';
 import Withdraw from '@pages/auth/withdraw/Withdraw';
 import Main from '@pages/main/Main';
 import MeetingBoard from '@pages/meetingBoard/MeetingBoard';
-import { Meeting } from '@pages/meeting/Meeting';
+import Meeting from '@pages/meeting/Meeting';
 import { MeetingCreate } from '@pages/meeting/create/MeetingCreate';
 import { MeetingHistory } from '@pages/meetingHistory/MeetingHistory';
 import { MeetingHistoryCreate } from '@pages/meetingHistory/create/MeetingHistoryCreate';
@@ -35,28 +35,15 @@ function AuthStack() {
   );
 }
 
-function MeetingStack({ params }) {
+function MeetingStack({ route }) {
   return (
-    <Stack.Navigator screenOptions={{ header: () => <TitleHeader title={params.title} /> }}>
-      <Stack.Screen name={PAGES.MEETING} component={Meeting} />
-      <Stack.Screen name={PAGES.MEETING_CREATE} component={MeetingCreate} />
-    </Stack.Navigator>
-  );
-}
-
-function MeetingHistoryStack() {
-  return (
-    <Stack.Navigator screenOptions={{ header: DefaultHeader }}>
-      <Stack.Screen name={PAGES.MEETING_HISTORY} component={MeetingHistory} />
-      <Stack.Screen name={PAGES.MEETING_HISTORY_CREATE} component={MeetingHistoryCreate} />
-    </Stack.Navigator>
-  );
-}
-
-function MeetingFeedStack() {
-  return (
-    <Stack.Navigator screenOptions={{ header: DefaultHeader }}>
-      <Stack.Screen name={PAGES.MEETING_FEED} component={MeetingFeed} />
+    <Stack.Navigator screenOptions={{ header: () => <TitleHeader title={route.params.title} /> }}>
+      <Stack.Screen
+        name={PAGES.MEETING}
+        component={Meeting}
+        // screenOptions={{ header: () => <TitleHeader title={route.params.title} /> }}
+      />
+      {/* <Stack.Screen name={PAGES.MEETING_CREATE} component={MeetingCreate} /> */}
     </Stack.Navigator>
   );
 }
@@ -84,13 +71,36 @@ function ProfileStack({ params }) {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ header: DefaultHeader }} initialRouteName={PAGES.MAIN}>
+      <Stack.Navigator initialRouteName={PAGES.MAIN} screenOptions={{ headerShown: false }}>
         <Stack.Screen name={PAGES.AUTH} component={AuthStack} />
-        <Stack.Screen name={PAGES.MAIN} component={Main} options={{ header: MainHeader }} />
-        <Stack.Screen name={PAGES.MEETING_STACK} component={MeetingStack} />
-        <Stack.Screen name={PAGES.MEETING_HISTORY_STACK} component={MeetingHistoryStack} />
-        <Stack.Screen name={PAGES.MEETING_FEED_STACK} component={MeetingFeedStack} />
+        <Stack.Screen name={PAGES.MAIN} component={Main} />
+        {/* <Stack.Screen name={PAGES.MEETING_STACK} component={MeetingStack} /> */}
+        <Stack.Screen
+          name={PAGES.MEETING}
+          component={Meeting}
+          // screenOptions={{ header: () => <TitleHeader title={params.title} /> }}
+        />
+        {/* <Stack.Screen name={PAGES.MEETING_CREATE} component={MeetingCreate} /> */}
+
+        {/* <Stack.Screen
+          name={PAGES.MEETING_HISTORY}
+          component={MeetingHistory}
+          screenOptions={{ header: DefaultHeader }}
+        />
+        <Stack.Screen
+          name={PAGES.MEETING_HISTORY_CREATE}
+          component={MeetingHistoryCreate}
+          screenOptions={{ header: DefaultHeader }}
+        /> */}
+
+        {/* <Stack.Screen
+          name={PAGES.MEETING_FEED}
+          component={MeetingFeed}
+          screenOptions={{ header: DefaultHeader }}
+        /> */}
+
         <Stack.Screen name={PAGES.MEETING_BOARD} component={MeetingBoard} />
+
         <Stack.Screen name={PAGES.PROFILE_STACK} component={ProfileStack} />
       </Stack.Navigator>
     </NavigationContainer>
