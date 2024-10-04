@@ -2,11 +2,13 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from 'react-native';
 import CreateMeetingScreen from './pages/CreateMeetingScreen';
+import LoginScreen from './pages/auth/LoginPage';
 
 export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CreateMeetingScreen />
+      {/* <LoginScreen/> */}
+      <CreateMeetingScreen/>
     </SafeAreaView>
   );
 }
