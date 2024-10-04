@@ -70,5 +70,9 @@ export const theme = {
       primary: blueColors[500],
       hover: blueColors[600],
     },
+    background: {
+      primary: '#FFFFFF',
+      appbar: greyColors[100],
+    },
   },
 };
