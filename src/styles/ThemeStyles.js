@@ -56,9 +56,7 @@ export const theme = {
       medium: '12px',
       large: '16px',
     },
-    color: {
-      primary: greyColors[400],
-    },
+    color: greyColors[400],
   },
   colors: {
     grey: {
