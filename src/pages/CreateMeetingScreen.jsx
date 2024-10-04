@@ -6,11 +6,14 @@ import DayButton from '../components/DayButton';
 import ImageButton from '../components/ImageButton';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Picker } from '@react-native-picker/picker';
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
+
   const [selectedDays, setSelectedDays] = useState([]);
   const [startTime, setStartTime] = useState(new Date());
+
   const [endTime, setEndTime] = useState(new Date());
   const [participantMethod, setParticipantMethod] = useState('');
   const [meetingType, setMeetingType] = useState('');
@@ -62,7 +65,12 @@ const CreateMeetingScreen = () => {
     };
   
     const handleEndConfirm = (date) => {
-      setEndTime(date);
+      if (date < startTime) {
+        alert('종료 시간이 시작 시간 이후여야 합니다.')
+      }
+      else {
+        setEndTime(date);
+      }
       hideEndPicker();
     };
 
@@ -102,7 +110,7 @@ const CreateMeetingScreen = () => {
                   title={type}
                   onPress={() => handleMeetingTypeSelect(type)}
                   style={{
-                    backgroundColor: selectedMeetingTypes.includes(type) ? '#d3d3d3' : '#f0ff', // 선택된 경우 색상 변경
+                    backgroundColor: selectedMeetingTypes.includes(type) ? '#666A73' : '#d3d3d3', // 선택된 경우 색상 변경
                   }}
                 />
         ))}
@@ -116,6 +124,7 @@ const CreateMeetingScreen = () => {
         <Button title="종료 시간 선택" onPress={showEndPicker} />
         <Text>{endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
       </View>
+    
 
       <Text style={styles.label}>참여자 선택 방식을 선택해 주세요</Text>
       <RadioButtonGroup
@@ -164,23 +173,37 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
   },
+  // timePickerContainer: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   marginTop: 10,
+  //   marginBottom: 20, // 아래쪽 마진 추가
+  // },
+  // timePicker: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  // },
+  // separator: {
+  //   marginHorizontal: 10,
+  //   fontSize: 18,
+  // },
+  // picker: {
+  //   height: 50,
+  //   width: 100,
+  // },
   timePickerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 20, // 아래쪽 마진 추가
   },
   timePicker: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  separator: {
-    marginHorizontal: 10,
-    fontSize: 18,
-  },
   picker: {
     height: 50,
-    width: 100,
+    width: 80,
+    marginHorizontal: 5,
   },
   imageGroup: {
     flexDirection: 'row',
