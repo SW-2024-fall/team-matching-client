@@ -18,8 +18,9 @@ const greyBlueColors = {
 };
 
 const blueColors = {
-  100: '#B9D9EB',
-  200: '#9BCBEB',
+  100: '#E6F3FF',
+  200: '#B9D9EB',
+  300: '#9BCBEB',
   400: '#0098FF',
   500: '#0082FF',
   600: '#0066EB',
@@ -59,6 +60,7 @@ export const theme = {
     color: greyColors[400],
   },
   colors: {
+    divider: greyColors[200],
     grey: {
       border: greyColors[400],
       light: greyColors[200],
@@ -66,12 +68,13 @@ export const theme = {
       dark: greyColors[900],
     },
     blue: {
-      light: blueColors[100],
+      light: blueColors[200],
       primary: blueColors[500],
       hover: blueColors[600],
     },
     background: {
       primary: '#FFFFFF',
+      light: blueColors[100],
       appbar: greyColors[100],
     },
   },
