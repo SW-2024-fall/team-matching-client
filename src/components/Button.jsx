@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   selected: {
-    backgroundColor: '#007BFF', // 선택된 색상 (파란색)
+    backgroundColor: '#0082FF', // 선택된 색상 (파란색)
   },
   default: {
     backgroundColor: '#ccc', // 선택되지 않은 색상 (회색)
   },
   nextButton: {
-    backgroundColor: '#007BFF', // 항상 파란색
+    backgroundColor: '#0082FF', // 항상 파란색
   },
   buttonText: {
     color: '#FFFFFF',

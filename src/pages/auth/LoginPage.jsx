@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   loginButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#0082FF',
     paddingVertical: 15,
     borderRadius: 5,
     width: '100%',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   linkText: {
-    color: '#007BFF',
+    color: '#0082FF',
     fontSize: 14,
   },
   error: {

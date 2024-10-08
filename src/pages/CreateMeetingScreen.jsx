@@ -6,7 +6,6 @@ import DayButton from '../components/DayButton';
 import ImageButton from '../components/ImageButton';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Picker } from '@react-native-picker/picker';
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
@@ -120,7 +119,6 @@ const CreateMeetingScreen = () => {
       <View style={styles.timePickerContainer}>
         <Button title="시작 시간 선택" onPress={showStartPicker} />
         <Text>{startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-        <Text> ~ </Text>
         <Button title="종료 시간 선택" onPress={showEndPicker} />
         <Text>{endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
       </View>

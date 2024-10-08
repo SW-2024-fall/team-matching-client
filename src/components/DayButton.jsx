@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   selected: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#0082FF',
     color: '#ffffff',
   },
   text: {
