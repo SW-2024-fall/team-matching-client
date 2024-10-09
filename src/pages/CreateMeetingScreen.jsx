@@ -9,7 +9,6 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const CreateMeetingScreen = () => {
 
-  const [title, setTitle] = useState('');
   const [meetingName, setMeetingName] = useState('');
 
   const [selectedDays, setSelectedDays] = useState([]);
@@ -77,13 +76,6 @@ const CreateMeetingScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-
-      <Text style={styles.label}>게시글 제목을 설정해주세요</Text>
-      <Input
-        placeholder="시대"
-        value={title}
-        onChangeText={setTitle}
-      />
 
       <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
       <RadioButtonGroup

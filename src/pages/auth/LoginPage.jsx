@@ -52,14 +52,18 @@ const LoginScreen = () => {
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
 
-      <View style={styles.linkContainer}>
+    {/* 아이디, 비밀번호 찾기 생략 */}
+
+      {/* <View style={styles.linkContainer}>
         <TouchableOpacity>
           <Text style={styles.linkText}>아이디 찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity>
           <Text style={styles.linkText}>비밀번호 찾기</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
+
+    
     </View>
   );
 };
