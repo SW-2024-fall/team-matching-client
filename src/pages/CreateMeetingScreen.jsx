@@ -1,34 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import Button from '../components/Button'; // 경로를 상황에 맞게 수정하세요.
 import Input from '../components/Input';
 import DayButton from '../components/DayButton';
 import ImageButton from '../components/ImageButton';
+import DateTimePickerModel from 'react-native-modal-datetime-picker';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
+  const [meetingType, setMeetingType] = useState('');
+  const [meetingTopic, setMeetingTopic] = useState('');
+  const [meetingDescription, setMeetingDescription] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
+
+  const [tags, setTags] = useState('');
+  const [tagList, setTagList] = useState(['#해시_태그']);
+  const [isTagInputVisible, setTagInputVisible] = useState(false); // 태그 입력 상태 관리
+
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  const [participantMethod, setParticipantMethod] = useState('');
-  const [meetingType, setMeetingType] = useState('');
-  const [selectedMeetingTypes, setSelectedMeetingTypes] = useState([]);
+  
+  
+  const [selectedMeetingTypes, setSelectedMeetingTypes] = useState([]); //모임유형... 일회성/정기의 타입과 구분필요
+
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  
   const [isStartPickerVisible, setStartPickerVisible] = useState(false);
   const [isEndPickerVisible, setEndPickerVisible] = useState(false);
-
+  
+  const [participantMethod, setParticipantMethod] = useState('');
+  
   const handleDaySelect = (day) => {
     setSelectedDays((prev) => 
       prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
     );
   };
 
+
+  // 정기/일회성 이동 시 요일 초기화 필요
+  // const handleMeetingType = (type) => {
+  //   setMeetingType(type);
+  //   if (type === '일회성 모임')
+  //     setSelectedDays([]);
+  // }
+
   const handleMeetingTypeSelect = (type) => {
     setSelectedMeetingTypes((prev) =>
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     );
   };
+
+const addTag = () => {
+  if (tags.trim()) {
+    setTags('');
+  }
+}
 
   const handleNext = () => {
     if (!meetingType) {
@@ -39,6 +68,20 @@ const CreateMeetingScreen = () => {
       return;
     }
   };
+
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const handleDateConfirm = (date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
+
   
   const showStartPicker = () => {
       setStartPickerVisible(true);
@@ -82,6 +125,43 @@ const CreateMeetingScreen = () => {
         onChangeText={setMeetingName}
       />
 
+      <Text style={styles.label}>모임 모집글 제목을 설정해 주세요</Text>
+      <Input
+        placeholder="모집글 제목"
+        value={meetingTopic}
+        onChangeText={setMeetingTopic}
+      />
+
+      <Text style={styles.label}>모임에 대해 설명해 주세요</Text>
+      <Input
+        style={styles.descriptionInput}
+        placeholder="구체적인 활동 내용을 쓰세요."
+        value={meetingDescription}
+        onChangeText={setMeetingDescription}
+        multiline
+      />
+
+      
+      <Text style={styles.label}>모임에 대한 특징을 넣어주세요 (#해시_태그)</Text>
+      <TouchableOpacity 
+        style={styles.defaultTag} 
+        onPress={() => setTagInputVisible(true)}
+      >
+        <Text style={styles.tagText}>#해시_태그</Text>
+      </TouchableOpacity>
+
+      {isTagInputVisible && (
+        <TextInput
+          style={styles.input}
+          placeholder="#입력하기"
+          value={tags}
+          onChangeText={setTags}
+          onSubmitEditing={addTag} // 엔터키로 태그 추가
+        />
+      )}
+
+{meetingType === '정기 모임' && (
+<>
       <Text style={styles.label}>요일을 선택해 주세요</Text>
       <View style={styles.dayGroup}>
         {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
@@ -93,20 +173,25 @@ const CreateMeetingScreen = () => {
           />
         ))}
       </View>
-      
-      <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
+  </>
+)}    
+      <Text style={styles.label}>어떤 모임인가요?</Text>
       <View style={styles.imageGroup}>
-        {['운동', '독서', '음악', '여행'].map((type) => (
+        {['인문학/책/글', '사진/영상', '운동', '외국/언어', '음악/악기', '댄스/무용', '공연/축제', '캠핑/여행', '봉사활동', '학술/연구', '면접/취준', '게임/오락'].map((type) => (
                   <ImageButton
                   key={type}
                   title={type}
                   onPress={() => handleMeetingTypeSelect(type)}
-                  style={{
-                    backgroundColor: selectedMeetingTypes.includes(type) ? '#d3d3d3' : '#f0ff', // 선택된 경우 색상 변경
-                  }}
+                  // imageSource={require('./path/to/${type}.png')} // image path REQUIRED!!
+                  isSelected={selectedMeetingTypes.includes(type)}
                 />
         ))}
       </View>
+
+      <Text style={styles.label}>날짜를 선택해주세요</Text>
+      <TouchableOpacity onPress={showDatePicker} style={styles.datePicker}>
+        <Text>{selectedDate.toLocaleDateString()}</Text>
+      </TouchableOpacity>
 
       <Text style={styles.label}>모임 시간을 선택해 주세요</Text>
       <View style={styles.timePickerContainer}>
@@ -125,6 +210,13 @@ const CreateMeetingScreen = () => {
       />
       <Button title="다음" onPress={() => {handleNext}} isNextButton={true} />
       
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleDateConfirm}
+        onCancel={hideDatePicker}
+      />
+
       <DateTimePickerModal
         isVisible={isStartPickerVisible}
         mode="time"
@@ -152,7 +244,9 @@ const styles = StyleSheet.create({
   },
   label: {
     marginTop: 20,
-    fontSize: 16,
+    fontSize: 14,
+    color : '#333D4B',
+    fontWeight: 'bold'
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -170,6 +264,27 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20, // 아래쪽 마진 추가
   },
+  
+  selectText: {
+    color: '#666A73',
+  },
+
+  descriptionInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 5,
+    height: 80,
+    textAlignVertical: 'top',
+  },
+
+  requiredText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+  },
+
   timePicker: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -182,6 +297,33 @@ const styles = StyleSheet.create({
     height: 50,
     width: 100,
   },
+
+  defaultTag: {
+    backgroundColor: '#E0E0E0',
+    borderRadius: 15,
+    padding: 5,
+    marginRight: 5,
+    marginBottom: 5,
+    alignItems: 'center',
+  },
+  tagListContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  tag: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 15,
+    padding: 5,
+    marginRight: 5,
+    marginBottom: 5,
+  },
+  tagText: {
+    color: '#000',
+  },
+
   imageGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between', // 가로로 배열
