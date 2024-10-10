@@ -7,6 +7,8 @@ import ImageButton from '../components/ImageButton';
 import DateTimePickerModel from 'react-native-modal-datetime-picker';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Calendar } from 'react-native-calendars';
+
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
@@ -27,6 +29,8 @@ const CreateMeetingScreen = () => {
 
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   
   const [isStartPickerVisible, setStartPickerVisible] = useState(false);
   const [isEndPickerVisible, setEndPickerVisible] = useState(false);
@@ -67,6 +71,34 @@ const addTag = () => {
       alert('참여자 선택 방식을 선택해 주세요.'); // 필수 선택 경고
       return;
     }
+  };
+
+  const [calendarVisible, setCalendarVisible] = useState(false);
+
+  const toggleCalendar = () => {
+    setCalendarVisible(!calendarVisible);
+  };
+
+  const onDayPress = (day) => {
+    const selectedDate = new Date(day.dateString);
+
+    if (!startDate || (startDate && endDate)) {
+      // 시작 날짜가 없거나 종료 날짜가 있는 경우 시작 날짜로 설정
+      setStartDate(selectedDate);
+      setEndDate(null); // 종료 날짜 초기화
+    } else if (startDate && !endDate) {
+      // 시작 날짜가 있고 종료 날짜가 없는 경우 종료 날짜로 설정
+      if (selectedDate >= startDate) {
+        setEndDate(selectedDate);
+      } else {
+        alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+      }
+    }
+    toggleCalendar(); // 달력 닫기
+  };
+
+  const getFormattedDate = (date) => {
+    return date ? date.toLocaleDateString() : '';
   };
 
   const showDatePicker = () => {
@@ -189,9 +221,23 @@ const addTag = () => {
       </View>
 
       <Text style={styles.label}>날짜를 선택해주세요</Text>
-      <TouchableOpacity onPress={showDatePicker} style={styles.datePicker}>
-        <Text>{selectedDate.toLocaleDateString()}</Text>
+      <TouchableOpacity onPress={toggleCalendar} style={styles.datePicker}>
+        <Text>{getFormattedDate(startDate)} - {getFormattedDate(endDate)}</Text>
       </TouchableOpacity>
+
+      {calendarVisible && (
+        <Calendar
+          onDayPress={onDayPress}
+          markedDates={{
+            ...(startDate && {
+				[selectedDate]: { selected: true, marked: true, selectedColor: 'blue' },
+            }),
+            ...(endDate && {
+				[selectedDate]: { selected: true, marked: true, selectedColor: 'blue' },
+            }),
+          }}
+        />
+        )}
 
       <Text style={styles.label}>모임 시간을 선택해 주세요</Text>
       <View style={styles.timePickerContainer}>

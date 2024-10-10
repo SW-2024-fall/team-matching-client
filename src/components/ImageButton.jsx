@@ -20,13 +20,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: 1,
     borderRadius: 5,
-    margin: 5, // 버튼 간격 조정
+    margin: 1, // 버튼 간격 조정
     backgroundColor: 'transparent', // 기본 배경 투명
   },
   selectedImageContainer: {
     backgroundColor: '#007BFF', // 선택된 버튼 색상
+	//투명도 적용한 파란체크 이미지로 변경
   },
   imageContainer: {
     width: 50,  // 이미지 컨테이너 너비
@@ -36,8 +37,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   image: {
-    width: 40,  // 실제 이미지 너비
-    height: 40, // 실제 이미지 높이
+    width: 54,  // 실제 이미지 너비
+    height: 50, // 실제 이미지 높이
   },
   text: {
     fontSize: 14,

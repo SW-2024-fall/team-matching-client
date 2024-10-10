@@ -4,8 +4,10 @@ import Input from '../components/Input';
 import ImageButton from '../components/ImageButton';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RadioButtonGroup from '../components/RadioButtonGroup';
+import AttendanceCheck from '../components/AttendanceCheck';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Calendar } from 'react-native-calendars';
+
 
 
 const CreateMeetingScreen = () => {
@@ -14,6 +16,8 @@ const CreateMeetingScreen = () => {
   const [activityDetails, setActivityDetails] = useState('');
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [isPublic, setIsPublic] = useState(true);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [images, setImages] = useState([]);
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -23,8 +27,25 @@ const CreateMeetingScreen = () => {
   };
 
   const onDayPress = (day) => {
-    setSelectedDate(day.dateString);
-    toggleCalendar();
+    const selectedDate = new Date(day.dateString);
+
+    if (!startDate || (startDate && endDate)) {
+      // 시작 날짜가 없거나 종료 날짜가 있는 경우 시작 날짜로 설정
+      setStartDate(selectedDate);
+      setEndDate(null); // 종료 날짜 초기화
+    } else if (startDate && !endDate) {
+      // 시작 날짜가 있고 종료 날짜가 없는 경우 종료 날짜로 설정
+      if (selectedDate >= startDate) {
+        setEndDate(selectedDate);
+      } else {
+        alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+      }
+    }
+    toggleCalendar(); // 달력 닫기
+  };
+
+  const getFormattedDate = (date) => {
+    return date ? date.toLocaleDateString() : '';
   };
 
   const showDatePicker = () => {
@@ -65,10 +86,33 @@ const CreateMeetingScreen = () => {
         onChangeText={setTitle}
       />
 
-      <Text style={styles.label}>활동 날짜를 선택해 주세요</Text>
+<Text style={styles.label}>활동 날짜를 선택해 주세요</Text>
       <TouchableOpacity onPress={toggleCalendar} style={styles.datePicker}>
-        <Text>{selectedDate.toLocaleDateString()}</Text>
+        <Text>{getFormattedDate(startDate)} - {getFormattedDate(endDate)}</Text>
       </TouchableOpacity>
+
+      {calendarVisible && (
+        <Calendar
+          onDayPress={onDayPress}
+          markedDates={{
+            ...(startDate && {
+				[selectedDate]: { selected: true, marked: true, selectedColor: 'blue' },
+            }),
+            ...(endDate && {
+				[selectedDate]: { selected: true, marked: true, selectedColor: 'blue' },
+            }),
+          }}
+        />
+      )}
+	  
+	  {calendarVisible && (
+        <Calendar
+          onDayPress={onDayPress}
+          markedDates={{
+            [selectedDate]: { selected: true, marked: true, selectedColor: 'blue' },
+          }}
+        />
+	  )}
 
       <Text style={styles.label}>모임 활동 내역을 작성해 주세요</Text>
       <Input
@@ -110,6 +154,8 @@ const CreateMeetingScreen = () => {
         </View>
       ))}
 
+	  <AttendanceCheck />
+
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -126,7 +172,9 @@ const styles = StyleSheet.create({
   },
   label: {
     marginTop: 20,
-    fontSize: 16,
+    fontSize: 14,
+	fontWeight: 'bold',
+	color: '#333D4B',
   },
   datePicker: {
     borderWidth: 1,
@@ -162,18 +210,23 @@ const styles = StyleSheet.create({
   },
   toggleContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginTop: 10,
   },
   activeButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#0082FF',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 12,
+	marginRight: 10,
   },
   inactiveButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#FFFFFF',
+	borderColor: '#B0B8C1',
+	borderWidth: 1,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 12,
+	color: '#B0B8C1',
+	marginRight: 10,
   },
   participant: {
     marginTop: 10,
