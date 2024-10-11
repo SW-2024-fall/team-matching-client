@@ -44,9 +44,7 @@ export default function Appbar({ navigation }) {
   };
 
   const goProfile = () => {
-    // navigation.navigate(PAGES.PROFILE);
-    // 당장에는 프로필이 없기 때문에 메인으로 이동
-    navigation.navigate(PAGES.MAIN);
+    navigation.navigate(PAGES.PROFILE, {access: "me"});
   };
 
   return (
