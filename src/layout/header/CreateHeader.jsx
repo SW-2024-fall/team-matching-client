@@ -1,6 +1,3 @@
-// 뒤로가기 시 모달 필요
-// 저장 시 해당 페이지 pop
-
 import BaseHeader from '@layout/header/BaseHeader';
 import { Pressable } from 'react-native';
 import styled from 'styled-components';
