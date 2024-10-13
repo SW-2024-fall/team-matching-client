@@ -64,6 +64,7 @@ export const theme = {
     grey: {
       border: greyColors[400],
       light: greyColors[200],
+      blur: greyColors[700],
       primary: greyColors[800],
       dark: greyColors[900],
     },
@@ -76,6 +77,9 @@ export const theme = {
       primary: '#FFFFFF',
       light: blueColors[100],
       appbar: greyColors[100],
+    },
+    red: {
+      primary: '#FF576B',
     },
   },
 };
