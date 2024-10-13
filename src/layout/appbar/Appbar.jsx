@@ -58,9 +58,9 @@ export default function Appbar() {
         <WithLocalSvg asset={boardIcon} />
         <Label>게시판</Label>
       </IconBtnWrapper>
-      <IconBtnWrapper onPress={goMeetingFeed}>
+      <IconBtnWrapper onPress={goRecommend}>
         <WithLocalSvg asset={meetingIcon} />
-        <Label>모임 피드</Label>
+        <Label>모임 추천</Label>
       </IconBtnWrapper>
       <IconBtnWrapper onPress={goProfile}>
         <WithLocalSvg asset={profileIcon} />
