@@ -7,6 +7,7 @@ import ImageButton from '../components/ImageButton';
 import DateTimePickerModel from 'react-native-modal-datetime-picker';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import SelectLabel from '../components/SelectLabel';
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
@@ -14,6 +15,7 @@ const CreateMeetingScreen = () => {
   const [meetingTopic, setMeetingTopic] = useState('');
   const [meetingDescription, setMeetingDescription] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
+  const [additionalInfo, setadditionalInfo] = useState([]);
 
   const [tags, setTags] = useState([]);
   const [inputValue, setInputValue] = useState(''); // 입력 필드 상태
@@ -132,7 +134,7 @@ const removeTag = (tagToRemove) => {
         selectedButtonStyle={styles.meetingTypeSelected}
         buttonStyle={styles.meetingTypeDefault}
       />
-      <Text style={styles.label}>모임 이름을 설정해 주세요</Text>
+      <Text style={[{topMargin: 20,}, styles.label]}>모임 이름을 설정해 주세요</Text>
       <Input
         placeholder="모임 이름"
         value={meetingName}
@@ -140,24 +142,30 @@ const removeTag = (tagToRemove) => {
       />
       
 
-      <Text style={styles.label}>모임 모집글 제목을 설정해 주세요</Text>
+      <SelectLabel style={styles.label} label= '모집글 제목을 설정해 주세요' />
       <Input
         placeholder="모집글 제목"
         value={meetingTopic}
         onChangeText={setMeetingTopic}
       />
 
-      <Text style={styles.label}>모임에 대해 설명해 주세요</Text>
+<SelectLabel style={styles.label} label= '모임에 대해 설명해주세요' />
       <Input
         style={styles.descriptionInput}
-        placeholder="구체적인 활동 내용을 쓰세요."
+        multiline
+        placeholder='모임에 대한 설명을 최대한 상세하게 작성해주세요. 예시) 안녕하세요, 코틀린 개발에 관심 있는 여러분! 우리 "코틀린 개발자 모임"에서 함께 성장하고 네트워킹할 수 있는 기회를 제공합니다. 이 모임은 코틀린을 사용하는 개발자들이 지식을 공유하고, 최신 트렌드를 논의하며, 실제 프로젝트 경험을 나누는 장입니다.'
         value={meetingDescription}
         onChangeText={setMeetingDescription}
-        multiline
       />
 
+<SelectLabel style={styles.label} label= '추가 모임 정보가 있으면 입력해주세요' />
+      <Input
+        placeholder="참가비 2만원 (사용 내역 공개)"
+        value={additionalInfo}
+        onChangeText={setadditionalInfo}
+      />
       
-<Text style={styles.label}>모임에 대한 특징을 넣어주세요 (#해시_태그)</Text>
+      <SelectLabel style={styles.label} label= '모임에 대한 특징을 넣어주세요 (#해시_태그)' />
 <View style={styles.tagListContainer}>
   <TouchableOpacity style={styles.defaultTag} onPress={() => setIsInputVisible(true)}>
     <Text style={styles.tagText}>#해시_태그</Text>
@@ -195,7 +203,7 @@ const removeTag = (tagToRemove) => {
       </View>
   </>
 )}    
-      <Text style={styles.label}>어떤 모임인가요?</Text>
+      <SelectLabel style={styles.label} label= '어떤 모임인가요?' />
       <View style={styles.imageGroup}>
         {['인문학/책/글', '사진/영상', '운동', '외국/언어', '음악/악기', '댄스/무용', '공연/축제', '캠핑/여행', '봉사활동', '학술/연구', '면접/취준', '게임/오락'].map((type) => (
                   <ImageButton
@@ -265,10 +273,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    marginTop: 20,
     fontSize: 14,
     color : '#333D4B',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   buttonGroup: {
     flexDirection: 'row',
@@ -302,10 +309,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginTop: 5,
-    height: 80,
+    minHeight: 80,
+    flexGrow: 1,
     textAlignVertical: 'top',
   },
-
   requiredText: {
     color: 'red',
     fontSize: 12,
