@@ -1,10 +1,8 @@
 import { Text, Pressable } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 
-export default function Meeting() {
-  const route = useRoute();
+export default function Meeting({ route }) {
   const { id, title } = route.params;
 
   return (
