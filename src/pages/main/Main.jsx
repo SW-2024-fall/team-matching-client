@@ -4,7 +4,7 @@ import Layout from '@layout/layout';
 
 export default function Main({ navigation }) {
   return (
-    <Layout screen={PAGES.MAIN} navigation={navigation}>
+    <Layout screen={PAGES.MAIN}>
       <View>
         <Text>Home Screen</Text>
       </View>

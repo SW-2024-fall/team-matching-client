@@ -1,9 +1,11 @@
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
+import { PAGES } from '@navigation/constant';
+import Layout from '@layout/layout';
 
 export default function Login() {
   return (
-    <View>
+    <Layout screen={PAGES.AUTH}>
       <Text>Login</Text>
-    </View>
+    </Layout>
   );
 }

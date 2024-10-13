@@ -5,8 +5,11 @@ import meetingIcon from '@assets/meetingIcon.svg';
 import profileIcon from '@assets/profileIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
 import { PAGES } from '@navigation/constant';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Appbar({ navigation }) {
+export default function Appbar() {
+  const navigation = useNavigation();
+
   const Wrapper = styled.View`
     width: 100%;
     padding: 20px;
@@ -37,16 +40,12 @@ export default function Appbar({ navigation }) {
     navigation.navigate(PAGES.MEETING_BOARD);
   };
 
-  const goMeetingFeed = () => {
-    // navigation.navigate(PAGES.MEETING_FEED);
-    // 당장에는 모임 피드가 없기 때문에 메인으로 이동
-    navigation.navigate(PAGES.MAIN);
+  const goRecommend = () => {
+    navigation.navigate(PAGES.RECOMMEND);
   };
 
   const goProfile = () => {
-    // navigation.navigate(PAGES.PROFILE);
-    // 당장에는 프로필이 없기 때문에 메인으로 이동
-    navigation.navigate(PAGES.MAIN);
+    navigation.navigate(PAGES.MYPROFILE);
   };
 
   return (
@@ -59,9 +58,9 @@ export default function Appbar({ navigation }) {
         <WithLocalSvg asset={boardIcon} />
         <Label>게시판</Label>
       </IconBtnWrapper>
-      <IconBtnWrapper onPress={goMeetingFeed}>
+      <IconBtnWrapper onPress={goRecommend}>
         <WithLocalSvg asset={meetingIcon} />
-        <Label>모임 피드</Label>
+        <Label>모임 추천</Label>
       </IconBtnWrapper>
       <IconBtnWrapper onPress={goProfile}>
         <WithLocalSvg asset={profileIcon} />
