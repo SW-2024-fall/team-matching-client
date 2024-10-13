@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import Constants from 'expo-constants';
 import { PAGES } from '@navigation/constant';
 
-export default function BaseHeader({ left, center, right }) {
+export default function BaseHeader({ left, center, right, backgroundColor = null }) {
   const LeftWrapper = styled(View)`
     position: absolute;
     left: 15px;
@@ -29,7 +29,7 @@ export default function BaseHeader({ left, center, right }) {
   const HeaderWrapper = styled(View)`
     width: 100%;
     height: 60px;
-    background-color: white;
+    background-color: ${backgroundColor};
     padding-top: ${Constants.statusBarHeight + 30}px;
     padding-bottom: 15px;
     padding-left: 15px;
@@ -37,6 +37,7 @@ export default function BaseHeader({ left, center, right }) {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: ${(props) => props.theme.colors.grey.light};
+    color: ${(props) => (backgroundColor ? 'white' : props.theme.colors.grey.dark)};
   `;
 
   return (
