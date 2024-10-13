@@ -7,6 +7,14 @@ import ImageButton from '../components/ImageButton';
 import DateTimePickerModel from 'react-native-modal-datetime-picker';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+<<<<<<< Updated upstream
+=======
+import { Calendar } from 'react-native-calendars';
+import DefaultHeader, { defaultHeader } from '../layout/header/DefaultHeader'
+import humanitiesImg from '../assets/humanitiesImg.svg';
+
+
+>>>>>>> Stashed changes
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
@@ -15,9 +23,9 @@ const CreateMeetingScreen = () => {
   const [meetingDescription, setMeetingDescription] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
 
-  const [tags, setTags] = useState('');
-  const [tagList, setTagList] = useState(['#해시_태그']);
-  const [isTagInputVisible, setTagInputVisible] = useState(false); // 태그 입력 상태 관리
+  const [tags, setTags] = useState([]);
+  const [inputValue, setInputValue] = useState(''); // 입력 필드 상태
+  const [isInputVisible, setIsInputVisible] = useState(false); // 태그 입력 상태 관리
 
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -47,6 +55,11 @@ const CreateMeetingScreen = () => {
   //     setSelectedDays([]);
   // }
 
+  const imageSources = {
+    '인문학/책/글': 'humanitiesImg',
+    '사진/영상': 'PhotographyIcon',
+  };
+
   const handleMeetingTypeSelect = (type) => {
     setSelectedMeetingTypes((prev) =>
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
@@ -54,10 +67,16 @@ const CreateMeetingScreen = () => {
   };
 
 const addTag = () => {
-  if (tags.trim()) {
-    setTags('');
+  if (inputValue.trim()) {
+    setTags((prevTags) => ['#'+inputValue.trim(), ...prevTags]); // 태그 추가
+    setInputValue(''); // 입력 필드 초기화
+    setIsInputVisible(false); // 입력 필드 숨기기
   }
 }
+
+const removeTag = (tagToRemove) => {
+  setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
+};
 
   const handleNext = () => {
     if (!meetingType) {
@@ -112,11 +131,14 @@ const addTag = () => {
   return (
     <ScrollView style={styles.container}>
       
+      {/* <DefaultHeader /> */}
       <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
       <RadioButtonGroup
         options={['정기 모임', '일회성 모임']}
         selectedOption={meetingType}
         onSelect={setMeetingType}
+        selectedButtonStyle={styles.meetingTypeSelected}
+        buttonStyle={styles.meetingTypeDefault}
       />
       <Text style={styles.label}>모임 이름을 설정해 주세요</Text>
       <Input
@@ -124,6 +146,7 @@ const addTag = () => {
         value={meetingName}
         onChangeText={setMeetingName}
       />
+      
 
       <Text style={styles.label}>모임 모집글 제목을 설정해 주세요</Text>
       <Input
@@ -142,23 +165,28 @@ const addTag = () => {
       />
 
       
-      <Text style={styles.label}>모임에 대한 특징을 넣어주세요 (#해시_태그)</Text>
-      <TouchableOpacity 
-        style={styles.defaultTag} 
-        onPress={() => setTagInputVisible(true)}
-      >
-        <Text style={styles.tagText}>#해시_태그</Text>
-      </TouchableOpacity>
+<Text style={styles.label}>모임에 대한 특징을 넣어주세요 (#해시_태그)</Text>
+<View style={styles.tagListContainer}>
+  <TouchableOpacity style={styles.defaultTag} onPress={() => setIsInputVisible(true)}>
+    <Text style={styles.tagText}>#해시_태그</Text>
+  </TouchableOpacity>
+  {isInputVisible && (
+    <TextInput
+      style={styles.input}
+      placeholder="#입력하기"
+      value={inputValue}
+      onChangeText={setInputValue}
+      onSubmitEditing={addTag} // 엔터키로 태그 추가
+      autoFocus // 입력 필드 자동 포커스
+    />
+  )}
+  {tags.map((tag, index) => (
+    <TouchableOpacity key={index} style={styles.tag} onPress = {()=>removeTag(tag)}>
+      <Text style={styles.tagText}>{tag}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
 
-      {isTagInputVisible && (
-        <TextInput
-          style={styles.input}
-          placeholder="#입력하기"
-          value={tags}
-          onChangeText={setTags}
-          onSubmitEditing={addTag} // 엔터키로 태그 추가
-        />
-      )}
 
 {meetingType === '정기 모임' && (
 <>
@@ -182,7 +210,7 @@ const addTag = () => {
                   key={type}
                   title={type}
                   onPress={() => handleMeetingTypeSelect(type)}
-                  // imageSource={require('./path/to/${type}.png')} // image path REQUIRED!!
+                  imageSource={imageSources[type]} // image path REQUIRED!!
                   isSelected={selectedMeetingTypes.includes(type)}
                 />
         ))}
@@ -207,6 +235,8 @@ const addTag = () => {
         options={['선착순 모임', '모임장 수락/거절']}
         selectedOption={participantMethod}
         onSelect={setParticipantMethod}
+        selectedButtonStyle={styles.particpantMethodSelected}
+        buttonStyle={styles.participantMethodDefault}
       />
       <Button title="다음" onPress={() => {handleNext}} isNextButton={true} />
       
@@ -268,7 +298,12 @@ const styles = StyleSheet.create({
   selectText: {
     color: '#666A73',
   },
-
+  meetingType: {
+    borderRadius: 12,
+    width: 89,
+    height: 35,
+    backgroundColor: '#FFFFFF',
+  },
   descriptionInput: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -299,12 +334,16 @@ const styles = StyleSheet.create({
   },
 
   defaultTag: {
-    backgroundColor: '#E0E0E0',
-    borderRadius: 15,
+    borderRadius: 12,
+    borderColor: '#B0B8C1',
+    height: 35,
+    borderWidth: 1,
     padding: 5,
     marginRight: 5,
     marginBottom: 5,
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
   },
   tagListContainer: {
     flexDirection: 'row',
@@ -314,22 +353,52 @@ const styles = StyleSheet.create({
   tag: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#333D48',
     borderRadius: 15,
-    padding: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     marginRight: 5,
     marginBottom: 5,
+    height: 35,
+    justifyContent: 'center',
+    alignSelf: 'flex-start'
   },
   tagText: {
-    color: '#000',
+    color: '#333D48',
+    textAlign: 'center',
   },
-
   imageGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between', // 가로로 배열
     flexWrap: 'wrap', // 여러 줄로 감싸기
     marginTop: 10,
     marginHorizontal: -5, // 양쪽 여백을 줄이기
+  },
+  meetingTypeDefault: {
+    bordercolor: '#B0B8C1',
+    borderWidth: 1,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  meetingTypeSelected: {
+    bordercolor: '#B0B8C1',
+    borderWidth: 1,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    backgroundColor: '#0082FF'
+  },
+  participantMethodDefault: {
+    bordercolor: '#B0B8C1',
+    borderWidth: 1,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  particpantMethodSelected: {
+    bordercolor: '#B0B8C1',
+    borderWidth: 1,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    backgroundColor: '#0082FF'
   },
 });
 

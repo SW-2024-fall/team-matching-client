@@ -2,11 +2,11 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const Button = ({ title, onPress, selected, isNextButton }) => {
+const Button = ({ title, onPress, selected, isNextButton, style }) => {
   return (
     <TouchableOpacity
       style={[styles.button, 
-        isNextButton ? styles.nextButton : (selected ? styles.selected : styles.default)
+          style
       ]}
       onPress={onPress}
     >
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    flex: 1,
     margin: 5,
+    borderColor: '#B0B8C1'
   },
   selected: {
     backgroundColor: '#007BFF', // 선택된 색상 (파란색)
@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF', // 항상 파란색
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#333333',
+    fontSize: 12,
   },
 });
 
