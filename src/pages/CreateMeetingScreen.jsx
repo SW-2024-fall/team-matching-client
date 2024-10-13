@@ -7,14 +7,6 @@ import ImageButton from '../components/ImageButton';
 import DateTimePickerModel from 'react-native-modal-datetime-picker';
 import RadioButtonGroup from '../components/RadioButtonGroup';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-<<<<<<< Updated upstream
-=======
-import { Calendar } from 'react-native-calendars';
-import DefaultHeader, { defaultHeader } from '../layout/header/DefaultHeader'
-import humanitiesImg from '../assets/humanitiesImg.svg';
-
-
->>>>>>> Stashed changes
 
 const CreateMeetingScreen = () => {
   const [meetingName, setMeetingName] = useState('');
