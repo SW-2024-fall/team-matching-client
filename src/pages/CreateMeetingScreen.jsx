@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import { Alert, View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import Button from '../components/Button'; // 경로를 상황에 맞게 수정하세요.
 import Input from '../components/Input';
 import DayButton from '../components/DayButton';
@@ -80,12 +80,16 @@ const handleKeyPress = (event) => {
 }
 
 const addTag = () => {
-  if (inputValue.trim()) {
-    setTags((prevTags) => ['#'+inputValue.trim(), ...prevTags]); // 태그 추가
+  const trimmedValue = inputValue.trim();
+  if (trimmedValue && !tags.includes(`#${trimmedValue}`)) {
+    setTags((prevTags) => [`#${trimmedValue}`, ...prevTags]); // 태그 추가
     setInputValue(''); // 입력 필드 초기화
     setIsEditing(false); // 입력 필드 숨기기
+  } else {
+    setInputValue('');
+    setIsEditing(false);
   }
-}
+};
 
 const removeTag = (tagToRemove) => {
   setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
@@ -124,7 +128,11 @@ const removeTag = (tagToRemove) => {
     };
   
     const handleEndConfirm = (date) => {
-      setEndTime(date);
+      if (date < startTime) {
+        Alert.alert('경고', '시작 시간이 종료 시간보다 빨라야 합니다.');
+      } else {
+        setEndTime(date);
+      }
       hideEndPicker();
     };
 
@@ -285,26 +293,15 @@ const removeTag = (tagToRemove) => {
 )}    
 
       <Text style={styles.label}>모임 시간을 선택해 주세요</Text>
-      <View style={styles.timePickerContainer}>
-        <Button title="시작 시간 선택" onPress={showStartPicker} />
-        <Text>{startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-        <Text> ~ </Text>
-        <Button title="종료 시간 선택" onPress={showEndPicker} />
-        <Text>{endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-      </View>
-
-      <Text style={styles.label}>참여자 선택 방식을 선택해 주세요</Text>
-      <RadioButtonGroup
-        options={['선착순 모임', '모임장 수락/거절']}
-        selectedOption={participantMethod}
-        onSelect={setParticipantMethod}
-        selectedButtonStyle={styles.particpantMethodSelected}
-        buttonStyle={styles.participantMethodDefault}
-      />
-      
-
-      <Button title="다음" onPress={() => {handleNext}} isNextButton={true} />
-      
+     <View style={styles.timePickerContainer}>
+      <TouchableOpacity style={styles.timePicker} onPress={showStartPicker}>
+        <Text style={styles.timeText}>{startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+      </TouchableOpacity>
+      <Text> ~ </Text>
+      <TouchableOpacity style={styles.timePicker} onPress={showEndPicker}>
+        <Text style={styles.timeText}>{endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+      </TouchableOpacity>
+    </View>
       <DateTimePickerModal
         isVisible={isStartPickerVisible}
         mode="time"
@@ -317,6 +314,18 @@ const removeTag = (tagToRemove) => {
         onConfirm={handleEndConfirm}
         onCancel={hideEndPicker}
       />
+      <Text style={styles.label}>참여자 선택 방식을 선택해 주세요</Text>
+      <RadioButtonGroup
+        options={['선착순 모임', '모임장 수락/거절']}
+        selectedOption={participantMethod}
+        onSelect={setParticipantMethod}
+        selectedButtonStyle={styles.particpantMethodSelected}
+        buttonStyle={styles.participantMethodDefault}
+      />
+      
+
+      <Button title="다음" onPress={() => {handleNext}} isNextButton={true} />
+      
     </ScrollView>
   );
 };
@@ -345,13 +354,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  timePickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20, // 아래쪽 마진 추가
-  },
-  
   selectText: {
     color: '#666A73',
   },
@@ -376,10 +378,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-
-  timePicker: {
+  timePickerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20, // 아래쪽 마진 추가
+  },
+  timePicker: {
+    borderWidth: 1,
+    borderColor: '#D3D3D3', // 연회색 테두리
+    borderRadius: 12,
+    padding: 10,
+    marginHorizontal: 5, // 버튼 간격
+    backgroundColor: '#FFFFFF', // 배경색
+  },
+  timeText: {
+    fontSize: 12,
+    color: '#000000',
+    textAlign: 'center',
   },
   separator: {
     marginHorizontal: 10,
