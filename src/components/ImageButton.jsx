@@ -1,10 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, Image, Text, View, StyleSheet } from 'react-native';
 
-const ImageButton = ({ title, onPress, isSelected, imageSource }) => {
+const ImageButton = ({ title, onPress, isSelected, imageSource, style }) => {
   return (
     <TouchableOpacity 
-      style={[styles.button]} 
+      style={[styles.button, style]} 
       onPress={onPress}
     >
       <View style={[styles.imageContainer, isSelected && styles.selectedImageContainer]}>
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: 3,
     borderRadius: 5,
     margin: 5, // 버튼 간격 조정
     backgroundColor: 'transparent', // 기본 배경 투명
@@ -40,8 +40,9 @@ const styles = StyleSheet.create({
     height: 40, // 실제 이미지 높이
   },
   text: {
-    fontSize: 14,
+    fontSize: 9,
     textAlign: 'center',
+    marginTop: 5,
     color: '#000', // 텍스트 색상
   },
 });
