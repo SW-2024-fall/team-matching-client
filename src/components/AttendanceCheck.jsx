@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 
+import ProfileImage1 from '../profile1.svg';
+
 const AttendanceCheck = () => {
   const attendees = [
     {
@@ -9,7 +11,7 @@ const AttendanceCheck = () => {
       department: '컴퓨터과학과',
       studentId: '20학번',
       phone: '010-8888-9999',
-      image: 'https://example.com/image1.jpg', // 이미지 URL (예시)
+      image: ProfileImage1, // 이미지 URL (예시)
     },
     {
       id: 2,
@@ -80,13 +82,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
     elevation: 2,
   },
   profileImage: {
@@ -108,29 +103,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   description: {
-	marginTop: 5,
-	fontSize: 12,
+	  marginTop: 5,
+	  fontSize: 12,
   },
   buttonsContainer: {
     flexDirection: 'row',
-	marginLeft: 10,
+	  marginLeft: 10,
   },
   statusButton: {
     backgroundColor: '#B0B8C1',
-    padding: 8,
-	// paddingVertical: 5, // 버튼의 세로 패딩 조정
-	paddingHorizontal: 10,
+	  // paddingHorizontal: 2,
+    // paddingVertical: 8,
     borderRadius: 4,
-    marginRight: 5,
-	height: 12,
-	width: 19,
+    marginRight: 10,
+	  height: 15,
+	  width: 35,
+    justifyContent: 'center',
+
   },
   selectedButton: {
     backgroundColor: '#0082FF',
   },
   buttonText: {
-    color: '#fff',
-	fontSize: 12,
+    color: '#FFFFFF',
+	  fontSize: 10,
+    textAlign: 'center',
   },
 });
 
