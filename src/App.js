@@ -7,8 +7,7 @@ import LoginScreen from './pages/auth/LoginPage';
 export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <LoginScreen/> */}
-      <CreateMeetingScreen/>
+      <LoginScreen/>
     </SafeAreaView>
   );
 }

@@ -6,32 +6,37 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [isChecked, setIsChecked] = useState(false); // 체크 상태 
 
 
   const handleLogin = () => {
     // 로그인 처리 로직 추가
     // 예: 이메일 유효성 검사
-    if (!email.includes('@')) {
-      setEmailError('이메일을 확인해주세요.');
+    if (!email || !password) {
+      setEmailError('이메일 또는 비밀번호를 확인해주세요.');
       return;
     }
     // 이메일과 비밀번호가 유효할 경우 로그인 처리
     console.log('로그인 시도:', { email, password });
   };
 
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>시대생모여라</Text>
+      <Text style={{fontSize: 25, marginBottom: 10}}> 대충 로고 </Text>
+      <Text style={styles.title}>이메일을 입력해주세요</Text>
+      <View style={styles.emailContainer}>
+        <TextInput
+          style={styles.emailInput}
+          placeholder="이메일"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <Text style={styles.emailSuffix}> @uos.ac.kr </Text>
+      </View>
+
       <TextInput
-        style={styles.input}
-        placeholder="이메일"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
+        style={styles.pwInput}
         placeholder="비밀번호"
         value={password}
         onChangeText={setPassword}
@@ -39,31 +44,18 @@ const LoginScreen = () => {
       />
       {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
 
-	  <View style={styles.checkboxContainer}>
-        <CheckBox
-          checked={isChecked}
-          onPress={() => setIsChecked(!isChecked)}
-          containerStyle={styles.checkbox}
-        />
-        <Text style={styles.checkboxLabel}>로그인 상태 유지</Text>
-      </View>
-
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.buttonText}>로그인</Text>
+      <TouchableOpacity 
+        style={email ? styles.loginButton : styles.unActivatedButton} 
+        onPress={email ? handleLogin : null}
+      >
+        <Text style={styles.buttonText}>다음</Text>
       </TouchableOpacity>
 
-    {/* 아이디, 비밀번호 찾기 생략 */}
-
-      {/* <View style={styles.linkContainer}>
-        <TouchableOpacity>
-          <Text style={styles.linkText}>아이디 찾기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.linkText}>비밀번호 찾기</Text>
-        </TouchableOpacity>
-      </View> */}
-
-    
+    <View style={styles.signupContainer}>
+          <TouchableOpacity>
+            <Text style={styles.detailedText}>회원가입하기</Text>
+          </TouchableOpacity>
+    </View>
     </View>
   );
 };
@@ -77,55 +69,81 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 24,
+    fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  input: {
+  emailInput: {
     height: 50,
-    width: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 10,
+    alignItems: 'center',
+  },
+  pwInput: {
+    height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    width: '100%',
+    height: 37,
+    justifyContent: 'center',
+    padding: 10,
+    alignItems: 'center',
     marginBottom: 10,
   },
   loginButton: {
     backgroundColor: '#0082FF',
-    paddingVertical: 15,
-    borderRadius: 5,
+    paddingVertical: 10,
+    borderRadius: 12,
     width: '100%',
+    height: 37,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  unActivatedButton: {
+    backgroundColor: '#B0B8C1',
+    paddingVertical: 10,
+    borderRadius: 12,
+    width: '100%',
+    height: 37,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
-  checkboxContainer: {
+  signupContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+    marginTop: 10,
+  },
+  detailedText: {
+    alignSelf: 'flex-end',
+    textAlign: 'right',
+    fontSize: 14,
+    
+  },
+  emailSuffix: {
+    height: 50,
+    lineHeight: 50, // 텍스트를 세로로 중앙 정렬
+    fontSize: 12,
+    color: '#555',
+    margin: 5,
+  },
+  emailContainer: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-  },
-  checkbox: {
-    backgroundColor: 'transparent', // 배경색 투명
-    borderWidth: 0, // 테두리 없애기
-	padding: 0, // 패딩 없애기
-    margin: 0, // 마진 없애기
-  },
-  checkboxLabel: {
-    marginLeft: 0,
-    fontSize: 16,
-  },
-  linkContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: '100%',
-    marginTop: 15,
-  },
-  linkText: {
-    color: '#0082FF',
-    fontSize: 14,
+    marginBottom: 10,
+    height: 37,
   },
   error: {
     color: 'red',
