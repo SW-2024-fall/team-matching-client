@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Pressable } from 'react-native';
+import { Text, Pressable, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
@@ -9,7 +9,13 @@ import { theme } from '../../styles/ThemeStyles';
 import TeamMemberList from '../../components/Meeting/MeetingMember/TeamMemberList';
 import WatingMemberList from '../../components/Meeting/MeetingMember/WatingMembetList';
 import CommentView from '../../components/Meeting/MeetingInfo/CommentView';
+import VerifyEmail from '../auth/register/VerifyEmail';
+import { WithLocalSvg } from 'react-native-svg/css';
+import runningPhoto from '../../assets/runningPhoto.svg';
 
+
+
+const screenWidth = Dimensions.get('window').width;
 
 const comments = [
   {
@@ -26,29 +32,29 @@ const comments = [
         replies: [],
       },
       {
-          name: '이영희2',
-          department: '전기전자공학과',
-          studentId: '20201235',
-          text: '동의합니다!',
-          replies: [],
-        },
+        name: '이영희2',
+        department: '전기전자공학과',
+        studentId: '20201235',
+        text: '동의합니다!',
+        replies: [],
+      },
     ],
   },
   {
-      name: '김철수2',
-      department: '컴퓨터공학과',
-      studentId: '20201234',
-      text: '이 글 너무 유익하네요!',
-      replies: [
-        {
-          name: '이영희2-1',
-          department: '전기전자공학과',
-          studentId: '20201235',
-          text: '동의합니다!',
-          replies: [],
-        },
-      ],
-    },
+    name: '김철수2',
+    department: '컴퓨터공학과',
+    studentId: '20201234',
+    text: '이 글 너무 유익하네요!',
+    replies: [
+      {
+        name: '이영희2-1',
+        department: '전기전자공학과',
+        studentId: '20201235',
+        text: '동의합니다!',
+        replies: [],
+      },
+    ],
+  },
 ];
 
 export default function Meeting() {
@@ -64,24 +70,25 @@ export default function Meeting() {
   return (
     <Layout screen={PAGES.MEETING} title={title}>
       <Container>
-        <Header><Text>사진</Text></Header>
+        <Header>
+          <WithLocalSvg
+            asset={runningPhoto}
+          />
+        </Header>
         <TabContainer>
           <TabWrapper
             isActive={activeTab === 0}
-            onPress={() => handleTabPress(0)}
-          >
+            onPress={() => handleTabPress(0)}>
             <Tab isActive={activeTab === 0}>모임 정보</Tab>
           </TabWrapper>
           <TabWrapper
             isActive={activeTab === 1}
-            onPress={() => handleTabPress(1)}
-          >
+            onPress={() => handleTabPress(1)}>
             <Tab isActive={activeTab === 1}>구성원</Tab>
           </TabWrapper>
           <TabWrapper
             isActive={activeTab === 2}
-            onPress={() => handleTabPress(2)}
-          >
+            onPress={() => handleTabPress(2)}>
             <Tab isActive={activeTab === 2}>활동 내역</Tab>
           </TabWrapper>
         </TabContainer>
@@ -99,14 +106,12 @@ export default function Meeting() {
   );
 }
 
-const Container = styled.View`
-  flex: 1;
+const Container = styled.ScrollView`
+  width:100%;
 `;
 const Header = styled.View`
-    height:230px;
-    justifyContent:center;
-    alignItems:center;
-    backgroundColor:grey;
+  width:100%;
+  aspectRatio: ${screenWidth} / 230,
 `;
 const Line = styled.View`
   borderBottomWidth:1px;
@@ -123,9 +128,11 @@ const TabWrapper = styled(Pressable)`
   flex: 1;
   justify-content: center;
   align-items: center;
-  border-width: 1px;
+  border-left-width: 1px;
+  border-right-width:1px;
   border-color: white;
   padding:7px;
+  margin:0;
   background-color: ${({ isActive, theme }) => (isActive ? 'white' : theme.colors.blue.primary)};
 `;
 

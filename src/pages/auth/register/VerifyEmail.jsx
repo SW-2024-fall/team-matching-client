@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
 import { greyBlueColors, blueColors, greyColors } from '../../../styles/ThemeStyles';
-
+import { WithLocalSvg } from 'react-native-svg/css';
+import logo from '../../../assets/logo.svg';
 
 export default function VerifyEmail() {
     const [inputValue, setInputValue] = useState('');
@@ -12,13 +13,17 @@ export default function VerifyEmail() {
     };
     return (
         <Container>
-            <Title>시대생모여라</Title>
+            <WithLocalSvg
+                width={147}
+                height={24}
+                asset={logo}
+            />
             <InputLable>이메일을 입력해주세요</InputLable>
 
             <BaseTextInput placeholder='이메일' onChangeText={handleInputChange}>{inputValue}</BaseTextInput>
             <AuthBtnWrapper>
                 <AuthBtn>
-                    <AuthBtnText>인증하기</AuthBtnText>
+                    <AuthBtnText>다음</AuthBtnText>
                 </AuthBtn>
             </AuthBtnWrapper>
         </Container>
@@ -29,14 +34,10 @@ const Container = styled.View`
     padding: 20px;
     flex: 1;
     justifyContent:center;
+    
     alignItems:center;
 `;
-const Title = styled.Text`
-    color: ${greyBlueColors[600]};
-    fontSize:30px;
-    fontWeight:700;
-    margin:10px;
-`;
+
 const TextInputWrapper = styled.View`
     backgroundColor:green;
 `;
@@ -52,9 +53,11 @@ const BaseTextInput = styled.TextInput`
     
 `;
 const InputLable = styled.Text`
-    fontSize:15px;
+    fontSize:${(props) => props.theme.font.size.primary};
     fontWeight:700;
     color:${(props) => props.theme.font.color.primary};
+    marginTop:10px;
+    marginBottom:10px;
 `;
 const AuthBtnWrapper = styled.View`
     width:100%;
@@ -68,7 +71,7 @@ const AuthBtnText = styled.Text`
 `;
 
 const AuthBtn = styled.View`
-    backgroundColor: ${blueColors[500]};
+    backgroundColor: ${(props) => props.theme.colors.blue.primary};
     alignItems: center;
     justifyContent:center;
     borderRadius:13px;
