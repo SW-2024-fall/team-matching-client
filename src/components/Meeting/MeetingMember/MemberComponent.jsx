@@ -1,23 +1,38 @@
 import { View, Text, Pressable } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
+import profile2 from '../../../assets/profileExample2.svg';
+
+import { WithLocalSvg } from "react-native-svg/css";
 
 export default function MemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags }) {
     return (
         <Container>
             <BaseInfoContainer>
-                <BaseInfoHeader>
-                    <Name>{name}</Name>
-                    <OutPressable>
-                        <OutText>내보내기</OutText>
-                    </OutPressable>
-                </BaseInfoHeader>
+                <WithLocalSvg asset={profile2} />
 
-                <DetailInfoContainer>
-                    <SmallFont>{department}</SmallFont>
-                    <SmallFont>{studentId}학번</SmallFont>
-                    <SmallFont>{phoneNo}</SmallFont>
-                </DetailInfoContainer>
+                <View>
+                    <BaseInfoHeader>
+                        <View>
+
+                        </View>
+                        <Name>{name}</Name>
+                        <OutPressable>
+                            <OutText>부모임장 승급 </OutText>
+                        </OutPressable>
+                        <OutPressable>
+                            <OutText>내보내기</OutText>
+                        </OutPressable>
+
+                    </BaseInfoHeader>
+
+                    <DetailInfoContainer>
+                        <SmallFont>{department}</SmallFont>
+                        <SmallFont>{studentId}학번</SmallFont>
+                        <SmallFont>{phoneNo}</SmallFont>
+                    </DetailInfoContainer>
+                </View>
+
 
             </BaseInfoContainer>
             <AdditionalInfoContainer>
@@ -37,30 +52,30 @@ const Container = styled.View`
     flex:1;
     flexDirection:row;
     alignItems:center;
-    height:50px;
     marginLeft:10px;
     marginRight:10px;
     marginBottom:5px;
 `;
 const BaseInfoContainer = styled.View`
     flex:3;
+    marginTop:10px;
     marginLeft:10px;
-    height:25px;
+    flexDirection:row;
+    alignItems:center;
 `;
 const BaseInfoHeader = styled.View`
     flexDirection:row;
     alignItmes:flex-end;
-    height:20px;
+    marginLeft:10px;
 `;
 const DetailInfoContainer = styled.View`
-    height:20px;
+    marginLeft:10px;
     flexDirection:row;
 `;
 const SmallFont = styled.Text`
     fontSize:${(props) => props.theme.font.size.small};
     fontWeight:${(props) => props.theme.font.weight.regular};
-    margin:1px;
-    `;
+`;
 const AdditionalInfoContainer = styled.View`
     flex:1;
 `;
@@ -70,24 +85,24 @@ const TagContainer = styled.View`
 `;
 
 const OutPressable = styled.Pressable`
-    backgroundColor:${(props)=>props.theme.colors.blue.primary};
-    borderRadius:${(props)=>props.theme.border.radius.small};
+    backgroundColor:${(props) => props.theme.colors.blue.primary};
+    borderRadius:${(props) => props.theme.border.radius.small};
     justifyContent:center;
     alignItems:center;
-    width:53px;
-    height:20px;
+    width:65px;
+    marginRight:5px;
+    paddingBottom:2px;
 `;
 const OutText = styled.Text`
     color:white;
-    fontSize:${(props)=>props.theme.font.size.xSmall};
-
+    fontSize:${(props) => props.theme.font.size.xSmall};
+    fontWeight:${(props) => props.theme.font.weight.medium};
 `;
 const Name = styled.Text`
-    fontWeight:${(props)=>props.theme.font.weight.semiBold};
+    fontWeight:${(props) => props.theme.font.weight.semiBold};
     marginRight:5px;
 `;
 const Score = styled.Text`
-    height:20px;
-    fontSize:${(props)=>props.theme.font.size.primary};
-    fontWeight:${(props)=>props.theme.font.weight.semiBold};
+    fontSize:${(props) => props.theme.font.size.primary};
+    fontWeight:${(props) => props.theme.font.weight.semiBold};
 `;
