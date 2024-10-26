@@ -12,8 +12,8 @@ import CommentView from '../../components/Meeting/MeetingInfo/CommentView';
 import VerifyEmail from '../auth/register/VerifyEmail';
 import { WithLocalSvg } from 'react-native-svg/css';
 import runningPhoto from '../../assets/runningPhoto.svg';
-
-
+import { greyBlueColors } from '../../styles/ThemeStyles';
+import uploadBtn from '../../assets/uploadBtn.svg';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -21,20 +21,20 @@ const comments = [
   {
     name: '김철수',
     department: '컴퓨터공학과',
-    studentId: '20201234',
+    studentId: '20학번',
     text: '이 글 너무 유익하네요!',
     replies: [
       {
         name: '이영희1',
         department: '전기전자공학과',
-        studentId: '20201235',
+        studentId: '20학번',
         text: '동의합니다!',
         replies: [],
       },
       {
         name: '이영희2',
         department: '전기전자공학과',
-        studentId: '20201235',
+        studentId: '20학번',
         text: '동의합니다!',
         replies: [],
       },
@@ -43,13 +43,13 @@ const comments = [
   {
     name: '김철수2',
     department: '컴퓨터공학과',
-    studentId: '20201234',
+    studentId: '20학번',
     text: '이 글 너무 유익하네요!',
     replies: [
       {
         name: '이영희2-1',
         department: '전기전자공학과',
-        studentId: '20201235',
+        studentId: '20학번',
         text: '동의합니다!',
         replies: [],
       },
@@ -96,8 +96,12 @@ export default function Meeting() {
         {activeTab === 0 && <MeetingInfo title={title} />}
         {activeTab === 0 && <Line></Line>}
         {activeTab === 0 && <CommentView comments={comments} />}
+        {activeTab === 0 && <CommentInputWrapper>
+          <CommentInput placeholder="댓글 예시입니다."></CommentInput>
+          <UploadBtnWraaper><WithLocalSvg
+            asset={uploadBtn} /></UploadBtnWraaper>
+        </CommentInputWrapper>}
         {activeTab === 1 && <WatingMemberList></WatingMemberList>}
-
         {activeTab === 1 && <Line></Line>}
         {activeTab === 1 && <TeamMemberList></TeamMemberList>}
         <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
@@ -139,3 +143,27 @@ const TabWrapper = styled(Pressable)`
 const Tab = styled.Text`
   color: ${({ isActive, theme }) => (isActive ? theme.font.color.primary : 'white')};
 `;
+
+const CommentInputWrapper = styled.View`
+backgroundColor:#E6F3FF;
+  width:${screenWidth};
+  paddingLeft:12px;
+  paddingRight:12px;
+  paddingTop:4px;
+  paddingBottom:4px;
+  flexDirection:row;
+`;
+const CommentInput = styled.TextInput`
+  backgroundColor:white;
+  padding:3px;
+  width:100%;
+  borderRadius:12px;
+  borderColor:${greyBlueColors[500]};
+  border-width:1px;
+`;
+const UploadBtnWraaper = styled.View`
+  position:absolute;
+  right:18px;
+  top:10px;
+`;
+
