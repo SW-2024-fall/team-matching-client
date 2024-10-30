@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, Button, StyleSheet, Pressable, TextInput } from 'react-native';
+import { Modal, View, Text, Button, StyleSheet, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import RadioButtonRN from 'radio-buttons-react-native'; // 라디오 버튼 컴포넌트
 import { theme } from '@styles/ThemeStyles';
@@ -8,8 +8,8 @@ const FilterModal = ({ visible, onClose, onApply }) => {
     const [selectedCategory, setSelectedCategory] = useState([]);
     const [meetingType, setMeetingType] = useState(null);
     const [recruitmentStatus, setRecruitmentStatus] = useState(null);
-    const [minParticipants, setMinParticipants] = useState(2);
-    const [maxParticipants, setMaxParticipants] = useState(99);
+    const [minParticipants, setMinParticipants] = useState('2');
+    const [maxParticipants, setMaxParticipants] = useState('99');
     const [activeFilter, setActiveFilter] = useState('category'); // 기본 활성화 필터는 '카테고리'
 
     const categories = [
@@ -70,8 +70,10 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                     <Pressable onPress={() => setActiveFilter('participants')}>
                         <Text style={[styles.tabText, activeFilter === 'participants' && styles.activeTabText]}>인원 수</Text>
                     </Pressable>
+                    
                 </View>
-
+                {/* 선 추가 */}
+                <View style={styles.separator} />
                 {/* 선택된 필터에 따라 옵션 표시 */}
                 <View style={styles.content}>
                     {activeFilter === 'category' && (
@@ -133,7 +135,9 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                                     style={styles.participantsInput}
                                     placeholder="2"
                                 />
+                                <Text style={styles.participantsLabel}>명</Text>
                                 <Text style={styles.participantsLabel}>~</Text>
+                                <Text style={styles.participantsLabel}>최대</Text>
                                 <TextInput
                                     keyboardType="numeric"
                                     value={maxParticipants.toString()}
@@ -146,9 +150,11 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                         </View>
                     )}
                 </View>
-
+                {/*적용 버튼*/}
                 <View style={styles.buttonContainer}>
-                    <Button title="적용" onPress={handleApply} />
+                    <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+                        <Text style={styles.applyButtonText}>적용</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
@@ -166,19 +172,26 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        height: '80%',
+        height: '70%',
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    title: {
-        fontSize: theme.font.size.large,
+        fontColor: theme.font.color.primary,
         fontWeight: theme.font.weight.bold,
     },
-    closeButton: {
+    title: {//필터
         fontSize: theme.font.size.large,
+        fontWeight: theme.font.weight.extraBold,
+    },
+    separator :{//구분선
+        borderWidth: 0.5,
+        borderColor: theme.colors.divider,
+    },
+    closeButton: {//닫기(x) 버튼
+        fontSize: theme.font.size.large,
+        fontColor: theme.font.weight.bold,
     },
     filterTabs: {
         flexDirection: 'row',
@@ -227,6 +240,7 @@ const styles = StyleSheet.create({
     checkboxText: {
         color: theme.font.color.light,
     },
+    //모임유형, 모집여부 -> 라디오버튼 
     radioContainer: {
         flexDirection: 'column',
         alignItems: 'flex-start',
@@ -259,8 +273,23 @@ const styles = StyleSheet.create({
         color: theme.font.color.primary,
     },
     participantsContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         borderRadius: 4,
         borderColor: theme.border.color,
+    },
+    participantsLabel : {
+        color : theme.font.color.primary,
+    },
+    participantsInput :{//숫자 박스
+        borderWidth: 1,  
+        borderColor: theme.border.color,  
+        padding: 8,  
+        width: 50,  
+        height: 40, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
     },
     input: {
         borderBottomWidth: 1,
@@ -269,10 +298,23 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingTop: 20,
-
+        backgroundColor: theme.colors.blue.primary,
+        borderRadius: theme.border.radius.primary,
+        padding: 20,
+        alignItems: 'center',
+    },
+    applyButton: {
+        backgroundColor: theme.colors.blue.primary,
+        borderRadius: theme.border.radius.primary,
+        paddingVertical: 0, // 수직 패딩 추가 안함
+        paddingHorizontal: 10, // 수평 패딩
+        alignItems: 'center', // 텍스트를 중앙에 정렬
+    },
+    applyButtonText: {
+        color: theme.colors.background.primary,
+        fontWeight: theme.font.weight.bold,
+        fontSize: theme.font.size.primary,
+        textAlign: 'center', // 텍스트 중앙 정렬
     },
 });
 
