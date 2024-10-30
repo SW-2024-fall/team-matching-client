@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Layout from '@layout/layout';
-import ProfileInfo from '@components/ProfileInfo'; // ProfileInfo 컴포넌트 임포트
-import {theme} from '@style/ThemeStyles';
-import MeetingItem from '@components/MeetingItem';
+import ProfileInfo from '@components/ProfileInfo';
+import EditProfileButton from '@components/EditProfileButton';
+import { theme } from '@styles/ThemeStyles';
+import { PAGES } from '@navigation/constant';
 
-const MyProfile = () => {
-    // 사용자 데이터 정의
+const MyProfile = ({ navigation }) => {
     const userData = {
         id: '1',
         name: '홍길동',
@@ -14,11 +14,16 @@ const MyProfile = () => {
         studentID: '20230001',
         attendanceScore: '95%',
         features: '성실함, 협업 능력',
-        profileURL: 'null' // 사용자 프로필 이미지 URL
+        profileURL: 'null'
+    };
+
+    const handleEditProfile = () => {
+        console.log("프로필 수정 버튼 클릭됨");
+        // 원하는 동작 추가 (예: 프로필 수정 화면으로 이동)
     };
 
     return (
-        <Layout>
+        <Layout screen={PAGES.MYPROFILE} navigation={navigation}>
             <View style={styles.profileContainer}>
                 <ProfileInfo 
                     id={userData.id}
@@ -29,9 +34,9 @@ const MyProfile = () => {
                     features={userData.features}
                     profileURL={userData.profileURL}
                 />
-        </View>
+                <EditProfileButton onPress={handleEditProfile} />
+            </View>
         </Layout>
-        
     );
 };
 
@@ -41,7 +46,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        backgroundColor: theme.colors.background.primary, // 배경 색
+        backgroundColor: theme.colors.background.primary,
     },
 });
 
