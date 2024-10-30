@@ -1,7 +1,15 @@
+import { WithLocalSvg } from 'react-native-svg/css';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { theme } from '@styles/ThemeStyles';
-import MeetingItem from './MeetingItem';
+import MeetingItem from '@components/MeetingItem';
+
+const tabIcons = {
+    모임: require('@assets/teamIcon.svg'),
+    스크랩: require('@assets/scrapIcon.svg'),
+    댓글: require('@assets/commentIcon.svg'),
+    좋아요: require('@assets/likeIcon.svg'),
+};
 
 const BottomTab = () => {
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
@@ -15,6 +23,7 @@ const BottomTab = () => {
 
     return (
         <View style={styles.container}>
+            {/* Bottom Tab Navigation */}
             <View style={styles.tabContainer}>
                 {['모임', '스크랩', '댓글', '좋아요'].map((tab) => (
                     <TouchableOpacity
@@ -22,12 +31,20 @@ const BottomTab = () => {
                         style={styles.tab}
                         onPress={() => setSelectedTab(tab)}
                     >
+                        <WithLocalSvg
+                            asset={tabIcons[tab]}
+                            width={24}
+                            height={24}
+                            fill={selectedTab === tab ? theme.colors.blue.primary : theme.font.color.primary}
+                        />
                         <Text style={[styles.tabText, selectedTab === tab && styles.activeTabText]}>
                             {tab}
                         </Text>
                     </TouchableOpacity>
                 ))}
             </View>
+            
+            {/* Meeting List */}
             <View style={styles.listContainer}>
                 {mockData[selectedTab].map((item) => (
                     <MeetingItem key={item.id} item={item} />
@@ -56,6 +73,7 @@ const styles = StyleSheet.create({
     tabText: {
         fontSize: theme.font.size.primary,
         color: theme.font.color.primary,
+        marginTop: 4,
     },
     activeTabText: {
         color: theme.colors.blue.primary,

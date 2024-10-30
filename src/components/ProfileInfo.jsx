@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         paddingBottom: 4,
     },
     features: {
-        color: theme.font.color.primary,
+        color: theme.colors.blue.hover,
         fontSize: theme.font.size.primary,
     },
 });

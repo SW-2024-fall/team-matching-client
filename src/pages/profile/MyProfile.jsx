@@ -5,6 +5,7 @@ import ProfileInfo from '@components/ProfileInfo';
 import EditProfileButton from '@components/EditProfileButton';
 import { theme } from '@styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
+import BottomTab from '@components/BottomTab';
 
 const MyProfile = ({ navigation }) => {
     const userData = {
@@ -13,7 +14,7 @@ const MyProfile = ({ navigation }) => {
         major: '컴퓨터공학',
         studentID: '20230001',
         attendanceScore: '95%',
-        features: '성실함, 협업 능력',
+        features: '#성실함, #협업 능력',
         profileURL: 'null'
     };
 
@@ -36,10 +37,12 @@ const MyProfile = ({ navigation }) => {
                 />
                 <EditProfileButton onPress={handleEditProfile} />
             </View>
+
+            {/* Bottom Tab 추가 */}
+            <BottomTab />
         </Layout>
     );
 };
-
 const styles = StyleSheet.create({
     profileContainer: {
         flex: 1,
