@@ -11,11 +11,18 @@ const tabIcons = {
     좋아요: require('@assets/likeIconMyPage.svg'),
 };
 
+const pressedIcons = {
+    모임: require('@assets/pressedTeamIcon.svg'),
+    스크랩: require('@assets/pressedScrapIcon.svg'),
+    댓글: require('@assets/pressedCommentIcon.svg'),
+    좋아요: require('@assets/pressedLikeIcon.svg'),
+};
+
 const BottomTab = () => {
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
 
     const mockData = {
-        모임: [{ id: '1', name: '모임1', preview: '모임 소개1', features: ['#특징1'], likeCount: 10, commentCount: 5, currentParticipants: 3, maxParticipants: 10, startDate: '2024-11-01', endDate: '2024-11-15' },
+        모임: [{ id: '1', name: '모임1', preview: '모임 소개1 입니다. 최대 2줄까지 보여줍니다. 모임 소개1 입니다. 최대 2줄까지 보여줍니다.모임 소개1 입니다. 최대 2줄까지 보여줍니다. ', features: ['#특징1'], likeCount: 10, commentCount: 5, currentParticipants: 3, maxParticipants: 10, startDate: '2024-11-01', endDate: '2024-11-15' },
         { id: '2', name: '모임2', preview: '모임 소개1', features: ['#특징1'], likeCount: 10, commentCount: 5, currentParticipants: 3, maxParticipants: 10, startDate: '2024-11-01', endDate: '2024-11-15' },
         { id: '3', name: '모임3', preview: '모임 소개1', features: ['#특징1'], likeCount: 10, commentCount: 5, currentParticipants: 3, maxParticipants: 10, startDate: '2024-11-01', endDate: '2024-11-15' }
     ],
@@ -38,7 +45,7 @@ const BottomTab = () => {
                         onPress={() => setSelectedTab(tab)}
                     >
                         <WithLocalSvg
-                            asset={tabIcons[tab]}
+                            asset={selectedTab === tab ? pressedIcons[tab] : tabIcons[tab]}
                             width={24}
                             height={24}
                         />
