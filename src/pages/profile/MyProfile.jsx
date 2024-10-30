@@ -2,6 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Layout from '@layout/layout';
 import ProfileInfo from '@components/ProfileInfo'; // ProfileInfo 컴포넌트 임포트
+import {theme} from '@style/ThemeStyles';
+import MeetingItem from '@components/MeetingItem';
 
 const MyProfile = () => {
     // 사용자 데이터 정의
@@ -17,7 +19,7 @@ const MyProfile = () => {
 
     return (
         <Layout>
-            <View style={styles.container}>
+            <View style={styles.profileContainer}>
                 <ProfileInfo 
                     id={userData.id}
                     name={userData.name}
@@ -34,12 +36,12 @@ const MyProfile = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
+    profileContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        backgroundColor: '#fff', // 배경 색
+        backgroundColor: theme.colors.background.primary, // 배경 색
     },
 });
 
