@@ -18,6 +18,13 @@ const pressedIcons = {
     좋아요: require('@assets/pressedLikeIcon.svg'),
 };
 
+const tabTitles = {
+    모임: "참여한 모임 목록",
+    스크랩: "스크랩한 모임 목록",
+    댓글: "댓글을 작성한 모임 목록",
+    좋아요: "좋아요 모임 목록",
+};
+
 const BottomTab = () => {
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
 
@@ -55,7 +62,11 @@ const BottomTab = () => {
                     </TouchableOpacity>
                 ))}
             </View>
-            
+            {/* 제목 */}
+            <Text style={styles.title}>
+                {tabTitles[selectedTab]}
+            </Text>
+
             {/* Meeting List */}
             <View style={styles.listContainer}>
                 {mockData[selectedTab].map((item) => (
@@ -75,7 +86,7 @@ const styles = StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        paddingVertical: 10,
+        paddingBottom: 20,
         borderBottomWidth: 1,
         borderColor: theme.colors.grey.light,
     },
@@ -89,6 +100,14 @@ const styles = StyleSheet.create({
     },
     activeTabText: {
         fontWeight: theme.font.weight.bold,
+    },
+    title :{
+        fontWeight : theme.font.weight.bold,
+        fontSize: theme.font.size.large,
+        color : theme.font.color.primary,
+        marginTop: 20,
+        marginBottom: 0,
+        marginLeft: 10,
     },
     listContainer: {
         marginTop: 10,
