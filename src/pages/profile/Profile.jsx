@@ -5,6 +5,7 @@ import ProfileInfo from '@components/ProfileInfo';
 import MeetingItem from '@components/MeetingItem';
 import { theme } from '@styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
+import MyProfile from './MyProfile';
 
 const mockMeetingData = [
     { id: '1', name: '모임1', preview: '모임 소개1입니다.', features: ['#특징1'], likeCount: 10, commentCount: 5, currentParticipants: 3, maxParticipants: 10, startDate: '2024-11-01', endDate: '2024-11-15' },
@@ -21,8 +22,8 @@ export default function Profile({ route }) {
 
     return (
         <View style={styles.container}>
-            {/* 외부인 프로필 정보 */}
-            <ProfileInfo 
+            {/* 프로필 정보 */}
+            <ProfileInfo
                 id="user-id"
                 name="홍길동"
                 major="컴퓨터공학"
@@ -32,7 +33,7 @@ export default function Profile({ route }) {
                 profileURL="https://example.com/profile.jpg" // 프로필 이미지 URL
             />
 
-            <Text style={styles.title}>내가 참여한 모임</Text>
+            <Text style={styles.title}>참여한 모임 목록</Text>
 
             {/* MeetingItem 리스트 */}
             {mockMeetingData.map((item) => (
