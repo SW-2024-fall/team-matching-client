@@ -35,11 +35,11 @@ const MeetingItem = ({ item, onPress }) => {
                         <WithLocalSvg asset={likeIcon} />
                         <Text style={styles.itemLikeCount}>{item.likeCount}</Text>
                         <WithLocalSvg asset={commentIcon} />
-                        <Text style={styles.itemCommentCount}>{item.commentCount}</Text>
+                        <Text style={styles.itemCommentCount}>{item.commentCount} </Text>
                         <Text style={styles.itemCurrentParticipants}>{item.currentParticipants}</Text>
-                        <Text style={styles.itemMaxParticipants}>/{item.maxParticipants}</Text>
+                        <Text style={styles.itemMaxParticipants}> / {item.maxParticipants}명</Text>
                         <Text style={styles.itemStartDate}>{item.startDate}</Text>
-                        <Text style={styles.itemEndDate}>~{item.endDate}</Text>
+                        <Text style={styles.itemEndDate}> ~ {item.endDate}</Text>
                     </View>
                 </View>
             </View>
@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
     itemLikeCount: {
         marginLeft: 4,
         fontSize: theme.font.size.xSmall,
-        color: theme.font.color.primary,
+        color: theme.colors.red.primary,
         marginRight: 10,
     },
     itemCommentCount: {
         marginLeft: 4,
         fontSize: theme.font.size.xSmall,
-        color: theme.font.color.primary,
+        color: theme.colors.blue.primary,
         marginRight: 10,
     },
     itemStartDate: {
