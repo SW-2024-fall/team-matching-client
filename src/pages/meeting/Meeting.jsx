@@ -15,6 +15,8 @@ import runningPhoto from '../../assets/runningPhoto.svg';
 import { greyBlueColors } from '../../styles/ThemeStyles';
 import uploadBtn from '../../assets/uploadBtn.svg';
 import ActivityDatail from '../../components/ActivityDetail/ActivityDetail';
+import Register from '../auth/register/Register';
+import MeetingRecordList from '../../components/Meeting/MeetingRecordList/MeetingRecordList';
 const screenWidth = Dimensions.get('window').width;
 
 const comments = [
@@ -68,46 +70,49 @@ export default function Meeting() {
   };
 
   return (
-    <ActivityDatail></ActivityDatail>
-    // <Layout screen={PAGES.MEETING} title={title}>
-    //   <Container>
-    //     <Header>
-    //       <WithLocalSvg
-    //         asset={runningPhoto}
-    //       />
-    //     </Header>
-    //     <TabContainer>
-    //       <TabWrapper
-    //         isActive={activeTab === 0}
-    //         onPress={() => handleTabPress(0)}>
-    //         <Tab isActive={activeTab === 0}>모임 정보</Tab>
-    //       </TabWrapper>
-    //       <TabWrapper
-    //         isActive={activeTab === 1}
-    //         onPress={() => handleTabPress(1)}>
-    //         <Tab isActive={activeTab === 1}>구성원</Tab>
-    //       </TabWrapper>
-    //       <TabWrapper
-    //         isActive={activeTab === 2}
-    //         onPress={() => handleTabPress(2)}>
-    //         <Tab isActive={activeTab === 2}>활동 내역</Tab>
-    //       </TabWrapper>
-    //     </TabContainer>
+    // <VerifyEmail></VerifyEmail>
+    // <Register></Register>
+    // <ActivityDatail></ActivityDatail>
+    <Layout screen={PAGES.MEETING} title={title}>
+      <Container>
+        <Header>
+          <WithLocalSvg
+            asset={runningPhoto}
+          />
+        </Header>
+        <TabContainer>
+          <TabWrapper
+            isActive={activeTab === 0}
+            onPress={() => handleTabPress(0)}>
+            <Tab isActive={activeTab === 0}>모임 정보</Tab>
+          </TabWrapper>
+          <TabWrapper
+            isActive={activeTab === 1}
+            onPress={() => handleTabPress(1)}>
+            <Tab isActive={activeTab === 1}>구성원</Tab>
+          </TabWrapper>
+          <TabWrapper
+            isActive={activeTab === 2}
+            onPress={() => handleTabPress(2)}>
+            <Tab isActive={activeTab === 2}>활동 내역</Tab>
+          </TabWrapper>
+        </TabContainer>
 
-    //     {activeTab === 0 && <MeetingInfo title={title} />}
-    //     {activeTab === 0 && <Line></Line>}
-    //     {activeTab === 0 && <CommentView comments={comments} />}
-    //     {activeTab === 0 && <CommentInputWrapper>
-    //       <CommentInput placeholder="댓글 예시입니다."></CommentInput>
-    //       <UploadBtnWraaper><WithLocalSvg
-    //         asset={uploadBtn} /></UploadBtnWraaper>
-    //     </CommentInputWrapper>}
-    //     {activeTab === 1 && <WatingMemberList></WatingMemberList>}
-    //     {activeTab === 1 && <Line></Line>}
-    //     {activeTab === 1 && <TeamMemberList></TeamMemberList>}
-    //     <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
-    //   </Container>
-    // </Layout>
+        {activeTab === 0 && <MeetingInfo title={title} />}
+        {activeTab === 0 && <Line></Line>}
+        {activeTab === 0 && <CommentView comments={comments} />}
+        {activeTab === 0 && <CommentInputWrapper>
+          <CommentInput placeholder="댓글 예시입니다."></CommentInput>
+          <UploadBtnWraaper><WithLocalSvg
+            asset={uploadBtn} /></UploadBtnWraaper>
+        </CommentInputWrapper>}
+        {activeTab === 1 && <WatingMemberList></WatingMemberList>}
+        {activeTab === 1 && <Line></Line>}
+        {activeTab === 1 && <TeamMemberList></TeamMemberList>}
+        {activeTab === 2 && <MeetingRecordList></MeetingRecordList>}
+        <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
+      </Container>
+    </Layout>
   );
 }
 
