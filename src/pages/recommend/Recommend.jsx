@@ -39,16 +39,24 @@ const UserFeatureText = styled.Text`
   font-weight: ${theme.font.weight.semiBold};
 `;
 
+const user = {
+  name: '홍길동',
+};
+
+const UserFeatureList = ['승부욕', '열정', '행복', '고양이'];
+
 export default function Recommend({ navigation }) {
   return (
     <Layout screen={PAGES.RECOMMEND}>
       <Body>
         <RecommendTitleWrapper>
-          <RecommendTitle>시대AI가 분석한 김혜주님의 추천 목록</RecommendTitle>
+          <RecommendTitle>시대AI가 분석한 김혜님의 추천 목록</RecommendTitle>
           <UserFeatureWrapper>
-            <UserFeature>
-              <UserFeatureText># 영화</UserFeatureText>
-            </UserFeature>
+            {UserFeatureList.map((feature) => (
+              <UserFeature>
+                <UserFeatureText># {feature}</UserFeatureText>
+              </UserFeature>
+            ))}
           </UserFeatureWrapper>
           <RecommendTitle>에 맞게 추천드려요!</RecommendTitle>
         </RecommendTitleWrapper>
