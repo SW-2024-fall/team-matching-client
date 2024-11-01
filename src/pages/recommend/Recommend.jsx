@@ -39,6 +39,30 @@ const UserFeatureText = styled.Text`
   font-weight: ${theme.font.weight.semiBold};
 `;
 
+const RecommendCard = styled.TouchableOpacity`
+  width: 100%;
+  padding: 30px;
+  gap: 10px;
+  border-radius: ${theme.border.radius.xLarge};
+  background-color: ${theme.colors.blue.primary};
+`;
+
+const MeetingThumbnail = styled.Image`
+  width: 100%;
+  height: 200px;
+  border-radius: ${theme.border.radius.medium};
+`;
+
+const meeting = {
+  title: '시대짱',
+  features: ['컴과', '나를_이겨봐'],
+  categories: ['운동/스포츠'],
+  content:
+    '시대짱인 나를 이길 수 있는 자들이 모인 모임! 근데 나를 이긴 사람은 아무도 없지 우하하하하!시대짱인 나를 이길 수 있는 자들이 모인 모임! 근데 나를 이긴 사람은 아무도 없지 우하하하하!시대짱인 나를 이길 수 있는 자들이 모인 모임! 근데 나를 이긴 사람은 아무도 없지 우하하하하!',
+  thumbnailUrl:
+    'http://images.munto.kr/production-feed/1684212255476-photo-dj0pc-443076-0?s=1920x1920',
+};
+
 const user = {
   name: '홍길동',
 };
@@ -60,6 +84,9 @@ export default function Recommend({ navigation }) {
           </UserFeatureWrapper>
           <RecommendTitle>에 맞게 추천드려요!</RecommendTitle>
         </RecommendTitleWrapper>
+        <RecommendCard>
+          <MeetingThumbnail source={{ uri: meeting.thumbnailUrl }} />
+        </RecommendCard>
       </Body>
     </Layout>
   );
