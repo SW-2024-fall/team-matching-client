@@ -103,7 +103,20 @@ const MeetingContent = ({ content }) => {
   );
 };
 
-const meeting = {
+const RecommendActionsWrapper = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const RecommendActionButton = styled.TouchableOpacity``;
+
+const RecommendActionButtonText = styled.Text`
+  font-weight: ${theme.font.weight.medium};
+  color: ${theme.font.color.primary};
+`;
+
+const meeting1 = {
   title: '시대짱',
   features: ['컴과', '나를_이겨봐'],
   categories: ['운동/스포츠'],
@@ -113,6 +126,11 @@ const meeting = {
     'http://images.munto.kr/production-feed/1684212255476-photo-dj0pc-443076-0?s=1920x1920',
 };
 
+const meeting2 = {
+  ...meeting1,
+  title: '시대짱2',
+};
+
 const user = {
   name: '홍길동',
 };
@@ -120,6 +138,20 @@ const user = {
 const UserFeatureList = ['승부욕', '열정', '행복', '고양이'];
 
 export default function Recommend({ navigation }) {
+  const [meeting, setMeeting] = useState(meeting1);
+
+  const recommendAnotherMeeting = () => {
+    if (meeting === meeting1) {
+      setMeeting(meeting2);
+    } else {
+      setMeeting(meeting1);
+    }
+  };
+
+  const goToMeetingDetail = () => {
+    navigation.navigate(PAGES.MEETING, { id: 1, title: 'meeting sample 1' });
+  };
+
   return (
     <Layout screen={PAGES.RECOMMEND}>
       <Body>
@@ -134,7 +166,7 @@ export default function Recommend({ navigation }) {
           </UserFeatureWrapper>
           <RecommendTitle>에 맞게 추천드려요!</RecommendTitle>
         </RecommendTitleWrapper>
-        <RecommendCard>
+        <RecommendCard onPress={goToMeetingDetail}>
           <MeetingThumbnail source={{ uri: meeting.thumbnailUrl }} />
           <MeetingTitleWrapper>
             <MeetingTitle>{meeting.title}</MeetingTitle>
@@ -153,6 +185,14 @@ export default function Recommend({ navigation }) {
           </MeetingCategoryWrapper>
           <MeetingContent content={meeting.content} />
         </RecommendCard>
+        <RecommendActionsWrapper>
+          <RecommendActionButton>
+            <RecommendActionButtonText>스크랩하기</RecommendActionButtonText>
+          </RecommendActionButton>
+          <RecommendActionButton onPress={recommendAnotherMeeting}>
+            <RecommendActionButtonText>다른 모임 추천받기</RecommendActionButtonText>
+          </RecommendActionButton>
+        </RecommendActionsWrapper>
       </Body>
     </Layout>
   );
