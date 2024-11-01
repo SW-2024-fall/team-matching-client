@@ -52,10 +52,12 @@ export const theme = {
   },
   border: {
     radius: {
+      xSmall: '6px',
       small: '8px',
       primary: '12px',
       medium: '12px',
       large: '16px',
+      xLarge: '28px',
     },
     color: greyColors[400],
   },
