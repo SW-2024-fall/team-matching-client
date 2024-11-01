@@ -12,7 +12,7 @@ const mockMeetingData = [
     { id: '2', name: '모임2', preview: '모임 소개2입니다.', features: ['#특징1'], likeCount: 12, commentCount: 3, currentParticipants: 2, maxParticipants: 8, startDate: '2024-12-01', endDate: '2024-12-15' },
 ];
 
-export default function Profile({ route }) {
+export default function Profile({ route, navigation }) {
     const screen = route.name;
     const isMe = screen === PAGES.MYPROFILE;
 
@@ -21,25 +21,27 @@ export default function Profile({ route }) {
     }
 
     return (
-        <View style={styles.container}>
-            {/* 프로필 정보 */}
-            <ProfileInfo
-                id="user-id"
-                name="홍길동"
-                major="컴퓨터공학"
-                studentID="20230001"
-                attendanceScore="출석 점수: 90%"
-                features={['#특징1', '#특징2']}
-                profileURL="https://example.com/profile.jpg" // 프로필 이미지 URL
-            />
+        <Layout screen={screen} title="Profile" navigation={navigation}>
+            <View style={styles.container}>
+                {/* 프로필 정보 */}
+                <ProfileInfo
+                    id="user-id"
+                    name="홍길동"
+                    major="컴퓨터공학"
+                    studentID="20230001"
+                    attendanceScore="출석 점수: 90%"
+                    features={['#특징1', '#특징2']}
+                    profileURL="https://example.com/profile.jpg" // 프로필 이미지 URL
+                />
 
-            <Text style={styles.title}>참여한 모임 목록</Text>
+                <Text style={styles.title}>참여한 모임 목록</Text>
 
-            {/* MeetingItem 리스트 */}
-            {mockMeetingData.map((item) => (
-                <MeetingItem key={item.id} item={item} />
-            ))}
-        </View>
+                {/* MeetingItem 리스트 */}
+                {mockMeetingData.map((item) => (
+                    <MeetingItem key={item.id} item={item} />
+                ))}
+            </View>
+        </Layout>
     );
 }
 
