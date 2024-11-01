@@ -53,6 +53,56 @@ const MeetingThumbnail = styled.Image`
   border-radius: ${theme.border.radius.medium};
 `;
 
+const MeetingTitleWrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const MeetingTitle = styled.Text`
+  font-size: ${theme.font.size.large};
+  font-weight: ${theme.font.weight.bold};
+  color: ${theme.colors.background.primary};
+`;
+
+const MeetingFeatureWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+`;
+
+const MeetingFeature = styled.Text`
+  font-size: ${theme.font.size.small};
+  color: ${theme.colors.background.primary};
+`;
+
+const MeetingCategoryWrapper = styled.View`
+  flex-direction: row;
+  gap: 10px;
+`;
+
+const MeetingCategoryContainer = styled.View`
+  padding: 4px 12px;
+  border-radius: ${theme.border.radius.xSmall};
+  background-color: ${theme.colors.background.primary};
+`;
+
+const MeetingCategory = styled.Text`
+  font-size: ${theme.font.size.small};
+  color: ${theme.colors.blue.primary};
+`;
+
+const MeetingContent = ({ content }) => {
+  const MeetingContentText = styled.Text`
+    color: ${theme.colors.background.primary};
+  `;
+
+  return (
+    <MeetingContentText numberOfLines={3} ellipsizeMode="tail">
+      {content}
+    </MeetingContentText>
+  );
+};
+
 const meeting = {
   title: '시대짱',
   features: ['컴과', '나를_이겨봐'],
@@ -86,6 +136,22 @@ export default function Recommend({ navigation }) {
         </RecommendTitleWrapper>
         <RecommendCard>
           <MeetingThumbnail source={{ uri: meeting.thumbnailUrl }} />
+          <MeetingTitleWrapper>
+            <MeetingTitle>{meeting.title}</MeetingTitle>
+            <MeetingFeatureWrapper>
+              {meeting.features.map((feature) => (
+                <MeetingFeature>#{feature}</MeetingFeature>
+              ))}
+            </MeetingFeatureWrapper>
+          </MeetingTitleWrapper>
+          <MeetingCategoryWrapper>
+            {meeting.categories.map((category) => (
+              <MeetingCategoryContainer>
+                <MeetingCategory>{category}</MeetingCategory>
+              </MeetingCategoryContainer>
+            ))}
+          </MeetingCategoryWrapper>
+          <MeetingContent content={meeting.content} />
         </RecommendCard>
       </Body>
     </Layout>
