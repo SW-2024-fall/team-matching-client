@@ -6,6 +6,8 @@ import EditProfileButton from '@components/EditProfileButton';
 import { theme } from '@styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
 import BottomTab from '@components/BottomTab';
+import profileImage from '@assets/testImage/frownyFace.png'
+
 
 const MyProfile = ({ navigation }) => {
     const userData = {
@@ -15,7 +17,7 @@ const MyProfile = ({ navigation }) => {
         studentID: '20230001',
         attendanceScore: '95%',
         features: '#성실함, #협업 능력',
-        profileURL: 'null'
+        profileURL: profileImage
     };
 
     const handleEditProfile = () => {
@@ -43,6 +45,8 @@ const MyProfile = ({ navigation }) => {
         </Layout>
     );
 };
+
+
 const styles = StyleSheet.create({
     profileContainer: {
         flex: 1,
