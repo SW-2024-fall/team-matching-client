@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text } from 'react-native';
+import { FlatList, Pressable, StyleSheet } from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import MeetingItem from '@components/MeetingItem'; // 새로운 MeetingItem 컴포넌트 import
 import FilterIcon from '@assets/filterIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
 import FilterModal from '@components/FilterModal'; // 필터 모달 컴포넌트 import
+import FloatingActionButton from '@components/FloatingActionButton'; // 플로팅 버튼 컴포넌트 import
 
 const DATA = [
     { id: '1', name: '모임 이름 1', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
@@ -48,6 +49,12 @@ export default function MeetingBoard({ navigation }) {
         />
     );
 
+    // 플로팅 버튼 클릭 시 동작 정의
+    const handleFloatingButtonPress = () => {
+        // 원하는 동작을 추가 (예: 새 모임 생성 페이지로 이동)
+        navigation.navigate(PAGES.CREATE_MEETING); // CREATE_MEETING 페이지로 이동하는 예시
+    };
+
     return (
         <Layout screen={PAGES.MEETING_BOARD} 
                 RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />}>
@@ -61,6 +68,7 @@ export default function MeetingBoard({ navigation }) {
                 onClose={() => setFilterVisible(false)} 
                 onApply={handleFilterApply} 
             />
+            <FloatingActionButton onPress={handleFloatingButtonPress} /> {/* 플로팅 버튼 추가 */}
         </Layout>
     );
 }

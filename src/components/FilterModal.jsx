@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
         borderColor: theme.colors.grey.border,
         backgroundColor: 'transparent',
         marginRight: 8,
-        borderRadius: 0, // Slight rounding for a more polished square look
+        borderRadius: 0,
     },
     selectedRadio: {
         backgroundColor: theme.colors.blue.primary, // Change to primary color when selected
