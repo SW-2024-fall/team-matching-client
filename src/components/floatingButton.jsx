@@ -1,9 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // 아이콘 사용을 위해 expo/vector-icons 추가
 import {theme} from '@styles/ThemeStyles';
 
-const FloatingActionButton = ({ onPress }) => {
+const FloatingButton = ({ onPress }) => {
     return (
         <TouchableOpacity style={styles.button} onPress={onPress}>
         <MaterialIcons name="add" style={styles.icon} />
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         right: 20, // 화면 오른쪽에서의 위치
         width: 70, // 버튼의 가로 크기
         height: 70, // 버튼의 세로 크기
-        borderRadius: 30,
+        borderRadius: 35,
         backgroundColor: theme.colors.blue.primary, // 버튼 배경색
         justifyContent: 'center', // 수직 중앙 정렬
         alignItems: 'center', // 수평 중앙 정렬
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FloatingActionButton;
+export default FloatingButton;

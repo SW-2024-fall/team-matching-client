@@ -49,11 +49,11 @@ const MeetingItem = ({ item, onPress }) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
-        padding: 10,
         borderBottomWidth: 0,
         borderBottomColor: theme.colors.grey.light,
         backgroundColor: theme.colors.background.primary,
         marginBottom: 0,
+        margin: 15,
         flexDirection: 'row',
     },
     itemContent: {

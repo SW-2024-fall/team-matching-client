@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { FlatList, Pressable, StyleSheet } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
-import MeetingItem from '@components/MeetingItem'; // 새로운 MeetingItem 컴포넌트 import
+import MeetingItem from '@components/MeetingItem';
 import FilterIcon from '@assets/filterIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
-import FilterModal from '@components/FilterModal'; // 필터 모달 컴포넌트 import
-import FloatingActionButton from '@components/FloatingActionButton'; // 플로팅 버튼 컴포넌트 import
+import FilterModal from '@components/FilterModal';
+import FloatingButton from '@components/FloatingButton';
 
 const DATA = [
     { id: '1', name: '모임 이름 1', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
     { id: '2', name: '모임 이름 2', features: ['#문화', '#여행'], currentParticipants: 12, maxParticipants: 25, startDate: '2020.05.05', endDate: '2024.1.2', likeCount: 39, commentCount: 1, preview: '문화 관련 모임으로 다양한 여행 정보를 공유합니다.', image: null, meetingType: 'oneTime', recruitmentStatus: 'completed' },
-    { id: '3', name: '모임 이름 3', features: ['#스포츠'], currentParticipants: 8, maxParticipants: 15, startDate: '2020.06.06', endDate: '2024.1.2', likeCount: 93, commentCount: 1, preview: '스포츠 관련 모임으로 매주 모여서 운동을 합니다.', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }
+    { id: '3', name: '모임 이름 3', features: ['#스포츠'], currentParticipants: 8, maxParticipants: 15, startDate: '2020.06.06', endDate: '2024.1.2', likeCount: 93, commentCount: 1, preview: '스포츠 관련 모임으로 매주 모여서 운동을 합니다.', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' },
+    { id: '4', name: '모임 이름 4', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
+    { id: '5', name: '모임 이름 5', features: ['#문화', '#여행'], currentParticipants: 12, maxParticipants: 25, startDate: '2020.05.05', endDate: '2024.1.2', likeCount: 39, commentCount: 1, preview: '문화 관련 모임으로 다양한 여행 정보를 공유합니다.', image: null, meetingType: 'oneTime', recruitmentStatus: 'completed' },
+    { id: '6', name: '모임 이름 6', features: ['#스포츠'], currentParticipants: 8, maxParticipants: 15, startDate: '2020.06.06', endDate: '2024.1.2', likeCount: 93, commentCount: 1, preview: '스포츠 관련 모임으로 매주 모여서 운동을 합니다.', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' },
 ];
 
 function FilterBtn({ onOpen }) {
@@ -28,7 +31,7 @@ export default function MeetingBoard({ navigation }) {
 
     const handleFilterApply = (filters) => {
         const { categories, meetingType, recruitmentStatus, minParticipants, maxParticipants } = filters;
-        
+
         const newData = DATA.filter(item => {
             const meetsCategory = categories.length === 0 || categories.some(category => item.features.includes(category));
             const meetsMeetingType = meetingType ? item.meetingType === meetingType : true;
@@ -39,7 +42,7 @@ export default function MeetingBoard({ navigation }) {
         });
 
         setFilteredData(newData);
-        setFilterVisible(false); // 필터 적용 후 모달 닫기
+        setFilterVisible(false);
     };
 
     const renderItem = ({ item }) => (
@@ -49,30 +52,41 @@ export default function MeetingBoard({ navigation }) {
         />
     );
 
-    // 플로팅 버튼 클릭 시 동작 정의
     const handleFloatingButtonPress = () => {
-        // 원하는 동작을 추가 (예: 새 모임 생성 페이지로 이동)
-        navigation.navigate(PAGES.CREATE_MEETING); // CREATE_MEETING 페이지로 이동하는 예시
+        navigation.navigate(PAGES.CREATE_MEETING);
     };
 
     return (
         <Layout screen={PAGES.MEETING_BOARD} 
-                RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />}>
-            <FlatList 
-                data={filteredData}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-            />
-            <FilterModal 
-                visible={filterVisible} 
-                onClose={() => setFilterVisible(false)} 
-                onApply={handleFilterApply} 
-            />
-            <FloatingActionButton onPress={handleFloatingButtonPress} /> {/* 플로팅 버튼 추가 */}
+                RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
+            <View style={styles.container}>
+                <FlatList 
+                    data={filteredData}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                />
+                <FilterModal 
+                    visible={filterVisible} 
+                    onClose={() => setFilterVisible(false)} 
+                    onApply={handleFilterApply} 
+                />
+            </View>
+            <FloatingButton onPress={handleFloatingButtonPress} style={styles.floatingButton} />
         </Layout>
     );
 }
 
 const styles = StyleSheet.create({
-    // 스타일을 여기에 추가할 수 있습니다.
+    layout: {
+        flex: 1,
+    },
+    container: {
+        flex: 1,
+    },
+    floatingButton: {
+        position: 'absolute',
+        bottom: 20, // 화면 하단에서의 위치
+        right: 20, // 화면 오른쪽에서의 위치
+        zIndex: 1, // 다른 컴포넌트 위에 표시되도록 z-index 설정
+    },
 });
