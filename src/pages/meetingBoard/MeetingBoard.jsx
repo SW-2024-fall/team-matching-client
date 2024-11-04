@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
-import MeetingItem from '@components/MeetingItem';
 import FilterIcon from '@assets/filterIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
-import FilterModal from '@components/FilterModal';
-import FloatingButton from '@components/FloatingButton';
+import MeetingItem from '@pages/MeetingBoard/components/MeetingItem';
+import FilterModal from '@pages/MeetingBoard/components/FilterModal';
+import FloatingButton from '@pages/MeetingBoard/components/FloatingButton';
 
 const DATA = [
     { id: '1', name: '모임 이름 1', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
