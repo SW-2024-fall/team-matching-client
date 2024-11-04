@@ -26,8 +26,6 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        borderWidth: 0,
-        //borderColor: '#fff',
         backgroundColor: theme.colors.grey.light, // 이미지가 로드되지 않을 경우의 배경색
     },
 });

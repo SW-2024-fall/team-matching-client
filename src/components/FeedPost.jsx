@@ -9,7 +9,7 @@ const FeedPost = ({ name,title, profileUrl, thumbnailUrl, preview }) => {
                 <Image source={{ uri: profileUrl }} style={styles.profileUrl} />
                 <View style={styles.userInfoText}>
                     <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.name}>{title}</Text>
+                    <Text style={styles.title}>{title}</Text>
                 </View>
             </View>
             <Image source={{ uri: thumbnailUrl }} style={styles.thumbnailUrl} />
@@ -20,7 +20,6 @@ const FeedPost = ({ name,title, profileUrl, thumbnailUrl, preview }) => {
 
 const styles = StyleSheet.create({
     postContainer: {
-        padding: 0,
         backgroundColor: theme.colors.background.primary,
         marginBottom: 20,
     },
@@ -33,16 +32,18 @@ const styles = StyleSheet.create({
         width: 35,
         height: 35,
         borderRadius: 30,
-        marginRight: 10,
+        marginRight: 8,
         backgroundColor: theme.colors.grey.light
     },
     name: {
-        fontWeight: theme.font.weight.semiBold,
-        color: theme.font.color.primary
+        fontWeight: '600',
+        color: theme.font.color.primary,
+        fontSize: theme.font.size.primary,
     },
     title:{
-        fontWeight: theme.font.weight.medium,
+        fontWeight: '500',
         color: theme.colors.grey.primary,
+        fontSize: theme.font.size.xSmall,
     },
     thumbnailUrl: {
         width: '100%',
@@ -53,6 +54,8 @@ const styles = StyleSheet.create({
     },
     postPreview: {
         color: theme.font.color.primary,
+        fontWeight: '500',
+        fontSize: theme.font.size.primary,
     },
 });
 

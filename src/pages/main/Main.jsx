@@ -34,7 +34,7 @@ export default function Main({ navigation }) {
             title: 'Title Two',
             profileUrl: null,
             thumbnailUrl: null,
-            preview: '3줄까지만 보이는 텍스트',
+            preview: '3줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다11111.!!!3줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다.2222!!!3333줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다.!!!3줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다.!!!',
         },
         {
             id: '3',
@@ -98,24 +98,14 @@ export default function Main({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
         backgroundColor: theme.colors.background.primary,
     },
     storyContainer: {
-        paddingHorizontal: 10,
-        paddingVertical: 15,
-        backgroundColor: '#fff',
-    },
-    storyList: {
-        paddingVertical: 0,
+        marginLeft: 10,
+        backgroundColor: theme.colors.background.primary,
     },
     feedPostContainer: {
-        paddingHorizontal: 10,
-        paddingTop: 15,
-    },
-    title: {
-        fontSize: theme.font.size.large,
-        fontWeight: theme.font.weight.bold,
-        marginBottom: 20,
+        paddingTop: 16,
+        paddingHorizontal: 20
     },
 });

@@ -10,12 +10,12 @@ function FilterBtn() {
 }
 
 export default function MeetingBoard({ navigation }) {
-  return (
-    <Layout screen={PAGES.MEETING_BOARD} RightComponent={FilterBtn}>
-      <Text>Meeting Board</Text>
-      <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}>
-        <Text>Let's go home</Text>
-      </Pressable>
-    </Layout>
-  );
+    return (
+        <Layout screen={PAGES.MEETING_BOARD} RightComponent={FilterBtn}>
+        <Text>Meeting Board</Text>
+        <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}>
+            <Text>Let's go home</Text>
+        </Pressable>
+        </Layout>
+    );
 }
