@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList , Image} from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import { theme } from '../../styles/ThemeStyles';
@@ -8,7 +8,7 @@ import FeedPost from '../../components/FeedPost';
 
 export default function Main({ navigation }) {
     const stories = [
-        { imageUrl: null, userId: 'user1' },
+        { imageUrl:require('@assets/testImage/frownyFace.png'), userId: 'user1' },
         { imageUrl: null, userId: 'user2' },
         { imageUrl: null, userId: 'user3' },
         { imageUrl: null, userId: 'user4' },

@@ -12,7 +12,10 @@ const StoryCircle = ({ imageUrl, userId }) => {
 
     return (
         <TouchableOpacity onPress={handlePress} style={styles.container}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
+            <Image 
+                source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl} 
+                style={styles.image} 
+            />
         </TouchableOpacity>
     );
 };

@@ -1,18 +1,24 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import {theme} from '../styles/ThemeStyles';
+import { theme } from '../styles/ThemeStyles';
 
-const FeedPost = ({ name,title, profileUrl, thumbnailUrl, preview }) => {
+const FeedPost = ({ name, title, profileUrl, thumbnailUrl, preview }) => {
     return (
         <View style={styles.postContainer}>
             <View style={styles.userInfo}>
-                <Image source={{ uri: profileUrl }} style={styles.profileUrl} />
+                <Image 
+                    source={typeof profileUrl === 'string' ? { uri: profileUrl } : profileUrl} 
+                    style={styles.profileUrl} 
+                />
                 <View style={styles.userInfoText}>
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.title}>{title}</Text>
                 </View>
             </View>
-            <Image source={{ uri: thumbnailUrl }} style={styles.thumbnailUrl} />
+            <Image 
+                source={typeof thumbnailUrl === 'string' ? { uri: thumbnailUrl } : thumbnailUrl} 
+                style={styles.thumbnailUrl} 
+            />
             <Text style={styles.postPreview} numberOfLines={3}>{preview}</Text>
         </View>
     );
@@ -33,14 +39,14 @@ const styles = StyleSheet.create({
         height: 35,
         borderRadius: 30,
         marginRight: 8,
-        backgroundColor: theme.colors.grey.light
+        backgroundColor: theme.colors.grey.light,
     },
     name: {
         fontWeight: '600',
         color: theme.font.color.primary,
         fontSize: theme.font.size.primary,
     },
-    title:{
+    title: {
         fontWeight: '500',
         color: theme.colors.grey.primary,
         fontSize: theme.font.size.xSmall,
