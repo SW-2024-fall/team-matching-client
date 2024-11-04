@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import Checkbox from 'expo-checkbox';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const FilterBottomSheet = ({ visible, onClose, onApply }) => {
-    const bottomSheetModalRef = useRef(null);
+const FilterBottomSheet = forwardRef(({ onClose, onApply }, ref) => {
     const snapPoints = useMemo(() => ['25%', '70%'], []);
     const [selectedCategory, setSelectedCategory] = useState([]);
     const [meetingType, setMeetingType] = useState(null);
@@ -33,18 +33,13 @@ const FilterBottomSheet = ({ visible, onClose, onApply }) => {
         };
         onApply(filters);
         onClose();
-        bottomSheetModalRef.current?.close();
     };
 
-    const handleOpen = useCallback(() => {
-        bottomSheetModalRef.current?.present();
-    }, []);
-
     return (
-        <GestureHandlerRootView style={{flex: 1}}>
-        <BottomSheetModalProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
             <BottomSheetModal
-                ref={bottomSheetModalRef}
+                ref={ref}
                 index={1}
                 snapPoints={snapPoints}
                 onDismiss={onClose}
@@ -116,11 +111,10 @@ const FilterBottomSheet = ({ visible, onClose, onApply }) => {
                     </TouchableOpacity>
                 </View>
             </BottomSheetModal>
-        </BottomSheetModalProvider>
+            </BottomSheetModalProvider>
         </GestureHandlerRootView>
     );
-};
-
+});
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,

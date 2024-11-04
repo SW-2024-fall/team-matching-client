@@ -26,23 +26,22 @@ function FilterBtn({ onOpen }) {
 }
 
 export default function MeetingBoard({ navigation }) {
-    const [filterVisible, setFilterVisible] = useState(false);
     const [filteredData, setFilteredData] = useState(DATA);
+    const filterBottomSheetRef = useRef(null);
 
     const handleFilterApply = (filters) => {
-        const { categories, meetingType, recruitmentStatus, minParticipants, maxParticipants } = filters;
+        const { categories, meetingType, minParticipants, maxParticipants } = filters;
 
         const newData = DATA.filter(item => {
             const meetsCategory = categories.length === 0 || categories.some(category => item.features.includes(category));
             const meetsMeetingType = meetingType ? item.meetingType === meetingType : true;
-            const meetsRecruitmentStatus = recruitmentStatus ? item.recruitmentStatus === recruitmentStatus : true;
             const meetsParticipants = item.currentParticipants >= minParticipants && item.currentParticipants <= maxParticipants;
 
-            return meetsCategory && meetsMeetingType && meetsRecruitmentStatus && meetsParticipants;
+            return meetsCategory && meetsMeetingType && meetsParticipants;
         });
 
         setFilteredData(newData);
-        setFilterVisible(false); // 필터 적용 후 바텀 시트 닫기
+        filterBottomSheetRef.current?.close(); // 필터 적용 후 바텀 시트 닫기
     };
 
     const renderItem = ({ item }) => (
@@ -56,9 +55,14 @@ export default function MeetingBoard({ navigation }) {
         navigation.navigate(PAGES.CREATE_MEETING);
     };
 
+    const openFilterBottomSheet = () => {
+        console.log("필터 버튼 클릭됨");
+        filterBottomSheetRef.current?.present();
+    };
+
     return (
         <Layout screen={PAGES.MEETING_BOARD} 
-                RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
+                RightComponent={() => <FilterBtn onOpen={openFilterBottomSheet} />} style={styles.layout}>
             <View style={styles.container}>
                 <FlatList 
                     data={filteredData}
@@ -66,8 +70,8 @@ export default function MeetingBoard({ navigation }) {
                     keyExtractor={item => item.id}
                 />
                 <FilterBottomSheet 
-                    visible={filterVisible} 
-                    onClose={() => setFilterVisible(false)} 
+                    ref={filterBottomSheetRef}
+                    onClose={() => filterBottomSheetRef.current?.close()}
                     onApply={handleFilterApply} 
                 />
             </View>
@@ -86,8 +90,8 @@ const styles = StyleSheet.create({
     },
     floatingButton: {
         position: 'absolute',
-        bottom: 20, // 화면 하단에서의 위치
-        right: 20, // 화면 오른쪽에서의 위치
-        zIndex: 1, // 다른 컴포넌트 위에 표시되도록 z-index 설정
+        bottom: 20,
+        right: 20,
+        zIndex: 1,
     },
 });
