@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import FilterIcon from '@assets/filterIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
 import MeetingItem from '@pages/meetingBoard/components/MeetingItem.jsx';
-import FilterModal from '@pages/meetingBoard/components/FilterModal';
+import FilterBottomSheet from '@pages/meetingBoard/components/FilterBottomSheet'; // 바텀 시트 컴포넌트
 import FloatingButton from '@pages/meetingBoard/components/FloatingButton';
 
 const DATA = [
@@ -42,7 +42,7 @@ export default function MeetingBoard({ navigation }) {
         });
 
         setFilteredData(newData);
-        setFilterVisible(false);
+        setFilterVisible(false); // 필터 적용 후 바텀 시트 닫기
     };
 
     const renderItem = ({ item }) => (
@@ -65,7 +65,7 @@ export default function MeetingBoard({ navigation }) {
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                 />
-                <FilterModal 
+                <FilterBottomSheet 
                     visible={filterVisible} 
                     onClose={() => setFilterVisible(false)} 
                     onApply={handleFilterApply} 
