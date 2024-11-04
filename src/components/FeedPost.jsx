@@ -15,10 +15,12 @@ const FeedPost = ({ name, title, profileUrl, thumbnailUrl, preview }) => {
                     <Text style={styles.title}>{title}</Text>
                 </View>
             </View>
-            <Image 
-                source={typeof thumbnailUrl === 'string' ? { uri: thumbnailUrl } : thumbnailUrl} 
-                style={styles.thumbnailUrl} 
-            />
+            {thumbnailUrl && (
+                <Image 
+                    source={typeof thumbnailUrl === 'string' ? { uri: thumbnailUrl } : thumbnailUrl} 
+                    style={styles.thumbnailUrl} 
+                />
+            )}
             <Text style={styles.postPreview} numberOfLines={3}>{preview}</Text>
         </View>
     );

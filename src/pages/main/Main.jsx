@@ -10,7 +10,7 @@ export default function Main({ navigation }) {
     const stories = [
         { imageUrl: require('@assets/testImage/frownyFace.png'), userId: 'user1' },
         { imageUrl: require('@assets/testImage/aCat.png'), userId: 'user2' },
-        { imageUrl: null, userId: 'user3' },
+        { imageUrl: require('@assets/testImage/aSnail.jpg'), userId: 'user3' },
         { imageUrl: null, userId: 'user4' },
         { imageUrl: null, userId: 'user5' },
         { imageUrl: null, userId: 'user6' },
@@ -40,8 +40,8 @@ export default function Main({ navigation }) {
             id: '3',
             name: 'User Three',
             title: 'Title Three',
-            profileUrl: null,
-            thumbnailUrl: null,
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
             preview: '3줄까지만 보이는 텍스트',
         },
     ];
