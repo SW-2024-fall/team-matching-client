@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Layout from '@layout/layout';
-import ProfileInfo from '@components/ProfileInfo';
-import MeetingItem from '@components/MeetingItem';
+import ProfileInfo from '@pages/profile/components/ProfileInfo';
+import MeetingItem from '@pages/profile/components/MeetingItem';
 import { theme } from '@styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
 import MyProfile from './MyProfile';
