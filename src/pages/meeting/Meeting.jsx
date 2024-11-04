@@ -70,10 +70,12 @@ export default function Meeting() {
   };
 
   return (
+    // <ActivityDatail></ActivityDatail>
     // <VerifyEmail></VerifyEmail>
     // <Register></Register>
-    // <ActivityDatail></ActivityDatail>
     <Layout screen={PAGES.MEETING} title={title}>
+
+
       <Container>
         <Header>
           <WithLocalSvg
@@ -111,8 +113,8 @@ export default function Meeting() {
         {activeTab === 1 && <TeamMemberList></TeamMemberList>}
         {activeTab === 2 && <MeetingRecordList></MeetingRecordList>}
         <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
-      </Container>
-    </Layout>
+      </Container> 
+    </Layout >
   );
 }
 
