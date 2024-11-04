@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { Modal, View, Text, Button, StyleSheet, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
+import BottomSheet from '@gorhom/bottom-sheet';
 import RadioButtonRN from 'radio-buttons-react-native'; // 라디오 버튼 컴포넌트
 import { theme } from '@styles/ThemeStyles';
 
@@ -12,20 +13,13 @@ const FilterModal = ({ visible, onClose, onApply }) => {
     const [activeFilter, setActiveFilter] = useState('category'); // 기본 활성화 필터는 '카테고리'
 
     const categories = [
-        "학술/연구",
-        "인문학/책/글",
-        "사진/영상",
-        "운동",
-        "외국/언어",
-        "음악/악기",
-        "댄스/무용",
-        "면접/취준",
-        "공연/축제",
-        "캠핑/여행",
-        "봉사활동",
-        "게임/오락",
-        "기타"
+        "학술/연구", "인문학/책/글", "사진/영상", "운동",
+        "외국/언어", "음악/악기", "댄스/무용", "면접/취준",
+        "공연/축제", "캠핑/여행", "봉사활동", "게임/오락",
     ];
+
+    const bottomSheetRef = useRef(null);
+    const snapPoints = useMemo(() => ['50%', '90%'], []);
 
     const toggleCategory = (category) => {
         setSelectedCategory(prev => 
@@ -37,7 +31,6 @@ const FilterModal = ({ visible, onClose, onApply }) => {
         const filters = {
             categories: selectedCategory,
             meetingType,
-            recruitmentStatus,
             minParticipants,
             maxParticipants,
         };
@@ -45,17 +38,38 @@ const FilterModal = ({ visible, onClose, onApply }) => {
         onClose();
     };
 
+    const renderCategoryCheckbox = (category) => (
+        <Pressable 
+            key={category}
+            onPress={() => toggleCategory(category)}
+            style={[styles.checkboxContainer, selectedCategory.includes(category) && styles.selectedCheckboxContainer]}>
+            <Checkbox
+                value={selectedCategory.includes(category)}
+                onValueChange={() => toggleCategory(category)}
+                style={styles.checkbox}
+            />
+            <Text style={[styles.checkboxText, selectedCategory.includes(category) && styles.selectedCheckboxText]}>
+                {category}
+            </Text>
+        </Pressable>
+    );
+
     return (
-        <Modal visible={visible} animationType="slide" transparent={true}>
-            <View style={styles.modalContainer}>
+        <Modal visible={visible} transparent={true}>
+            <BottomSheet
+                ref={bottomSheetRef}
+                snapPoints={snapPoints}
+                index={0}
+                onClose={onClose}
+                backgroundStyle={styles.modalContainer}
+                enablePanDownToClose
+            >
                 <View style={styles.header}>
                     <Text style={styles.title}>필터</Text>
                     <Pressable onPress={onClose}>
                         <Text style={styles.closeButton}>X</Text>
                     </Pressable>
                 </View>
-
-                {/* 상단 필터 항목을 가로로 나열 */}
                 <View style={styles.filterTabs}>
                     <Pressable onPress={() => setActiveFilter('category')}>
                         <Text style={[styles.tabText, activeFilter === 'category' && styles.activeTabText]}>카테고리</Text>
@@ -66,8 +80,8 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                     <Pressable onPress={() => setActiveFilter('participants')}>
                         <Text style={[styles.tabText, activeFilter === 'participants' && styles.activeTabText]}>인원 수</Text>
                     </Pressable>
-                    
                 </View>
+
                 {/* 선 추가 */}
                 <View style={styles.separator} />
                 {/* 선택된 필터에 따라 옵션 표시 */}
@@ -152,7 +166,7 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                         <Text style={styles.applyButtonText}>적용</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+                </BottomSheet>
         </Modal>
     );
 };
