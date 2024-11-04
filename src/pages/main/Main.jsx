@@ -11,6 +11,9 @@ export default function Main({ navigation }) {
       <Pressable onPress={() => navigation.navigate(PAGES.MEETING_BOARD)}>
         <Text>Let's go meeting board</Text>
       </Pressable>
+      <Pressable onPress={() => navigation.navigate(PAGES.MEETING_CREATE)}>
+        <Text>Let's go meeting create</Text>
+      </Pressable>
       <Pressable
         onPress={() => navigation.navigate(PAGES.MEETING, { id: 1, title: 'meeting sample 1' })}
       >

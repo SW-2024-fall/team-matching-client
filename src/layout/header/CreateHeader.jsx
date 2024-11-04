@@ -1,5 +1,6 @@
 import BaseHeader from '@layout/header/BaseHeader';
 import { Pressable } from 'react-native';
+import { theme } from '../../styles/ThemeStyles';
 import styled from 'styled-components';
 
 const HeaderText = styled.Text`
