@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Layout from '@layout/layout';
 import ProfileInfo from '@pages/profile/components/ProfileInfo';
-import EditProfileButton from '@pages/profile/compoenets/EditProfileButton';
+import EditProfileButton from '@pages/profile/components/EditProfileButton.jsx';
 import { theme } from '@styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
 import BottomTab from '@pages/profile/components/BottomTab';
