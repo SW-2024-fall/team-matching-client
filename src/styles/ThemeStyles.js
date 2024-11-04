@@ -17,9 +17,10 @@ export const greyBlueColors = {
   700: '#002D63',
 };
 
-export const blueColors = {
-  100: '#B9D9EB',
-  200: '#9BCBEB',
+const blueColors = {
+  100: '#E6F3FF',
+  200: '#B9D9EB',
+  300: '#9BCBEB',
   400: '#0098FF',
   500: '#0082FF',
   600: '#0066EB',
@@ -51,28 +52,36 @@ export const theme = {
   },
   border: {
     radius: {
+      xSmall: '6px',
       small: '8px',
       primary: '12px',
       medium: '12px',
       large: '16px',
+      xLarge: '28px',
     },
     color: greyColors[400],
   },
   colors: {
+    divider: greyColors[200],
     grey: {
       border: greyColors[400],
       light: greyColors[200],
+      blur: greyColors[700],
       primary: greyColors[800],
       dark: greyColors[900],
     },
     blue: {
-      light: blueColors[100],
+      light: blueColors[200],
       primary: blueColors[500],
       hover: blueColors[600],
     },
     background: {
       primary: '#FFFFFF',
+      light: blueColors[100],
       appbar: greyColors[100],
+    },
+    red: {
+      primary: '#FF576B',
     },
   },
 };

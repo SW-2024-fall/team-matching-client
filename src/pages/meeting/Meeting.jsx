@@ -58,8 +58,7 @@ const comments = [
   },
 ];
 
-export default function Meeting() {
-  const route = useRoute();
+export default function Meeting({ route }) {
   const { id, title } = route.params;
 
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
