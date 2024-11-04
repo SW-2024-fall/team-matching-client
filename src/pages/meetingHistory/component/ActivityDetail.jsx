@@ -5,14 +5,14 @@ import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import styled from 'styled-components/native';
 import { WithLocalSvg } from 'react-native-svg/css';
-import runningPhoto from '../../assets/runningPhoto.svg';
-import ActivityDatailInfo from './component/ActivityDetailInfo';
-import ActivityMemberList from './component/ActivityMemberList';
-import ActivityRecord from './component/ActivityRecord';
+import runningPhoto from '../../../assets/runningPhoto.svg';
+import ActivityDatailInfo from './ActivityDetailInfo';
+import ActivityMemberList from './ActivityMemberList';
+import ActivityRecord from './ActivityRecord';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function MeetingHistory() {
+export default function ActivityDatail() {
   const route = useRoute();
   const { id, title } = route.params;
 
@@ -84,6 +84,7 @@ const TabWrapper = styled(Pressable)`
 const Tab = styled.Text`
   color: ${({ isActive, theme }) => (isActive ? theme.font.color.primary : 'white')};
 `;
+
 
 
 

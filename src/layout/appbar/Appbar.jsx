@@ -45,7 +45,7 @@ export default function Appbar() {
   };
 
   const goProfile = () => {
-    navigation.navigate(PAGES.MYPROFILE);
+    navigation.navigate(PAGES.PROFILE, {access: "me"});
   };
 
   return (

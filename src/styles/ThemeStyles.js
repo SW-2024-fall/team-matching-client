@@ -1,4 +1,4 @@
-const greyColors = {
+export const greyColors = {
   100: '#F9FAFB',
   200: '#E5E8EB',
   400: '#b0b8c1',
@@ -8,7 +8,7 @@ const greyColors = {
   900: '#191f28',
 };
 
-const greyBlueColors = {
+export const greyBlueColors = {
   100: '#B9D9EB',
   200: '#9BCBEB',
   400: '#0077C8',

@@ -1,14 +1,13 @@
-import { PAGES } from '@navigation/constant';
-import Layout from '@layout/layout';
+import React, { useState } from 'react';
 import { Text } from 'react-native';
-
-export default function Profile({ route }) {
-  const screen = route.name;
-  const isMe = screen == PAGES.MYPROFILE;
-
-  return (
-    <Layout screen={screen}>
-      <Text>{isMe ? '내 프로필' : '상대방 프로필  '}</Text>
-    </Layout>
-  );
+import styled from 'styled-components';
+import Foundation from '@expo/vector-icons/Foundation';
+import Layout from '../../layout/layout';
+import { PAGES } from '@navigation/constant';
+export default function Profile({ navigation }) {
+    return (
+        <Layout screen={PAGES.PROFILE} navigation={navigation}>
+            <View></View>
+        </Layout>
+    );
 }
