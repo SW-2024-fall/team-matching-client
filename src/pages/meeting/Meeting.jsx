@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, Pressable, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
@@ -18,6 +18,32 @@ import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import MeetingHistory from '../meetingHistory/MeetingHistory';
 const screenWidth = Dimensions.get('window').width;
 
+export const meetingData = {
+  name: "모임 이름 예시!!",
+	type: "REGULAR", // ONE_TIME
+	title: "모임 모집글 제목", //nullable
+	categories: ["EXCERCISE", "RESEARCH"], // enum MeetingCategory
+	features: [ "친목", "몰라", "뭐_넣지" ],
+	analyzed_features: [ "분석된_특징", "어떨려나" ],
+	analyzed_introduction: "승부에 진심이 사람들이 모인 모임이에요! 열정적으로 참여하고 싶은 분께 적절할 것 같아요!",
+	content: "모임 설명 다 넣어서 드릴게요", // nullable
+	thumbnailUrls: 'url1',
+	currentParticipant: 1,
+	maxParticipant: 2,
+	startDate: "2023.11.12",
+	endDate: "2024.1.2",
+	likeCount: 10,
+	isLiked: true, // 현재 보고 있는 사용자가 좋아요을 눌렀는지
+	commentCount: 10,
+	scrapCount: 10,
+	days: [ "MON", "WED", "FRI"], // nullable,
+	meta: "주인장이 설정한 추가 모임 정보",
+	location: "백주년기념관 나동 980호",
+	startTime: "20:00",
+	endTime: "21:30",
+	isRecruiting: true,
+
+}
 const comments = [
   {
     name: '김철수',
@@ -60,10 +86,44 @@ const comments = [
 
 export default function Meeting() {
   const route = useRoute();
-  const { id, title } = route.params;
+  // const { id, title } = route.params;
 
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
 
+  //**Get meeting Info**
+  // const meetingId = 1;
+  // const [meetingData, setMeetingData] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+  // useEffect(() => {
+  //   const fetchMeetingData = async () => {
+  //     try {
+  //       const response = await fetch(`/api/meeting/${meetingId}`);
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! status: ${response.status}`);
+  //       }
+  //       const data = await response.json();
+  //       setMeetingData(data);
+  //     } catch (err) {
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchMeetingData();
+  // })
+  // if (loading) {
+  //   return <ActivityIndicator size="large" color="#0000ff" />;
+  // }
+
+  // if (error) {
+  //   return (
+  //     <View>
+  //       <Text>Error: {error}</Text>
+  //     </View>
+  //   );
+  // }
+  /////////////////////////////
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
@@ -72,9 +132,7 @@ export default function Meeting() {
     // <MeetingHistory></MeetingHistory>
     // <VerifyEmail></VerifyEmail>
     // <Register></Register>
-    <Layout screen={PAGES.MEETING} title={title}>
-
-
+    <Layout screen={PAGES.MEETING} title={meetingData.name}>
       <Container>
         <Header>
           <WithLocalSvg
@@ -99,7 +157,7 @@ export default function Meeting() {
           </TabWrapper>
         </TabContainer>
 
-        {activeTab === 0 && <MeetingInfo title={title} />}
+        {activeTab === 0 && <MeetingInfo title={meetingData.name} />}
         {activeTab === 0 && <Line></Line>}
         {activeTab === 0 && <CommentView comments={comments} />}
         {activeTab === 0 && <CommentInputWrapper>
@@ -112,7 +170,7 @@ export default function Meeting() {
         {activeTab === 1 && <TeamMemberList></TeamMemberList>}
         {activeTab === 2 && <MeetingRecordList></MeetingRecordList>}
         <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
-      </Container> 
+      </Container>
     </Layout >
   );
 }

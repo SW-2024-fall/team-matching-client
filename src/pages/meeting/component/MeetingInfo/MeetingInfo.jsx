@@ -6,51 +6,65 @@ import { WithLocalSvg } from 'react-native-svg/css';
 import location from '../../../../assets/location.svg';
 import calendar from '../../../../assets/calendar.svg';
 import o from '../../../../assets/o.svg'
+
+import { meetingData } from "../../Meeting";
+const daysToKoreanText = (days) => {
+    // 요일 약어와 한글 요일명을 매핑한 객체 생성
+    const dayMap = {
+      MON: '월',
+      TUE: '화',
+      WED: '수',
+      THU: '목',
+      FRI: '금',
+      SAT: '토',
+      SUN: '일',
+    };
+  
+    // 주어진 days 배열을 한글 요일명으로 변환하고 '/'로 연결
+    const koreanDays = days.map(day => dayMap[day]).join('/');
+  
+    return `매주 ${koreanDays}`;
+  };
+
 export default function MeetingInfo({ title }) {
 
     return (
         <Container>
 
             <Header>
-                <HeaderTitle>{title}</HeaderTitle>
-                <HeaderContent>배드민턴 치고 싶은데 혼자 치기는 싫은 사람 모여!</HeaderContent>
+                <HeaderTitle>{meetingData.name}</HeaderTitle>
+                <HeaderContent>{meetingData.content}</HeaderContent>
                 <HeaderFooter>
                     <HeaderFooterLeft>
-                        <HeaderFootText>♡ 998    </HeaderFootText>
-                        <HeaderFootText>☆ 998</HeaderFootText>
+                        <HeaderFootText>♡ {meetingData.likeCount}    </HeaderFootText>
+                        <HeaderFootText>☆ {meetingData.scrapCount}</HeaderFootText>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
                         <WithLocalSvg
                             asset={hand}
                         />
-                        <HeaderFootText>  2/4</HeaderFootText>
+                        <HeaderFootText>  {meetingData.currentParticipant}/{meetingData.maxParticipant}</HeaderFootText>
                     </HeaderFooterRight>
                 </HeaderFooter>
             </Header>
             <Body>
                 <MeetingAiInfo></MeetingAiInfo>
                 <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={calendar}
-                    /><BodyText>  24.04.15~24.10.23 매주 월/수/금요일 20:00~21:30</BodyText>
-                </BodyTextWarraper>
-
-                <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={location}
-                    /><BodyText>  백주념기념관 나동 990호</BodyText>
+                    <WithLocalSvg asset={calendar}/>
+                    <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText>
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={o}
-                    /><BodyText>    출석점수 60점 이하 참여 불가 </BodyText>
+                    <WithLocalSvg asset={location}/>
+                    <BodyText>  {meetingData.location}</BodyText>
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={o}
-                    /><BodyText>    참가비: 20000원  </BodyText>
+                    <WithLocalSvg asset={o}/>
+                    <BodyText>    {meetingData.meta} </BodyText>
                 </BodyTextWarraper>
-    
+                <BodyTextWarraper>
+                    <WithLocalSvg asset={o}/>
+                    <BodyText>    참가비: 20000원  </BodyText>
+                </BodyTextWarraper>
             </Body>
         </Container>
     )

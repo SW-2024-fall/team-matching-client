@@ -1,12 +1,10 @@
-import { View, Text, FlatList, TextInput,Dimensions } from "react-native";
+import { View, Text, FlatList, TextInput } from "react-native";
 import styled from "styled-components/native";
 import { WithLocalSvg } from 'react-native-svg/css';
 import profile1 from '../../../../assets/profileExample1.svg';
 import profile2 from '../../../../assets/profileExample2.svg';
 import CommentItem from "./CommentItem";
 import { greyBlueColors } from "../../../../styles/ThemeStyles";
-
-const screenWidth = Dimensions.get('window').width;
 
 export default function CommentView({ comments }) {
   const count = comments.length;
