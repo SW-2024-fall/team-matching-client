@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Layout from '@layout/layout';
-import ProfileInfo from '@components/ProfileInfo';
-import EditProfileButton from '@components/EditProfileButton';
+import ProfileInfo from '@pages/profile/components/ProfileInfo';
+import EditProfileButton from '@pages/profile/compoenets/EditProfileButton';
 import { theme } from '@styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
-import BottomTab from '@components/BottomTab';
+import BottomTab from '@pages/profile/components/BottomTab';
 import profileImage from '@assets/testImage/frownyFace.png'
 
 
