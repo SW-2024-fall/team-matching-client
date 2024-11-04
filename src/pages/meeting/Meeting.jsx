@@ -3,20 +3,19 @@ import { Text, Pressable, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
-import MeetingInfo from '../../components/Meeting/MeetingInfo/MeetingInfo';
+import MeetingInfo from './component/MeetingInfo/MeetingInfo';
 import styled from 'styled-components/native';
-import { theme } from '../../styles/ThemeStyles';
-import TeamMemberList from '../../components/Meeting/MeetingMember/TeamMemberList';
-import WatingMemberList from '../../components/Meeting/MeetingMember/WatingMembetList';
-import CommentView from '../../components/Meeting/MeetingInfo/CommentView';
+import TeamMemberList from './component/MeetingMember/TeamMemberList';
+import WatingMemberList from './component/MeetingMember/WatingMembetList';
+import CommentView from './component/MeetingInfo/CommentView';
 import VerifyEmail from '../auth/register/VerifyEmail';
 import { WithLocalSvg } from 'react-native-svg/css';
 import runningPhoto from '../../assets/runningPhoto.svg';
 import { greyBlueColors } from '../../styles/ThemeStyles';
 import uploadBtn from '../../assets/uploadBtn.svg';
-import ActivityDatail from '../../components/ActivityDetail/ActivityDetail';
 import Register from '../auth/register/Register';
-import MeetingRecordList from '../../components/Meeting/MeetingRecordList/MeetingRecordList';
+import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
+import MeetingHistory from '../meetingHistory/MeetingHistory';
 const screenWidth = Dimensions.get('window').width;
 
 const comments = [
@@ -70,7 +69,7 @@ export default function Meeting() {
   };
 
   return (
-    // <ActivityDatail></ActivityDatail>
+    // <MeetingHistory></MeetingHistory>
     // <VerifyEmail></VerifyEmail>
     // <Register></Register>
     <Layout screen={PAGES.MEETING} title={title}>

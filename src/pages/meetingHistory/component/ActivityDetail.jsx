@@ -5,7 +5,7 @@ import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import styled from 'styled-components/native';
 import { WithLocalSvg } from 'react-native-svg/css';
-import runningPhoto from '../../assets/runningPhoto.svg';
+import runningPhoto from '../../../assets/runningPhoto.svg';
 import ActivityDatailInfo from './ActivityDetailInfo';
 import ActivityMemberList from './ActivityMemberList';
 import ActivityRecord from './ActivityRecord';

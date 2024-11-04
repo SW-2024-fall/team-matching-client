@@ -1,7 +1,7 @@
 import { View, Text } from "react-native"
 import styled from "styled-components"
-import location from './../../assets/location.svg';
-import calendar from './../../assets/calendar.svg';
+import location from '../../../assets/location.svg';
+import calendar from '../../../assets/calendar.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 
 export default function ActivityDatailInfo() {

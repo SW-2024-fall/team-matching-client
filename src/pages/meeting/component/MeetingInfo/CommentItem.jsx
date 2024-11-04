@@ -1,9 +1,9 @@
 import { View, Text, FlatList } from "react-native";
 import styled from "styled-components/native";
 import { WithLocalSvg } from 'react-native-svg/css';
-import profile1 from '../../../assets/profileExample1.svg';
-import profile2 from '../../../assets/profileExample2.svg';
-import curveArrow from '../../../assets/curveArrow.svg';
+import profile1 from '../../../../assets/profileExample1.svg';
+import profile2 from '../../../../assets/profileExample2.svg';
+import curveArrow from '../../../../assets/curveArrow.svg';
 
 export default function CommentItem({ comment }) {
     return (

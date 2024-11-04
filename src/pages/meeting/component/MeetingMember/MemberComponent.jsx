@@ -1,7 +1,7 @@
 import { View, Text, Pressable } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
-import profile2 from '../../../assets/profileExample2.svg';
+import profile2 from '../../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 

@@ -2,7 +2,7 @@
 import { View, Text } from "react-native"
 import styled from "styled-components"
 import ActivityRecorder from "./ActivityRecorder"
-import menu from '../../assets/menu.svg';
+import menu from '../../../assets/menu.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 
 export default function ActivityRecord() {

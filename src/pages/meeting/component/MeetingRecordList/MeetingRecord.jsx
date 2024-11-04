@@ -1,9 +1,9 @@
 import { View, Text } from "react-native";
 import styled from "styled-components";
-import profile1 from '../../../assets/profileExample1.svg';
+import profile1 from '../../../../assets/profileExample1.svg';
 import { WithLocalSvg } from "react-native-svg/css";
-import menu from '../../../assets/menu.svg';
-import runningPhoto from '../../../assets/runningPhoto.svg';
+import menu from '../../../../assets/menu.svg';
+import runningPhoto from '../../../../assets/runningPhoto.svg';
 
 
 export default function MeetingRecord({ name, group, content }) {

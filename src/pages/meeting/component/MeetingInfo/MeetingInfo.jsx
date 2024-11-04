@@ -1,11 +1,11 @@
 import { View, Text } from "react-native"
 import styled from "styled-components"
 import MeetingAiInfo from "./MeetingAiInfo";
-import hand from '../../../assets/hand.svg';
+import hand from '../../../../assets/hand.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
-import location from '../../../assets/location.svg';
-import calendar from '../../../assets/calendar.svg';
-import o from '../../../assets/o.svg'
+import location from '../../../../assets/location.svg';
+import calendar from '../../../../assets/calendar.svg';
+import o from '../../../../assets/o.svg'
 export default function MeetingInfo({ title }) {
 
     return (
