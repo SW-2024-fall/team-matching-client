@@ -8,8 +8,8 @@ import FeedPost from '../../components/FeedPost';
 
 export default function Main({ navigation }) {
     const stories = [
-        { imageUrl:require('@assets/testImage/frownyFace.png'), userId: 'user1' },
-        { imageUrl: null, userId: 'user2' },
+        { imageUrl: require('@assets/testImage/frownyFace.png'), userId: 'user1' },
+        { imageUrl: require('@assets/testImage/aCat.png'), userId: 'user2' },
         { imageUrl: null, userId: 'user3' },
         { imageUrl: null, userId: 'user4' },
         { imageUrl: null, userId: 'user5' },
@@ -24,15 +24,15 @@ export default function Main({ navigation }) {
             id: '1',
             name: 'User One',
             title: 'Title One',
-            profileUrl: null,
-            thumbnailUrl: null,
-            preview: '3줄까지만 보이는 텍스트',
+            profileUrl: require('@assets/testImage/frownyFace.png'),
+            thumbnailUrl: require('@assets/testImage/orchestra.jpg'),
+            preview: '3줄까지만 보이는 텍스트입니다. 정말 세 줄까지 보일까요?!  한 번 테스트 해 봅니다. 여기에 모임 활동 내역에 대한 요약글을 적어두고, 적으면 3줄까지 보여줍니다!!!@@@',
         },
         {
             id: '2',
             name: 'User Two',
             title: 'Title Two',
-            profileUrl: null,
+            profileUrl: require('@assets/testImage/aCat.png'),
             thumbnailUrl: null,
             preview: '3줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다11111.!!!3줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다.2222!!!3333줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다.!!!3줄까지만 보이는 텍스트 3줄까지만 보이는 지 테스트 합니다.!!!',
         },
