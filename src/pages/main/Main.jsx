@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, FlatList , Image} from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import { theme } from '../../styles/ThemeStyles';
-import StoryCircle from '../../components/StoryCircle';
-import FeedPost from '../../components/FeedPost';
+import StoryCircle from '@pages/main/components/StoryCircle';
+import FeedPost from '@pages/main/components/FeedPost';
 
 export default function Main({ navigation }) {
     const stories = [
