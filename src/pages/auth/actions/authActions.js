@@ -1,6 +1,6 @@
 import * as types from '../types';
 import AsyncStorage from '@react-native-community/async-storage';
-import { request } from './api'; // request 함수는 API 요청을 보낼 때 사용할 유틸리티 함수로 가정
+//import { request } from './api'; // request 함수는 API 요청을 보낼 때 사용할 유틸리티 함수로 가정
 
 export function login(dataToSubmit) {
     const data = request("POST", "/login", dataToSubmit);
