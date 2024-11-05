@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, Pressable, Dimensions } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Text, Pressable, Dimensions, Animated } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
@@ -16,32 +16,54 @@ import uploadBtn from '../../assets/uploadBtn.svg';
 import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import MeetingHistory from '../meetingHistory/MeetingHistory';
-const screenWidth = Dimensions.get('window').width;
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+export const meetingDetail = {
+  id: 1123,
+  userRole: "CO_LEADER",
+  info: { meetingData },
+  member: { members }
+};
+const members = { // MeetingMember 그대로
+  member:
+    [
+      {
+        id: 1,
+        name: "김가가",
+        profileUrl: "afljadf",
+        attendenceScore: 100,
+        major: "COMPUTER_SIENCE", // enum Major 참고
+        studentId: 20,
+        phoneNumber: "010-1234-1234", // Role에 따라 안줄 수 있음
+        features: ["활발", "승부욕"],
+      },
+    ]
+}
 export const meetingData = {
   name: "모임 이름 예시!!",
-	type: "REGULAR", // ONE_TIME
-	title: "모임 모집글 제목", //nullable
-	categories: ["EXCERCISE", "RESEARCH"], // enum MeetingCategory
-	features: [ "친목", "몰라", "뭐_넣지" ],
-	analyzed_features: [ "분석된_특징", "어떨려나" ],
-	analyzed_introduction: "승부에 진심이 사람들이 모인 모임이에요! 열정적으로 참여하고 싶은 분께 적절할 것 같아요!",
-	content: "모임 설명 다 넣어서 드릴게요", // nullable
-	thumbnailUrls: 'url1',
-	currentParticipant: 1,
-	maxParticipant: 2,
-	startDate: "2023.11.12",
-	endDate: "2024.1.2",
-	likeCount: 10,
-	isLiked: true, // 현재 보고 있는 사용자가 좋아요을 눌렀는지
-	commentCount: 10,
-	scrapCount: 10,
-	days: [ "MON", "WED", "FRI"], // nullable,
-	meta: "주인장이 설정한 추가 모임 정보",
-	location: "백주년기념관 나동 980호",
-	startTime: "20:00",
-	endTime: "21:30",
-	isRecruiting: true,
+  type: "REGULAR", // ONE_TIME
+  title: "모임 모집글 제목", //nullable
+  categories: ["EXCERCISE", "RESEARCH"], // enum MeetingCategory
+  features: ["친목", "몰라", "뭐_넣지"],
+  analyzed_features: ["분석된_특징", "어떨려나"],
+  analyzed_introduction: "승부에 진심이 사람들이 모인 모임이에요! 열정적으로 참여하고 싶은 분께 적절할 것 같아요!",
+  content: "모임 설명 다 넣어서 드릴게요", // nullable
+  thumbnailUrls: 'url1',
+  currentParticipant: 1,
+  maxParticipant: 2,
+  startDate: "2023.11.12",
+  endDate: "2024.1.2",
+  likeCount: 10,
+  isLiked: true, // 현재 보고 있는 사용자가 좋아요을 눌렀는지
+  commentCount: 10,
+  scrapCount: 10,
+  days: ["MON", "WED", "FRI"], // nullable,
+  meta: "주인장이 설정한 추가 모임 정보",
+  location: "백주년기념관 나동 980호",
+  startTime: "20:00",
+  endTime: "21:30",
+  isRecruiting: true,
 
 }
 const comments = [
@@ -87,7 +109,13 @@ const comments = [
 export default function Meeting() {
   const route = useRoute();
   // const { id, title } = route.params;
+  const scrollY = useRef(new Animated.Value(0)).current;
 
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 300],
+    outputRange: [0, -50],
+    extrapolate: 'clamp',
+  });
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
 
   //**Get meeting Info**
@@ -165,10 +193,15 @@ export default function Meeting() {
           <UploadBtnWraaper><WithLocalSvg
             asset={uploadBtn} /></UploadBtnWraaper>
         </CommentInputWrapper>}
-        {activeTab === 1 && <WatingMemberList></WatingMemberList>}
-        {activeTab === 1 && <Line></Line>}
+
+        {activeTab === 1 && (meetingDetail.userRole === "LEADER" || meetingDetail.userRole === "CO_LEADER") && <WatingMemberList></WatingMemberList>}
+        {activeTab === 1 && (meetingDetail.userRole === "LEADER" || meetingDetail.userRole === "CO_LEADER") && <Line></Line>}
         {activeTab === 1 && <TeamMemberList></TeamMemberList>}
+
         {activeTab === 2 && <MeetingRecordList></MeetingRecordList>}
+        {activeTab === 2 && <PlusBtn translateY={translateY}><Text>+</Text></PlusBtn>}
+
+
         <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
       </Container>
     </Layout >
@@ -231,4 +264,20 @@ const UploadBtnWraaper = styled.View`
   right:18px;
   top:10px;
 `;
-
+const PlusBtn = styled(Animated.View).attrs(({ translateY }) => ({
+  style: {
+    transform: [{ translateY }],
+  },
+}))`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: coral;
+  padding: 10px;
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+`;

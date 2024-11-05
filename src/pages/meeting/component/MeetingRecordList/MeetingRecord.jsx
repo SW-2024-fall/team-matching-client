@@ -1,13 +1,14 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable, Button } from "react-native";
 import styled from "styled-components";
 import profile1 from '../../../../assets/profileExample1.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 import menu from '../../../../assets/menu.svg';
 import runningPhoto from '../../../../assets/runningPhoto.svg';
-
+import useModal from "../../../../hooks/useModal";
 
 export default function MeetingRecord({ name, group, content }) {
     const previewText = content.length > 100 ? `${content.substring(0, 100)}...` : content;
+    const { Modal, open, close } = useModal();
     return (
         <Container >
             <Header>
@@ -18,7 +19,22 @@ export default function MeetingRecord({ name, group, content }) {
                         <MeetingName >{group}</MeetingName>
                     </HeaderNameContainer>
                 </HeaderLeft>
-                <WithLocalSvg asset={menu} />
+                <Pressable onPress={open}>
+                    <WithLocalSvg asset={menu} />
+                </Pressable>
+                <Modal>
+                    <View style={{ padding: 20, alignItems: 'center' }}>
+                        <Text style={{ marginBottom: 10 }}>삭제하시겠습니까?</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Pressable onPress={close} style={{ padding: 10, backgroundColor: 'lightgrey', marginRight: 10, borderRadius: 5 }}>
+                                <Text>OK</Text>
+                            </Pressable>
+                            <Pressable onPress={close} style={{ padding: 10, backgroundColor: 'lightgrey', borderRadius: 5 }}>
+                                <Text>Cancel</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </Modal>
             </Header>
             <PhotoWrapper>
                 <WithLocalSvg asset={runningPhoto} />

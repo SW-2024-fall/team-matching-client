@@ -1,13 +1,14 @@
-import { Text, View, FlatList, } from "react-native";
+import { Text, View, FlatList,Dimensions } from "react-native";
 import MeetingRecord from "./MeetingRecord";
 import styled from "styled-components";
-
+import { meetingDetail } from "../../Meeting";
+import { Pressable } from "react-native";
 const data = [
     { id: '1', name: '홍길동', group: '독서 모임', content: '오늘 독서 모임 정말 좋았어요! 오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!' },
     { id: '2', name: '최재원', group: '개발 모임', content: '오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.' },
     { id: '3', name: '권민재', group: '운동 모임', content: '축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.' },
 ];
-
+const screenWidth = Dimensions.get('window').width;
 export default function MeetingRecordList() {
     return (
         <Container>
@@ -18,6 +19,7 @@ export default function MeetingRecordList() {
                     <MeetingRecord name={item.name} group={item.group} content={item.content} />
                 )}
             />
+            
         </Container>
     )
 }

@@ -18,8 +18,9 @@ export const greyBlueColors = {
 };
 
 export const blueColors = {
-  100: '#B9D9EB',
-  200: '#9BCBEB',
+  100: '#E6F3FF',
+  200: '#B9D9EB',
+  300: '#9BCBEB',
   400: '#0098FF',
   500: '#0082FF',
   600: '#0066EB',

@@ -2,8 +2,9 @@ import { View, Text, Pressable } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
 import profile2 from '../../../../assets/profileExample2.svg';
-
 import { WithLocalSvg } from "react-native-svg/css";
+import { meetingDetail } from "../../Meeting";
+
 
 export default function MemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags }) {
     return (
@@ -17,12 +18,15 @@ export default function MemberComponent({ name, studentId, phoneNo, attendanceSc
 
                         </View>
                         <Name>{name}</Name>
-                        <OutPressable>
-                            <OutText>부모임장 승급 </OutText>
-                        </OutPressable>
-                        <OutPressable>
-                            <OutText>내보내기</OutText>
-                        </OutPressable>
+                        {(meetingDetail.userRole === "LEADER" || meetingDetail.userRole === "CO_LEADER") &&
+                            <OutPressable>
+                                <OutText>부모임장 승급 </OutText>
+                            </OutPressable>}
+                        {(meetingDetail.userRole === "LEADER" || meetingDetail.userRole === "CO_LEADER") &&
+                            <OutPressable>
+                                <OutText>내보내기</OutText>
+                            </OutPressable>}
+
 
                     </BaseInfoHeader>
 
