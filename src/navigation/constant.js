@@ -1,0 +1,17 @@
+export const PAGES = {
+  AUTH: 'Auth',
+  MAIN: 'Main',
+  LOGIN: 'Login',
+  REGISTER: 'Register',
+  VERIFY_EMAIL: 'VerifyEmail',
+  REGISTER_INFO: 'RegisterInfo',
+  MEETING_BOARD: 'MeetingBoard',
+  MEETING: 'Meeting',
+  MEETING_CREATE: 'MeetingCreate',
+  MEETING_HISTORY: 'MeetingHistory',
+  MEETING_HISTORY_CREATE: 'MeetingHistoryCreate',
+  RECOMMEND: 'Recommend',
+  MYPROFILE: 'MyProfile',
+  PROFILE: 'Profile',
+  PROFILE_EDIT: 'ProfileEdit',
+};

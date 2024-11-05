@@ -1,23 +1,15 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from 'react-native';
-import CreateMeetingScreen from './pages/CreateMeetingScreen';
-import ActivityDetailScreen from './pages/ActivityDetailScreen';
+import { theme } from './styles/ThemeStyles';
+import { ThemeProvider } from 'styled-components';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import Navigation from '@navigation/navigation';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* <CreateMeetingScreen /> */}
-      <ActivityDetailScreen />
-    </SafeAreaView>
+    <ThemeProvider theme={theme}>
+      <Navigation />
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
