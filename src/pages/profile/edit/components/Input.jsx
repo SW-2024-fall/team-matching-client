@@ -8,8 +8,7 @@ const Input = ({ placeholder, value, onChangeText, style, multiline}) => {
       style={[styles.input, style]}
       placeholder={placeholder}
       value={value}
-      multiline={multiline}
-      onChangeText={onChangeText}
+      editable={false}
     />
   );
 };

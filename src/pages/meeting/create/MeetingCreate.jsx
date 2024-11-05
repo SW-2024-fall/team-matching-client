@@ -6,6 +6,7 @@ import Button from './components/Button'; // 경로를 상황에 맞게 수정�
 import Input from './components/Input';
 import DayButton from './components/DayButton';
 import ImageButton from './components/ImageButton';
+import * as ImagePicker from 'expo-image-picker'
 import SelectLabel from './components/SelectLabel';
 import RadioButtonGroup from './components/RadioButtonGroup';
 import { Calendar } from 'react-native-calendars';
