@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { View, Text } from 'react-native';
-
+import { autoLogin } from '../pages/auth/actions/authActions';
 import { connect } from 'react-redux';
 
 function Splash(props) {
