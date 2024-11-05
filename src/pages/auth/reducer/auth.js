@@ -9,7 +9,8 @@ const initialState = {
 
 export default function authReducer(state = initialState, action) {
     switch (action.type) {
-        case types.LOGIN:
+        case types.SIGN_UP:
+        case types.LOGIN://signup과 login 동일하게 처리! -> singup 후 바로 로그인 상태 됨.
             AsyncStorage.multiSet([
                 ['accessToken', action.payload.accessToken],
                 ['refreshToken', action.payload.refreshToken],
