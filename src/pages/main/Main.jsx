@@ -77,7 +77,6 @@ export default function Main({ navigation }) {
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.feedPostContainer}
             />
-            
             {/* Navigation Buttons 
             <View>
                 <Text>Home Screen</Text>
