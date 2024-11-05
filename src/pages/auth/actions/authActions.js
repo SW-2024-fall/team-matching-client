@@ -19,3 +19,11 @@ export function logout() {
 export function autoLogin(data) {
     return { type: types.AUTO_LOGIN, payload: data };
 }
+
+export function signup(dataToSubmit) {
+    const data = request("POST", "/signup", dataToSubmit);  // '/signup' 엔드포인트로 API 요청
+    return {
+        type: types.SIGNUP,
+        payload: data,
+    };
+}
