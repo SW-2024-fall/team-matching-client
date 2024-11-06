@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList , Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import { theme } from '../../styles/ThemeStyles';
@@ -44,7 +44,81 @@ export default function Main({ navigation }) {
             thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
             preview: '3줄까지만 보이는 텍스트',
         },
+        {
+            id: '4',
+            name: 'User Four',
+            title: 'Title Four',
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
+            preview: '3줄까지만 보이는 텍스트',
+        },
+        {
+            id: '5',
+            name: 'User Five',
+            title: 'Title Five',
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
+            preview: '3줄까지만 보이는 텍스트',
+        },
+        {
+            id: '6',
+            name: 'User Six',
+            title: 'Title Six',
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
+            preview: '3줄까지만 보이는 텍스트',
+        },
+        {
+            id: '7',
+            name: 'User Seven',
+            title: 'Title Seven',
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
+            preview: '3줄까지만 보이는 텍스트',
+        },
+        {
+            id: '8',
+            name: 'User Eight',
+            title: 'Title Eight',
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
+            preview: '3줄까지만 보이는 텍스트',
+        },
+        {
+            id: '9',
+            name: 'User Nine',
+            title: 'Title Nine',
+            profileUrl: require('@assets/testImage/aSnail.jpg'),
+            thumbnailUrl: require('@assets/testImage/aSnowman.jpg'),
+            preview: '3줄까지만 보이는 텍스트',
+        },
     ];
+
+    /* 무한스크롤 동작 */
+
+    const [loadedfeedData, setloadedFeedData] = useState(feedData.slice(0, 3)); // 초기 데이터 3개만 표시
+    const [page, setPage] = useState(0); // 페이지 상태
+    const [isLoading, setIsLoading] = useState(false);
+
+    const loadMoreData = async() => {
+        if (isLoading) return; // 이미 로딩 중이면 함수 종료
+        setIsLoading(true);
+
+        const nextPage = page + 1;
+        const startIndex = 3 * nextPage; 
+        const newData = feedData.slice(startIndex, startIndex + 3); // 다음 페이지 데이터
+        if (newData.length > 0) {
+            console.log('aa', newData);
+            setloadedFeedData((prevData) => [...prevData, ...newData])
+            setPage(nextPage);
+            console.log('page loaded');
+        } else {
+            console.log('No data to load');
+        }
+        setIsLoading(false); // 로딩 종료
+    };
+
+    /* 여기까지 */
 
     return (
         <Layout screen={PAGES.MAIN} navigation={navigation}>
@@ -64,7 +138,7 @@ export default function Main({ navigation }) {
             
             {/* Feed Section */}
             <FlatList
-                data={feedData}
+                data={loadedfeedData}
                 renderItem={({ item }) => (
                     <FeedPost 
                         name={item.name}
@@ -76,6 +150,10 @@ export default function Main({ navigation }) {
                 )}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.feedPostContainer}
+                ListFooterComponent={isLoading ? <ActivityIndicator /> : null} // 로딩 인디케이터 표시
+                initialNumToRender={5} // 처음 렌더링할 아이템 수
+                onEndReached={loadMoreData} // 스크롤 끝에 닿을 때 추가 데이터 로드
+                onEndReachedThreshold={0.5} // 스크롤이 리스트의 50%에 도달했을 때 호출
             />
             {/* Navigation Buttons 
             <View>
