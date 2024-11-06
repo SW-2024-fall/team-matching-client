@@ -82,12 +82,7 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                                                 onValueChange={() => toggleCategory(category)}
                                                 style={styles.checkbox}
                                             />
-                                            <Text 
-                                                style={[
-                                                    styles.checkboxText, 
-                                                    selectedCategory.includes(category) && styles.selectedCheckboxText
-                                                ]}
-                                            >
+                                            <Text style={[styles.checkboxText, selectedCategory.includes(category) && styles.selectedCheckboxText]}>
                                                 {category}
                                             </Text>
                                         </View>
@@ -130,25 +125,33 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                         {activeFilter === 'participants' && (
                             <View style={styles.optionContainer}>
                                 <View style={styles.participantsContainer}>
-                                    <Text style={styles.participantsLabel}>최소</Text>
-                                    <TextInput
-                                        keyboardType="numeric"
-                                        value={minParticipants.toString()}
-                                        onChangeText={text => setMinParticipants(Number(text))}
-                                        style={styles.participantsInput}
-                                        placeholder="2"
-                                    />
-                                    <Text style={styles.participantsLabel}>명</Text>
+                                    <View style ={styles.Participants}> 
+                                        <Text style={styles.minMaxLabel}>최소</Text>
+                                        <View style ={styles.inputTextContainer}> 
+                                            <TextInput
+                                                keyboardType="numeric"
+                                                value={minParticipants.toString()}
+                                                onChangeText={text => setMinParticipants(Number(text))}
+                                                style={styles.participantsInput}
+                                                placeholder="2"
+                                            />
+                                            <Text style={styles.participantsLabel}>명</Text>
+                                        </View>
+                                    </View>
                                     <Text style={styles.participantsLabel}>~</Text>
-                                    <Text style={styles.participantsLabel}>최대</Text>
-                                    <TextInput
-                                        keyboardType="numeric"
-                                        value={maxParticipants.toString()}
-                                        onChangeText={text => setMaxParticipants(Number(text))}
-                                        style={styles.participantsInput}
-                                        placeholder="99"
-                                    />
-                                    <Text style={styles.participantsLabel}>명</Text>
+                                    <View style ={styles.Participants}>
+                                        <Text style={styles.minMaxLabel}>최대</Text>
+                                        <View style={styles.inputTextContainer}>
+                                            <TextInput
+                                                keyboardType="numeric"
+                                                value={maxParticipants.toString()}
+                                                onChangeText={text => setMaxParticipants(Number(text))}
+                                                style={styles.participantsInput}
+                                                placeholder="99"
+                                            />
+                                            <Text style={styles.participantsLabel}>명</Text>
+                                        </View>
+                                    </View>
                                 </View>
                             </View>
                         )}
@@ -285,31 +288,42 @@ const styles = StyleSheet.create({
     selectedRadioText:{
         color: theme.font.color.primary,
         fontWeight: '500'
-    },
+    },//인원 수
     participantsContainer:{
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderRadius: 4,
         borderColor: theme.border.color,
+        alignItems: 'center',
     },
-    participantsLabel : {
-        color : theme.font.color.primary,
+    inputTextContainer:{
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    Participants: {
+        flexDirection: 'column',
+    },
+    minMaxLabel:{//"최소", "최대"레이블
+        paddingBottom: 8,
+        fontWeight: '400',
+        fontSize: theme.font.size.small,
+        color: theme.font.color.primary
+    },
+    participantsLabel : {//"명" 레이블
+        fontWeight: '400',
+        fontSize: theme.font.size.small,
+        color: theme.font.color.primary
     },
     participantsInput :{//숫자 박스
         borderWidth: 1,  
         borderColor: theme.border.color,  
-        padding: 8,  
-        width: 50,  
-        height: 40, 
+        paddingHorizontal: 10,
+        paddingVertical: 8, 
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
-    },
-    input: {
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.grey.border,
-        marginVertical: 10,
-        padding: 10,
+        marginRight: 8,
     },
     buttonContainer: {
         backgroundColor: theme.colors.blue.primary,
