@@ -24,7 +24,6 @@ const FilterModal = ({ visible, onClose, onApply }) => {
         "캠핑/여행",
         "봉사활동",
         "게임/오락",
-        "기타"
     ];
 
     const toggleCategory = (category) => {
@@ -47,110 +46,112 @@ const FilterModal = ({ visible, onClose, onApply }) => {
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
-            <View style={styles.modalContainer}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>필터</Text>
-                    <Pressable onPress={onClose}>
-                        <Text style={styles.closeButton}>X</Text>
-                    </Pressable>
-                </View>
+            <View style ={styles.overlay}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.header}>
+                        <Text style={styles.title}>필터</Text>
+                        <Pressable onPress={onClose}>
+                            <Text style={styles.closeButton}>X</Text>
+                        </Pressable>
+                    </View>
 
-                {/* 상단 필터 항목을 가로로 나열 */}
-                <View style={styles.filterTabs}>
-                    <Pressable onPress={() => setActiveFilter('category')}>
-                        <Text style={[styles.tabText, activeFilter === 'category' && styles.activeTabText]}>카테고리</Text>
-                    </Pressable>
-                    <Pressable onPress={() => setActiveFilter('meetingType')}>
-                        <Text style={[styles.tabText, activeFilter === 'meetingType' && styles.activeTabText]}>모임 유형</Text>
-                    </Pressable>
-                    <Pressable onPress={() => setActiveFilter('participants')}>
-                        <Text style={[styles.tabText, activeFilter === 'participants' && styles.activeTabText]}>인원 수</Text>
-                    </Pressable>
-                    
-                </View>
-                {/* 선 추가 */}
-                <View style={styles.separator} />
-                {/* 선택된 필터에 따라 옵션 표시 */}
-                <View style={styles.content}>
-                    {activeFilter === 'category' && (
-                        <View style={styles.optionContainer}>
-                            <View style={styles.checkboxGrid}>
-                                {categories.map(category => (
-                                    <View key={category} style={styles.checkboxContainer}>
-                                        <Checkbox
-                                            value={selectedCategory.includes(category)}
-                                            onValueChange={() => toggleCategory(category)}
-                                            style={styles.checkbox}
-                                        />
-                                        <Text style={styles.checkboxText}>{category}</Text>
-                                    </View>
-                                ))}
+                    {/* 상단 필터 항목을 가로로 나열 */}
+                    <View style={styles.filterTabs}>
+                        <Pressable onPress={() => setActiveFilter('category')}>
+                            <Text style={[styles.tabText, activeFilter === 'category' && styles.activeTabText]}>카테고리</Text>
+                        </Pressable>
+                        <Pressable onPress={() => setActiveFilter('meetingType')}>
+                            <Text style={[styles.tabText, activeFilter === 'meetingType' && styles.activeTabText]}>모임 유형</Text>
+                        </Pressable>
+                        <Pressable onPress={() => setActiveFilter('participants')}>
+                            <Text style={[styles.tabText, activeFilter === 'participants' && styles.activeTabText]}>인원 수</Text>
+                        </Pressable>
+                        
+                    </View>
+                    {/* 선 추가 */}
+                    <View style={styles.separator} />
+                    {/* 선택된 필터에 따라 옵션 표시 */}
+                    <View style={styles.content}>
+                        {activeFilter === 'category' && (
+                            <View style={styles.optionContainer}>
+                                <View style={styles.checkboxGrid}>
+                                    {categories.map(category => (
+                                        <View key={category} style={styles.checkboxContainer}>
+                                            <Checkbox
+                                                value={selectedCategory.includes(category)}
+                                                onValueChange={() => toggleCategory(category)}
+                                                style={styles.checkbox}
+                                            />
+                                            <Text style={styles.checkboxText}>{category}</Text>
+                                        </View>
+                                    ))}
+                                </View>
                             </View>
-                        </View>
-                    )}
-                    
-                    {activeFilter === 'meetingType' && (
-                        <View style={styles.optionContainer}>
-                            <View style={styles.radioContainer}>
-                                <Pressable onPress={() => setMeetingType('일회성')} style={styles.radioButton}>
-                                    <View style={[styles.radioSquare, meetingType === '일회성' && styles.selectedRadio]} />
-                                    <Text style={[styles.radioText, meetingType === '일회성' && styles.selectedRadioText]}>일회성</Text>
-                                </Pressable>
-                                <Pressable onPress={() => setMeetingType('정기')} style={styles.radioButton}>
-                                    <View style={[styles.radioSquare, meetingType === '정기' && styles.selectedRadio]} />
-                                    <Text style={[styles.radioText, meetingType === '정기' && styles.selectedRadioText]}>정기</Text>
-                                </Pressable>
+                        )}
+                        
+                        {activeFilter === 'meetingType' && (
+                            <View style={styles.optionContainer}>
+                                <View style={styles.radioContainer}>
+                                    <Pressable onPress={() => setMeetingType('일회성')} style={styles.radioButton}>
+                                        <View style={[styles.radioSquare, meetingType === '일회성' && styles.selectedRadio]} />
+                                        <Text style={[styles.radioText, meetingType === '일회성' && styles.selectedRadioText]}>일회성</Text>
+                                    </Pressable>
+                                    <Pressable onPress={() => setMeetingType('정기')} style={styles.radioButton}>
+                                        <View style={[styles.radioSquare, meetingType === '정기' && styles.selectedRadio]} />
+                                        <Text style={[styles.radioText, meetingType === '정기' && styles.selectedRadioText]}>정기</Text>
+                                    </Pressable>
+                                </View>
                             </View>
-                        </View>
-                    )}
+                        )}
 
-                    {activeFilter === 'recruitmentStatus' && (
-                        <View style={styles.optionContainer}>
-                            <View style={styles.radioContainer}>
-                                <Pressable onPress={() => setRecruitmentStatus('모집 중')} style={styles.radioButton}>
-                                    <View style={[styles.radioSquare, recruitmentStatus === '모집 중' && styles.selectedRadio]} />
-                                    <Text style={[styles.radioText, recruitmentStatus === '모집 중' && styles.selectedRadioText]}>모집 중</Text>
-                                </Pressable>
-                                <Pressable onPress={() => setRecruitmentStatus('모집 완료')} style={styles.radioButton}>
-                                    <View style={[styles.radioSquare, recruitmentStatus === '모집 완료' && styles.selectedRadio]} />
-                                    <Text style={[styles.radioText, recruitmentStatus === '모집 완료' && styles.selectedRadioText]}>모집 완료</Text>
-                                </Pressable>
+                        {activeFilter === 'recruitmentStatus' && (
+                            <View style={styles.optionContainer}>
+                                <View style={styles.radioContainer}>
+                                    <Pressable onPress={() => setRecruitmentStatus('모집 중')} style={styles.radioButton}>
+                                        <View style={[styles.radioSquare, recruitmentStatus === '모집 중' && styles.selectedRadio]} />
+                                        <Text style={[styles.radioText, recruitmentStatus === '모집 중' && styles.selectedRadioText]}>모집 중</Text>
+                                    </Pressable>
+                                    <Pressable onPress={() => setRecruitmentStatus('모집 완료')} style={styles.radioButton}>
+                                        <View style={[styles.radioSquare, recruitmentStatus === '모집 완료' && styles.selectedRadio]} />
+                                        <Text style={[styles.radioText, recruitmentStatus === '모집 완료' && styles.selectedRadioText]}>모집 완료</Text>
+                                    </Pressable>
+                                </View>
                             </View>
-                        </View>
-                    )}
+                        )}
 
-                    {/* 인원 수 디자인 변경 */}
-                    {activeFilter === 'participants' && (
-                        <View style={styles.optionContainer}>
-                            <View style={styles.participantsContainer}>
-                                <Text style={styles.participantsLabel}>최소</Text>
-                                <TextInput
-                                    keyboardType="numeric"
-                                    value={minParticipants.toString()}
-                                    onChangeText={text => setMinParticipants(Number(text))}
-                                    style={styles.participantsInput}
-                                    placeholder="2"
-                                />
-                                <Text style={styles.participantsLabel}>명</Text>
-                                <Text style={styles.participantsLabel}>~</Text>
-                                <Text style={styles.participantsLabel}>최대</Text>
-                                <TextInput
-                                    keyboardType="numeric"
-                                    value={maxParticipants.toString()}
-                                    onChangeText={text => setMaxParticipants(Number(text))}
-                                    style={styles.participantsInput}
-                                    placeholder="99"
-                                />
-                                <Text style={styles.participantsLabel}>명</Text>
+                        {/* 인원 수 디자인 변경 */}
+                        {activeFilter === 'participants' && (
+                            <View style={styles.optionContainer}>
+                                <View style={styles.participantsContainer}>
+                                    <Text style={styles.participantsLabel}>최소</Text>
+                                    <TextInput
+                                        keyboardType="numeric"
+                                        value={minParticipants.toString()}
+                                        onChangeText={text => setMinParticipants(Number(text))}
+                                        style={styles.participantsInput}
+                                        placeholder="2"
+                                    />
+                                    <Text style={styles.participantsLabel}>명</Text>
+                                    <Text style={styles.participantsLabel}>~</Text>
+                                    <Text style={styles.participantsLabel}>최대</Text>
+                                    <TextInput
+                                        keyboardType="numeric"
+                                        value={maxParticipants.toString()}
+                                        onChangeText={text => setMaxParticipants(Number(text))}
+                                        style={styles.participantsInput}
+                                        placeholder="99"
+                                    />
+                                    <Text style={styles.participantsLabel}>명</Text>
+                                </View>
                             </View>
-                        </View>
-                    )}
-                </View>
-                {/*적용 버튼*/}
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
-                        <Text style={styles.applyButtonText}>적용</Text>
-                    </TouchableOpacity>
+                        )}
+                    </View>
+                    {/*적용 버튼*/}
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+                            <Text style={styles.applyButtonText}>적용</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -158,6 +159,11 @@ const FilterModal = ({ visible, onClose, onApply }) => {
 };
 
 const styles = StyleSheet.create({
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'flex-end',
+    },
     modalContainer: {
         flex: 1,
         backgroundColor: theme.colors.background.primary,
@@ -166,16 +172,15 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         position: 'absolute',
-        bottom: 0,
         width: '100%',
-        height: '70%',
+        height: '80%',
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         fontColor: theme.font.color.primary,
-        fontWeight: theme.font.weight.bold,
+        fontWeight: '700',
     },
     title: {//필터
         fontSize: theme.font.size.large,
