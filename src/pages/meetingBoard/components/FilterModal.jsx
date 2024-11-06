@@ -159,7 +159,7 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                     {/*적용 버튼*/}
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
-                            <Text style={styles.applyButtonText}>적용</Text>
+                            <Text style={styles.applyButtonText}>적용하기</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -328,19 +328,18 @@ const styles = StyleSheet.create({
     buttonContainer: {
         backgroundColor: theme.colors.blue.primary,
         borderRadius: theme.border.radius.primary,
-        padding: 20,
+        paddingTop: 13,
+        height: 37,
         alignItems: 'center',
     },
     applyButton: {
         backgroundColor: theme.colors.blue.primary,
         borderRadius: theme.border.radius.primary,
-        paddingVertical: 0, // 수직 패딩 추가 안함
-        paddingHorizontal: 10, // 수평 패딩
         alignItems: 'center', // 텍스트를 중앙에 정렬
     },
     applyButtonText: {
         color: theme.colors.background.primary,
-        fontWeight: theme.font.weight.bold,
+        fontWeight: "700",
         fontSize: theme.font.size.primary,
         textAlign: 'center', // 텍스트 중앙 정렬
     },
