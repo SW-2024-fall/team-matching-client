@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Input from './components/Input';
 import ImageButton from './components/ImageButton';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker'
 
 export default function ProfileEdit() {
   
@@ -26,23 +26,31 @@ export default function ProfileEdit() {
     );
   };
 
-  const handleChoosePhoto = () => {
+  const handleChoosePhoto = async () => {
+    // 권한 요청
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  
+    if (permissionResult.granted === false) {
+      console.log('사진 선택 권한이 거부되었습니다.');
+      return;
+    }
+  
+    // 이미지 선택 옵션
     const options = {
-      mediaType: 'photo',
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     };
-
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('사용자가 사진 선택을 취소했습니다.');
-      } else if (response.error) {
-        console.log('사진 선택 중 오류 발생:', response.error);
-      } else {
-        const source = { uri: response.assets[0].uri };
-        setProfileImage(source);
-      }
-    });
-  }
+  
+    // 이미지 라이브러리 열기
+    const result = await ImagePicker.launchImageLibraryAsync(options);
+  
+    if (result.cancelled) {
+      console.log('사용자가 사진 선택을 취소했습니다.');
+    } else {
+      const source = { uri: result.uri };
+      setProfileImg(source);
+    }
+  };
 
   return (
     <Layout screen={PAGES.PROFILE_EDIT}>
