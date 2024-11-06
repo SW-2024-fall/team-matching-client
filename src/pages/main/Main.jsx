@@ -118,6 +118,8 @@ export default function Main({ navigation }) {
         setIsLoading(false); // 로딩 종료
     };
 
+    //FLATLIST가 VIEW 안에 nested 되어 있는지 확인 필요
+
     /* 여기까지 */
 
     return (
@@ -151,7 +153,6 @@ export default function Main({ navigation }) {
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.feedPostContainer}
                 ListFooterComponent={isLoading ? <ActivityIndicator /> : null} // 로딩 인디케이터 표시
-                initialNumToRender={5} // 처음 렌더링할 아이템 수
                 onEndReached={loadMoreData} // 스크롤 끝에 닿을 때 추가 데이터 로드
                 onEndReachedThreshold={0.5} // 스크롤이 리스트의 50%에 도달했을 때 호출
             />
