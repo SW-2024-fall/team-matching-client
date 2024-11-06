@@ -9,14 +9,14 @@ export default function MeetingAiInfo() {
                 <HeaderText>시대AI가 예측한 이 모임은...</HeaderText>
             </Header>
             <Body>
-                <BodyText>{meetingData.analyzed_introduction}</BodyText>
+                <BodyText>{meetingData.analyzedIntroduction}</BodyText>
             </Body>
             <Footer1>
-                {meetingData.analyzed_features.map((item,index)=>
+                {meetingData.features.map((item,index)=>
                     <Footer1Tag># {item} </Footer1Tag>)}
             </Footer1>
             <Footer2>
-                {meetingData.features.map((item,index)=>
+                {meetingData.analyzedFeatures.map((item,index)=>
                 <Footer2TagWrraper><Footer2Tag>{item}</Footer2Tag></Footer2TagWrraper>)}
             </Footer2>
         </Container>

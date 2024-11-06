@@ -7,37 +7,32 @@ import location from '../../../../assets/location.svg';
 import calendar from '../../../../assets/calendar.svg';
 import o from '../../../../assets/o.svg'
 
-import { meetingData } from "../../Meeting";
-const daysToKoreanText = (days) => {
-    // 요일 약어와 한글 요일명을 매핑한 객체 생성
-    const dayMap = {
-      MON: '월',
-      TUE: '화',
-      WED: '수',
-      THU: '목',
-      FRI: '금',
-      SAT: '토',
-      SUN: '일',
-    };
-  
-    // 주어진 days 배열을 한글 요일명으로 변환하고 '/'로 연결
-    const koreanDays = days.map(day => dayMap[day]).join('/');
-  
-    return `매주 ${koreanDays}`;
-  };
+// const daysToKoreanText = (days) => {
+//     const dayMap = {
+//       MON: '월',
+//       TUE: '화',
+//       WED: '수',
+//       THU: '목',
+//       FRI: '금',
+//       SAT: '토',
+//       SUN: '일',
+//     };
+//     const koreanDays = days.map(day => dayMap[day]).join('/');
+//     return `매주 ${koreanDays}`;
+//   };
 
-export default function MeetingInfo({ title }) {
+export default function MeetingInfo({ meetingData }) {
 
     return (
         <Container>
 
             <Header>
-                <HeaderTitle>{meetingData.name}</HeaderTitle>
+                <HeaderTitle>{meetingData.title}</HeaderTitle>
                 <HeaderContent>{meetingData.content}</HeaderContent>
                 <HeaderFooter>
                     <HeaderFooterLeft>
-                        <HeaderFootText>♡ {meetingData.likeCount}    </HeaderFootText>
-                        <HeaderFootText>☆ {meetingData.scrapCount}</HeaderFootText>
+                        <HeaderFootText>♡ {meetingData.likes}    </HeaderFootText>
+                        <HeaderFootText>☆ {meetingData.scraps}</HeaderFootText>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
                         <WithLocalSvg
@@ -51,7 +46,7 @@ export default function MeetingInfo({ title }) {
                 <MeetingAiInfo></MeetingAiInfo>
                 <BodyTextWarraper>
                     <WithLocalSvg asset={calendar}/>
-                    <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText>
+                    {/* <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText> */}
                 </BodyTextWarraper>
                 <BodyTextWarraper>
                     <WithLocalSvg asset={location}/>

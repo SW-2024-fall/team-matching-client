@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import styled from "styled-components/native";
 import { WithLocalSvg } from 'react-native-svg/css';
 import profile1 from '../../../../assets/profileExample1.svg';
@@ -27,12 +27,13 @@ export default function CommentItem({ comment }) {
                     <SubBodyWrapper>
                         <WithLocalSvg
                             asset={curveArrow} />
-                        <FlatList
-                            data={comment.replies}
-                            renderItem={({ item }) => <CommentItem comment={item} />}
-                            keyExtractor={(item, index) => index.toString()}
-
-                        />
+                        <ScrollView>
+                            <View>
+                                {comment.replies.map((item, index) => (
+                                    <CommentItem key={index.toString()} comment={item} />
+                                ))}
+                            </View>
+                        </ScrollView>
                     </SubBodyWrapper>
 
                 )}

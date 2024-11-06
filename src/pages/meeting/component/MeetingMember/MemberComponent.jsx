@@ -5,31 +5,67 @@ import profile2 from '../../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function MemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags }) {
+export default function MemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags, userRole }) {
+    const onPressOut = async () => {
+        const url = `/api/meetings/${meetingId}/members/leave`;
+        const data = {                                      
+            targetUserId:{userId}
+        };
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify(data)                       
+            });
+            if (response.ok) {                                   
+                const responseBody = await response.json();        
+                console.log("응답 데이터:", responseBody);
+            } else {
+                console.error("요청 실패:", response.status);
+            }
+        } catch (error) {
+            console.error("네트워크 오류:", error);
+        }
+    };
+    const onPressUpgrade = async () => {
+        const url = `/api/meetings/${meetingId}/members/upgrade`;
+        const data = {                                      
+            targetUserId:{userId}
+        };
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify(data)                       
+            });
+            if (response.ok) {                                   
+                const responseBody = await response.json();        
+                console.log("응답 데이터:", responseBody);
+            } else {
+                console.error("요청 실패:", response.status);
+            }
+        } catch (error) {
+            console.error("네트워크 오류:", error);
+        }
+    };
     return (
         <Container>
             <BaseInfoContainer>
                 <WithLocalSvg asset={profile2} />
-
                 <View>
                     <BaseInfoHeader>
-                        <View>
-
-                        </View>
                         <Name>{name}</Name>
-                        <OutPressable>
-                            <OutText>부모임장 승급 </OutText>
-                        </OutPressable>
-                        <OutPressable>
-                            <OutText>내보내기</OutText>
-                        </OutPressable>
-
+                        {(userRole === "LEADER" || userRole === "CO_LEADER") &&
+                            <OutPressable onPres={onPressUpgrade}>
+                                <OutText>부모임장 승급 </OutText>
+                            </OutPressable>}
+                        {(userRole === "LEADER" || userRole === "CO_LEADER") &&
+                            <OutPressable onPress={onPressOut}>
+                                <OutText>내보내기</OutText>
+                            </OutPressable>}
                     </BaseInfoHeader>
-
                     <DetailInfoContainer>
-                        <SmallFont>{department}</SmallFont>
-                        <SmallFont>{studentId}학번</SmallFont>
-                        <SmallFont>{phoneNo}</SmallFont>
+                        <SmallFont>{department}   </SmallFont>
+                        <SmallFont>{studentId}학번   </SmallFont>
+                        <SmallFont>{phoneNo}   </SmallFont>
                     </DetailInfoContainer>
                 </View>
 
@@ -38,7 +74,7 @@ export default function MemberComponent({ name, studentId, phoneNo, attendanceSc
             <AdditionalInfoContainer>
                 <Score>{attendanceScore}점</Score>
                 <TagContainer>
-                    <Text>#{tags[0]}</Text>
+                    <Text>#{tags[0]} </Text>
                     <Text>#{tags[1]}</Text>
                 </TagContainer>
             </AdditionalInfoContainer>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, Pressable, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
@@ -16,106 +16,150 @@ import uploadBtn from '../../assets/uploadBtn.svg';
 import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import MeetingHistory from '../meetingHistory/MeetingHistory';
-const screenWidth = Dimensions.get('window').width;
+import useFetch from '../../hooks/useFetch';
+import { Animated } from 'react-native';
 
-export const meetingData = {
-  name: "모임 이름 예시!!",
-	type: "REGULAR", // ONE_TIME
-	title: "모임 모집글 제목", //nullable
-	categories: ["EXCERCISE", "RESEARCH"], // enum MeetingCategory
-	features: [ "친목", "몰라", "뭐_넣지" ],
-	analyzed_features: [ "분석된_특징", "어떨려나" ],
-	analyzed_introduction: "승부에 진심이 사람들이 모인 모임이에요! 열정적으로 참여하고 싶은 분께 적절할 것 같아요!",
-	content: "모임 설명 다 넣어서 드릴게요", // nullable
-	thumbnailUrls: 'url1',
-	currentParticipant: 1,
-	maxParticipant: 2,
-	startDate: "2023.11.12",
-	endDate: "2024.1.2",
-	likeCount: 10,
-	isLiked: true, // 현재 보고 있는 사용자가 좋아요을 눌렀는지
-	commentCount: 10,
-	scrapCount: 10,
-	days: [ "MON", "WED", "FRI"], // nullable,
-	meta: "주인장이 설정한 추가 모임 정보",
-	location: "백주년기념관 나동 980호",
-	startTime: "20:00",
-	endTime: "21:30",
-	isRecruiting: true,
-
+const meetingResponse = {
+  code: "SUCCESS",
+  message: "string",
+  data: {
+    id: 0,
+    userRole: "LEADER", //다른거 넣어보기
+    info: {
+      name: "시대짱 모여라(모임 이름)",
+      type: "REGULAR",
+      title: "시대짱 모집글 입니다",
+      content: "시대짱이 되고 싶으면 모두 모여라!",
+      thumbnailUrls: [
+        "string"
+      ],
+      startDate: "2024-11-06",
+      endDate: "2024-11-06",
+      startTime: {
+        hour: 0,
+        minute: 0,
+        second: 0,
+        nano: 0
+      },
+      endTime: {
+        hour: 0,
+        minute: 0,
+        second: 0,
+        nano: 0
+      },
+      location: "백주념 기념관 나동 980호",
+      currentParticipant: 2,
+      minParticipant: 2,
+      maxParticipant: 4,
+      meta: "meta",
+      categories: [
+        "RESEARCH"
+      ],
+      features: [
+        "모임장이 직접 쓴 특징", "번개", "친근한"
+      ],
+      analyzedFeatures: [
+        "AI가 분석한 특징", "친목", "공부"
+      ],
+      analyzedIntroduction: "승부에 진심인 사람들이 모인 모임이에요!",
+      applicationMethod: "FIRST_COME_FIRST_SERVED",
+      likes: 2,
+      scraps: 2
+    },
+    members: {
+      member: [
+        {
+          id: "string",
+          name: "홍길동",
+          profileUrl: "string",
+          attendenceScore: 60,
+          major: "서얼",
+          studentId: "19",
+          phoneNumber: "010-5555-6666",
+          features: [
+            "도둑",
+            "착함"
+          ],
+          role: "LEADER"
+        },
+        {
+          id: "string",
+          name: "최재원",
+          profileUrl: "string",
+          attendenceScore: 100,
+          major: "컴퓨터과학부",
+          studentId: "22",
+          phoneNumber: "010-1234-5678",
+          features: [
+            "침착",
+            "적극적"
+          ],
+          role: "LEADER"
+        }
+      ],
+      requested: [
+        {
+          id: "string",
+          name: "권민재",
+          profileUrl: "string",
+          attendenceScore: 90,
+          major: "컴퓨터과학부",
+          studentId: "21",
+          phoneNumber: "010-1111-3333",
+          features: [
+            "귀여움",
+            "활발"
+          ],
+          role: "LEADER"
+        },
+        {
+          id: "string",
+          name: "김혜주",
+          profileUrl: "string",
+          attendenceScore: 80,
+          major: "컴퓨터과학부",
+          studentId: "21",
+          phoneNumber: "010-1111-2222",
+          features: [
+            "활발",
+            "리더십"
+          ],
+          role: "LEADER"
+        }
+      ]
+    }
+  },
+  page: {
+    number: 0,
+    size: 0,
+    totalCount: 0,
+    hasNext: true,
+    hasPrevious: true
+  }
 }
-const comments = [
-  {
-    name: '김철수',
-    department: '컴퓨터공학과',
-    studentId: '20학번',
-    text: '이 글 너무 유익하네요!',
-    replies: [
-      {
-        name: '이영희1',
-        department: '전기전자공학과',
-        studentId: '20학번',
-        text: '동의합니다!',
-        replies: [],
-      },
-      {
-        name: '이영희2',
-        department: '전기전자공학과',
-        studentId: '20학번',
-        text: '동의합니다!',
-        replies: [],
-      },
-    ],
-  },
-  {
-    name: '김철수2',
-    department: '컴퓨터공학과',
-    studentId: '20학번',
-    text: '이 글 너무 유익하네요!',
-    replies: [
-      {
-        name: '이영희2-1',
-        department: '전기전자공학과',
-        studentId: '20학번',
-        text: '동의합니다!',
-        replies: [],
-      },
-    ],
-  },
-];
-
+export const meetingData = meetingResponse.data.info;
 export default function Meeting() {
   const route = useRoute();
   // const { id, title } = route.params;
-
+  
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, 50], // 스크롤이 내려가면서 살짝 아래로 이동
+    extrapolate: 'clamp',
+  });
+  const opacity = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [1, 0], // 스크롤이 내려가면서 투명해짐
+    extrapolate: 'clamp',
+  });
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
 
   //**Get meeting Info**
-  // const meetingId = 1;
-  // const [meetingData, setMeetingData] = useState(null);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-  // useEffect(() => {
-  //   const fetchMeetingData = async () => {
-  //     try {
-  //       const response = await fetch(`/api/meeting/${meetingId}`);
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       setMeetingData(data);
-  //     } catch (err) {
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchMeetingData();
-  // })
+  // const [meetingData, loading, error] = useFetch(`/api/meeting/${meetingId}`)
   // if (loading) {
   //   return <ActivityIndicator size="large" color="#0000ff" />;
   // }
-
   // if (error) {
   //   return (
   //     <View>
@@ -123,7 +167,6 @@ export default function Meeting() {
   //     </View>
   //   );
   // }
-  /////////////////////////////
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
@@ -134,53 +177,64 @@ export default function Meeting() {
     // <Register></Register>
     <Layout screen={PAGES.MEETING} title={meetingData.name}>
       <Container>
-        <Header>
-          <WithLocalSvg
-            asset={runningPhoto}
-          />
-        </Header>
-        <TabContainer>
-          <TabWrapper
-            isActive={activeTab === 0}
-            onPress={() => handleTabPress(0)}>
-            <Tab isActive={activeTab === 0}>모임 정보</Tab>
-          </TabWrapper>
-          <TabWrapper
-            isActive={activeTab === 1}
-            onPress={() => handleTabPress(1)}>
-            <Tab isActive={activeTab === 1}>구성원</Tab>
-          </TabWrapper>
-          <TabWrapper
-            isActive={activeTab === 2}
-            onPress={() => handleTabPress(2)}>
-            <Tab isActive={activeTab === 2}>활동 내역</Tab>
-          </TabWrapper>
-        </TabContainer>
-
-        {activeTab === 0 && <MeetingInfo title={meetingData.name} />}
-        {activeTab === 0 && <Line></Line>}
-        {activeTab === 0 && <CommentView comments={comments} />}
-        {activeTab === 0 && <CommentInputWrapper>
-          <CommentInput placeholder="댓글 예시입니다."></CommentInput>
-          <UploadBtnWraaper><WithLocalSvg
-            asset={uploadBtn} /></UploadBtnWraaper>
-        </CommentInputWrapper>}
-        {activeTab === 1 && <WatingMemberList></WatingMemberList>}
-        {activeTab === 1 && <Line></Line>}
-        {activeTab === 1 && <TeamMemberList></TeamMemberList>}
-        {activeTab === 2 && <MeetingRecordList></MeetingRecordList>}
-        <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
+        <Animated.ScrollView
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: false } // 애니메이션에 Native Driver 사용
+          )}
+          scrollEventThrottle={16} // 스크롤 이벤트가 자주 발생하도록 설정
+        >
+          <Header><WithLocalSvg asset={runningPhoto} /></Header>
+          <TabContainer>
+            <TabWrapper isActive={activeTab === 0} onPress={() => handleTabPress(0)}>
+              <Tab isActive={activeTab === 0}>모임 정보</Tab></TabWrapper>
+            <TabWrapper isActive={activeTab === 1} onPress={() => handleTabPress(1)}>
+              <Tab isActive={activeTab === 1}>구성원</Tab></TabWrapper>
+            <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
+              <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
+          </TabContainer>
+          {activeTab === 0 && <MeetingInfo meetingData={meetingData} />}
+          {activeTab === 0 && <Line></Line>}
+          {/* {activeTab === 0 && <CommentView comments={comments} />} */}
+          {activeTab === 0 && <CommentInputWrapper>
+            <CommentInput placeholder="댓글 예시입니다."></CommentInput>
+            <UploadBtnWraaper><WithLocalSvg
+              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>}
+          {activeTab === 1 && (meetingResponse.data.userRole === "LEADER" || meetingResponse.data.userRole === "CO_LEADER") && <WatingMemberList memberList={meetingResponse.data.members.requested}></WatingMemberList>}
+          {activeTab === 1 && (meetingResponse.data.userRole === "LEADER" || meetingResponse.data.userRole === "CO_LEADER") && <Line></Line>}
+          {activeTab === 1 && <TeamMemberList memberList={meetingResponse.data.members.member} userRole={meetingResponse.data.userRole}></TeamMemberList>}
+          {activeTab === 2 && <MeetingRecordList ></MeetingRecordList>}
+          <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
+        </Animated.ScrollView>
+        {activeTab === 2 && <PlusBtn
+          style={{ opacity, transform: [{ translateY }] }}
+          onPress={() => console.log(scrollY.__getValue())}
+        ><Text>+</Text></PlusBtn>}
       </Container>
-    </Layout >
+    </Layout>
   );
 }
-
+const PlusBtn = styled(Animated.createAnimatedComponent(styled.Pressable`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007aff;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  justify-content: center;
+  align-items: center;
+  shadow-color: #000;
+  shadow-opacity: 0.3;
+  shadow-offset: 0px 2px;
+  shadow-radius: 5px;
+  elevation: 5;
+`))``;
 const Container = styled.ScrollView`
-  width:100%;
+  flex:1;
 `;
 const Header = styled.View`
   width:100%;
-  aspectRatio: ${screenWidth} / 230,
 `;
 const Line = styled.View`
   borderBottomWidth:1px;
@@ -232,3 +286,6 @@ const UploadBtnWraaper = styled.View`
   top:10px;
 `;
 
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;

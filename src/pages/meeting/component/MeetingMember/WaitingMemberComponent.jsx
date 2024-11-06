@@ -5,7 +5,47 @@ import profile1 from '../../../../assets/profileExample1.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function WaitingMemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags }) {
+export default function WaitingMemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags, userId }) {
+    const onPressIn = async () => {
+        const url = `/api/meetings/${meetingId}/members/application/accept`;
+        const data = {                                      
+            targetUserId:{userId}
+        };
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify(data)                       
+            });
+            if (response.ok) {                                   
+                const responseBody = await response.json();        
+                console.log("응답 데이터:", responseBody);
+            } else {
+                console.error("요청 실패:", response.status);
+            }
+        } catch (error) {
+            console.error("네트워크 오류:", error);
+        }
+    };
+    const onPressOut = async () => {
+        const url = `/api/meetings/${meetingId}/members/application/reject`;
+        const data = {                                      
+            targetUserId:{userId}
+        };
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify(data)                       
+            });
+            if (response.ok) {                                   
+                const responseBody = await response.json();        
+                console.log("응답 데이터:", responseBody);
+            } else {
+                console.error("요청 실패:", response.status);
+            }
+        } catch (error) {
+            console.error("네트워크 오류:", error);
+        }
+    };
     return (
         <Container>
             <BaseInfoContainer>
@@ -14,10 +54,10 @@ export default function WaitingMemberComponent({ name, studentId, phoneNo, atten
                 <View>
                     <BaseInfoHeader>
                         <Name>{name}</Name>
-                        <OutPressable>
+                        <OutPressable onPress={onPressIn}>
                             <OutText>수락</OutText>
                         </OutPressable>
-                        <OutPressable>
+                        <OutPressable onPress={onPressOut}>
                             <OutText>거절</OutText>
                         </OutPressable>
                     </BaseInfoHeader>
@@ -31,7 +71,7 @@ export default function WaitingMemberComponent({ name, studentId, phoneNo, atten
             <AdditionalInfoContainer>
                 <Score>{attendanceScore}점</Score>
                 <TagContainer>
-                    <Text>#{tags[0]}</Text>
+                    <Text>#{tags[0]} </Text>
                     <Text>#{tags[1]}</Text>
                 </TagContainer>
             </AdditionalInfoContainer>
