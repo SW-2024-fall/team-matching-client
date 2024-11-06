@@ -59,11 +59,12 @@ const styles = StyleSheet.create({
     itemContainer: {
         borderBottomColor: theme.colors.grey.light,
         backgroundColor: theme.colors.background.primary,
-        marginBottom: 20,
+        paddingBottom: 15,
         flexDirection: 'row',
     },
     itemContent: {
         flexDirection: 'row',
+        alignItems: 'center',
         flex: 1,
     },
     imageContainer: {

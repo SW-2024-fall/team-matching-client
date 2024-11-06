@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; 
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View , ScrollView} from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import FilterIcon from '@assets/filterIcon.svg';
@@ -60,11 +60,15 @@ export default function MeetingBoard({ navigation }) {
         <Layout screen={PAGES.MEETING_BOARD} 
                 RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
             <View style={styles.container}>
-                <FlatList 
-                    data={filteredData}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                />
+            <ScrollView>
+                    {filteredData.map((item) => (
+                        <MeetingItem 
+                            key={item.id} 
+                            item={item} 
+                            onPress={() => navigation.navigate(PAGES.MEETING_DETAIL, { itemId: item.id })} 
+                        />
+                    ))}
+                </ScrollView>
                 <FilterModal 
                     visible={filterVisible} 
                     onClose={() => setFilterVisible(false)} 
@@ -82,6 +86,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        padding: 15,
     },
     floatingButton: {
         position: 'absolute',
