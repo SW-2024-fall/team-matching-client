@@ -11,10 +11,12 @@ import SelectLabel from './components/SelectLabel';
 import RadioButtonGroup from './components/RadioButtonGroup';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { createMeeting } from './api'; // API 요청 함수 import
 
 export default function MeetingCreate() {
 
   const [meetingName, setMeetingName] = useState('');
+  const [meetingTitle, setMeetingTitle] = useState('');
   const [meetingType, setMeetingType] = useState('');
   const [meetingTopic, setMeetingTopic] = useState('');
   const [meetingDescription, setMeetingDescription] = useState('');
@@ -51,6 +53,54 @@ export default function MeetingCreate() {
     );
   };
 
+  const handleNext = async () => {
+    if (!meetingName || !meetingType || !participantMethod) {
+      Alert.alert('필수 입력 사항이 누락되었습니다.', '모임 이름, 유형 및 참여자 방식을 입력해 주세요.');
+      return;
+    }
+
+    const meetingData = {
+      files: [], // 파일 업로드 관련 데이터가 있다면 추가
+      meeting: {
+        name: meetingName,
+        title: meetingTitle,
+        type: meetingType,
+        categories: ['RESEARCH'], // 필요한 카테고리를 정의하세요
+        features: tags, // 태그를 특징으로 사용
+        days: selectedDays,
+        minParticipant: 1, // 최소 참여자 수
+        maxParticipant: 10, // 최대 참여자 수
+        content: meetingDescription,
+        location: additionalInfo, // 추가 정보에 장소 설정
+        startDate: startDate,
+        endDate: endDate,
+        startTime: {
+          hour: startTime.getHours(),
+          minute: startTime.getMinutes(),
+          second: 0,
+          nano: 0,
+        },
+        endTime: {
+          hour: endTime.getHours(),
+          minute: endTime.getMinutes(),
+          second: 0,
+          nano: 0,
+        },
+        meta: '', // 추가 메타 정보가 있다면 설정
+        applicationMethod: participantMethod,
+      },
+    };
+
+    try {
+      const response = await createMeeting(meetingData);
+      Alert.alert('성공', '모임이 성공적으로 생성되었습니다.');
+      console.log('Created meeting:', response);
+      // 성공적으로 생성된 후 처리 (예: 내비게이션)
+    } catch (error) {
+      Alert.alert('오류', '모임 생성에 실패했습니다. 다시 시도해 주세요.');
+      console.error('Failed to create meeting:', error);
+    }
+  };
 
   // 정기/일회성 이동 시 요일 초기화 필요
   // const handleMeetingType = (type) => {
@@ -96,17 +146,6 @@ const addTag = () => {
 const removeTag = (tagToRemove) => {
   setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
 };
-
-  const handleNext = () => {
-    if (!meetingType) {
-      alert('모임 유형을 선택해 주세요.'); // 필수 선택 경고
-    }
-    if (!participantMethod) {
-      alert('참여자 선택 방식을 선택해 주세요.'); // 필수 선택 경고
-      return;
-    }
-  };
-
   
   const showStartPicker = () => {
       setStartPickerVisible(true);
@@ -325,7 +364,7 @@ const removeTag = (tagToRemove) => {
       />
       
 
-      <Button title="다음" onPress={() => {handleNext}} isNextButton={true} />
+      <Button title="다음" onPress={handleNext} isNextButton={true} />
       
     </ScrollView>
     </Layout>
