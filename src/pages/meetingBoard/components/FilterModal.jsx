@@ -82,7 +82,14 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                                                 onValueChange={() => toggleCategory(category)}
                                                 style={styles.checkbox}
                                             />
-                                            <Text style={styles.checkboxText}>{category}</Text>
+                                            <Text 
+                                                style={[
+                                                    styles.checkboxText, 
+                                                    selectedCategory.includes(category) && styles.selectedCheckboxText
+                                                ]}
+                                            >
+                                                {category}
+                                            </Text>
                                         </View>
                                     ))}
                                 </View>
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
     },
     title: {//필터
         fontSize: theme.font.size.large,
-        fontWeight: theme.font.weight.extraBold,
+        fontWeight: '700',
     },
     separator :{//구분선
         borderWidth: 0.5,
@@ -192,32 +199,33 @@ const styles = StyleSheet.create({
     },
     closeButton: {//닫기(x) 버튼
         fontSize: theme.font.size.large,
-        fontColor: theme.font.weight.bold,
+        fontColor: theme.font.color.primary,
+        fontWeight: "700"
     },
-    filterTabs: {
+    filterTabs: {//카테고리, 모임유형, 인원수 부분
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 20,
+        justifyContent: 'space-between',
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.background.primary,
     },
     tabText: {
         fontSize: theme.font.size.primary,
-        paddingVertical: 10,
+        paddingVertical: 20,
         color: theme.font.color.light,
+        fontWeight: "400",
+        paddingHorizontal: 10,
     },
     activeTabText: {
         color: theme.font.color.primary,
-        fontWeight: theme.font.weight.bold,
-        borderBottomWidth: 2,
-        borderBottomColor: theme.colors.background.primary,
+        fontWeight: "600",
+        fontSize: theme.font.size.primary,
     },
     content: {
         flex: 1,
-        marginTop: 20,
+        marginVertical: 20,
     },
     optionContainer: {
-        paddingVertical: 10,
+
     },
     checkboxGrid: {
         flexDirection: 'row',
@@ -227,30 +235,34 @@ const styles = StyleSheet.create({
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '30%', // 3열로 배열하기 위해 각 항목의 너비를 설정
-        marginVertical: 5,
+        width: '27%',
+        paddingVertical:10,
+        paddingHorizontal: 10,
     },
     checkbox: {
         width: 10,
         height: 10,
         marginRight: 4,
-        borderRadius: 0,
         borderWidth: 1.5,
         borderColor: theme.colors.grey.border,
     },
     checkboxText: {
         color: theme.font.color.light,
+        fontSize: theme.font.size.small,
     },
-    //모임유형, 모집여부 -> 라디오버튼 
+    selectedCheckboxText:{
+        color: theme.font.color.primary,
+        fontSize: theme.font.size.small,
+        fontWeight: '500',
+    },
+    //모임유형 -> 라디오버튼 
     radioContainer: {
         flexDirection: 'column',
         alignItems: 'flex-start',
-        marginVertical: 10,
     },
     radioButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 0,
         padding: 10,
     },
     radioSquare: {
@@ -260,11 +272,11 @@ const styles = StyleSheet.create({
         borderColor: theme.colors.grey.border,
         backgroundColor: 'transparent',
         marginRight: 8,
-        borderRadius: 0,
+        borderRadius: 2,
     },
     selectedRadio: {
         backgroundColor: theme.colors.blue.primary, // Change to primary color when selected
-        borderColor: theme.colors.grey.blur,
+        borderColor: 'transparent',
     },
     radioText: {
         color: theme.font.color.light,
@@ -272,6 +284,7 @@ const styles = StyleSheet.create({
     },
     selectedRadioText:{
         color: theme.font.color.primary,
+        fontWeight: '500'
     },
     participantsContainer:{
         flexDirection: 'row',
