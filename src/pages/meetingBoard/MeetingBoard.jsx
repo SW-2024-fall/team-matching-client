@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState , useEffect, setLoading} from 'react'; 
 import { FlatList, Pressable, StyleSheet, View , ScrollView} from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
@@ -8,6 +8,9 @@ import MeetingItem from '@pages/meetingBoard/components/MeetingItem.jsx';
 import FilterModal from '@pages/meetingBoard/components/FilterModal';
 import FloatingButton from '@pages/meetingBoard/components/FloatingButton';
 
+const API_URL = '/api/meetings/{meetingId}'
+
+//테스트데이터..
 const DATA = [
     { id: '1', name: '모임 이름 1', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
     { id: '2', name: '모임 이름 2', features: ['#문화', '#여행'], currentParticipants: 12, maxParticipants: 25, startDate: '2020.05.05', endDate: '2024.1.2', likeCount: 39, commentCount: 1, preview: '문화 관련 모임으로 다양한 여행 정보를 공유합니다.', image: null, meetingType: 'oneTime', recruitmentStatus: 'completed' },
@@ -28,6 +31,32 @@ function FilterBtn({ onOpen }) {
 export default function MeetingBoard({ navigation }) {
     const [filterVisible, setFilterVisible] = useState(false);
     const [filteredData, setFilteredData] = useState(DATA);
+    const [loading, setLoading] = useState(true);
+
+     // API에서 모임 목록을 가져오는 함수
+    const fetchMeetings = async (filters = {}) => {
+        setLoading(true);
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // 필터 조건을 쿼리 파라미터로 전달
+                params: filters,
+            });
+            const data = await response.json();
+            setFilteredData(data);
+        } catch (error) {
+            console.error('Error fetching meetings:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchMeetings();  // 처음 로드될 때 API 호출
+    }, [])
 
     const handleFilterApply = (filters) => {
         const { categories, meetingType, minParticipants, maxParticipants } = filters;
