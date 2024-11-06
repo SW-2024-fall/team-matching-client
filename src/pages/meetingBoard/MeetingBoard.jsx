@@ -30,15 +30,14 @@ export default function MeetingBoard({ navigation }) {
     const [filteredData, setFilteredData] = useState(DATA);
 
     const handleFilterApply = (filters) => {
-        const { categories, meetingType, recruitmentStatus, minParticipants, maxParticipants } = filters;
+        const { categories, meetingType, minParticipants, maxParticipants } = filters;
 
         const newData = DATA.filter(item => {
             const meetsCategory = categories.length === 0 || categories.some(category => item.features.includes(category));
             const meetsMeetingType = meetingType ? item.meetingType === meetingType : true;
-            const meetsRecruitmentStatus = recruitmentStatus ? item.recruitmentStatus === recruitmentStatus : true;
             const meetsParticipants = item.currentParticipants >= minParticipants && item.currentParticipants <= maxParticipants;
 
-            return meetsCategory && meetsMeetingType && meetsRecruitmentStatus && meetsParticipants;
+            return meetsCategory && meetsMeetingType && meetsParticipants;
         });
 
         setFilteredData(newData);
