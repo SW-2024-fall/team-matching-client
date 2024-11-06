@@ -36,7 +36,6 @@ const FilterModal = ({ visible, onClose, onApply }) => {
         const filters = {
             categories: selectedCategory,
             meetingType,
-            recruitmentStatus,
             minParticipants,
             maxParticipants,
         };
@@ -101,21 +100,6 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                                     <Pressable onPress={() => setMeetingType('정기')} style={styles.radioButton}>
                                         <View style={[styles.radioSquare, meetingType === '정기' && styles.selectedRadio]} />
                                         <Text style={[styles.radioText, meetingType === '정기' && styles.selectedRadioText]}>정기</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
-                        )}
-
-                        {activeFilter === 'recruitmentStatus' && (
-                            <View style={styles.optionContainer}>
-                                <View style={styles.radioContainer}>
-                                    <Pressable onPress={() => setRecruitmentStatus('모집 중')} style={styles.radioButton}>
-                                        <View style={[styles.radioSquare, recruitmentStatus === '모집 중' && styles.selectedRadio]} />
-                                        <Text style={[styles.radioText, recruitmentStatus === '모집 중' && styles.selectedRadioText]}>모집 중</Text>
-                                    </Pressable>
-                                    <Pressable onPress={() => setRecruitmentStatus('모집 완료')} style={styles.radioButton}>
-                                        <View style={[styles.radioSquare, recruitmentStatus === '모집 완료' && styles.selectedRadio]} />
-                                        <Text style={[styles.radioText, recruitmentStatus === '모집 완료' && styles.selectedRadioText]}>모집 완료</Text>
                                     </Pressable>
                                 </View>
                             </View>
