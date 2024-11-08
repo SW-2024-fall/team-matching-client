@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , handleApply} from 'react';
 import { Modal, View, Text, Button, StyleSheet, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import RadioButtonRN from 'radio-buttons-react-native'; // 라디오 버튼 컴포넌트
@@ -140,12 +140,12 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                             </View>
                         )}
                     </View>
-                    {/*적용 버튼*/}
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+                    {/*적용 버튼*/} 
+                    <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+                        <View style={styles.buttonContainer}>
                             <Text style={styles.applyButtonText}>적용하기</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
