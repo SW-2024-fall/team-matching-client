@@ -120,7 +120,7 @@ export default function Meeting() {
             <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
               <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
           </TabContainer>
-          {activeTab === 0 && <MeetingInfo meetingData={data} isLike={isLike} isScrap={isScrap}/>}
+          {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap}/>}
           {activeTab === 0 && <Line></Line>}
           {activeTab === 0 && userData.userRole === "LEADER" &&
             <View>
