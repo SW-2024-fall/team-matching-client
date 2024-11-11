@@ -26,7 +26,7 @@ const MeetingItem = ({ item, onPress }) => {
                         <Text style={styles.itemName}>{item.name}</Text>
                         <View style={styles.featuresContainer}>
                             {item.features.map((cat, index) => (
-                                <Text key={index} style={styles.itemHashtag}>{cat}</Text>
+                                <Text key={index} style={styles.itemHashtag}>#{cat}</Text>
                             ))}
                         </View>
                     </View>
@@ -41,7 +41,7 @@ const MeetingItem = ({ item, onPress }) => {
                         <Text style={styles.separator}> | </Text>
                         <View style ={styles.participants}>
                             <Text style={styles.itemCurrentParticipants}>{item.currentParticipants}</Text>
-                            <Text style={styles.itemMaxParticipants}> / {item.maxParticipants}명</Text>
+                            <Text style={styles.itemMaxParticipants}> / {item.maxParticipant}명</Text>
                         </View>
                         <Text style={styles.separator}> | </Text>
                         <View style ={styles.date}>

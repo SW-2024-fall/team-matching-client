@@ -9,8 +9,7 @@ import FilterModal from '@pages/meetingBoard/components/FilterModal';
 import FloatingButton from '@pages/meetingBoard/components/FloatingButton';
 import axios from 'axios';
 
-//const API_URL = 'http://localhost:8080/api/meetings'
-const API_URL = 'http://192.168.0.100:8080/api/meetings'
+const API_URL = 'http://10.0.84.8:8080/api/meetings'
 
 //테스트데이터..
 /*
@@ -33,27 +32,38 @@ function FilterBtn({ onOpen }) {
 }
 
 export default function MeetingBoard({ navigation }) {
-    const [filterVisible, setFilterVisible] = useState(false);
-    const [filteredData, setFilteredData] = useState([]);
+    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-
-     // API에서 모임 목록을 가져오는 함수
-    const fetchMeetings = async () => {
-        setLoading(true);
+    const [error, setError] = useState(null);
+    const[filter, filterVisible] = useState();
+    useEffect(() => {
+    const fetchData = async () => {
         try {
-            const response = await axios.get(API_URL, {method: "GET"});
-            setFilteredData(response.data);
+        const response = await fetch(API_URL,{method:"GET"});
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const json = await response.json(); 
+        setData(json);
+        setLoading(false);
         } catch (error) {
-            console.error('Error fetching meetings:', error);
+        setError(error.message);
         } finally {
-            setLoading(false);
+        setLoading(false);
         }
     };
 
-    useEffect(() => {
-        fetchMeetings();  // 처음 로드될 때 API 호출
-    }, [])
+    fetchData();
+    }, []);
 
+    if (loading) {
+    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+    }
+
+    if (error) {
+    return <Text>Error: {error}</Text>; // 에러 메시지 표시
+    }
+    
     /* //테스트 데이터 일때, 필터 적용
     const handleFilterApply = (filters) => {
         const { categories, meetingType, minParticipants, maxParticipants } = filters;
@@ -107,7 +117,7 @@ export default function MeetingBoard({ navigation }) {
                 RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
             <View style={styles.container}>
                 <ScrollView>
-                    {filteredData.map((item) => (
+                    {data.data.map((item) => (
                         <MeetingItem 
                             key={item.id} 
                             item={item} 
