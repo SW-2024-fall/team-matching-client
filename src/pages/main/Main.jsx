@@ -1,54 +1,65 @@
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList , Image, ScrollView} from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
-import useFetch from '../../hooks/useFetch';
+import { theme } from '@styles/ThemeStyles';
+import StoryCircle from '@pages/main/componenets/StoryCircle';
+import FeedPost from '@pages/main/componenets/FeedPost';
 import { useEffect, useState } from 'react';
 
 export default function Main({ navigation }) {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
     useEffect(() => {
-    const fetchData = async () => {
-        try {
-        const response = await fetch("http://10.0.84.8:8080/api/meetings",{method:"GET"});
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const json = await response.json(); 
-        setData(json);
-        setLoading(false);
-        } catch (error) {
-        setError(error.message);
-        } finally {
-        setLoading(false);
-        }
-    };
+        const fetchData = async () => {
+            try {
+            const response = await fetch("http://10.0.84.8:8080/api/meetings",{method:"GET"});
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const json = await response.json(); 
+            setData(json);
+            setLoading(false);
+            } catch (error) {
+            setError(error.message);
+            } finally {
+            setLoading(false);
+            }
+        };
+    
 
-    fetchData();
+        fetchData();
     }, []);
 
-    if (loading) {
-    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
-    }
-
-    if (error) {
-    return <Text>Error: {error}</Text>; // 에러 메시지 표시
-    }
     
     return (
-    <Layout screen={PAGES.MAIN} navigation={navigation}>
-        <View>
-        <Text>Home Screen</Text>
-        </View>
-        <Pressable onPress={() => navigation.navigate(PAGES.MEETING_BOARD)}>
-        <Text>Let's go meeting board</Text>
-        </Pressable>
-        {data.data.map((item, index)=>(
-        <Pressable onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })}>
-            <Text>{item.name}</Text>
-        </Pressable>
-        ))}
-    </Layout>
+        <Layout screen={PAGES.MAIN} navigation={navigation}>
+            {/* Story Section */}
+            <View style={styles.storyContainer}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.storyList}>
+                    {data.data.map((item) => (
+                        <StoryCircle key={item.userId} imageUrl={item.imageUrl} userId={item.userId} />
+                    ))}
+                </ScrollView>
+            </View>
+            
+            {/* Feed Section */}
+            <View style={styles.feedPostContainer}>
+                <ScrollView>
+                    {data.data.map((item) => (
+                        <FeedPost 
+                            key={item.id}
+                            name={item.name}
+                            title={item.title}
+                            profileUrl={item.profileUrl}
+                            thumbnailUrl={item.thumbnailUrl}
+                            preview={item.preview}
+                        />
+                    ))}
+                </ScrollView>
+            </View>
+        </Layout>
     );
 }
