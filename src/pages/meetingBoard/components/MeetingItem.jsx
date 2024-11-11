@@ -12,11 +12,11 @@ const MeetingItem = ({ item, onPress }) => {
                 <View 
                     style={[
                         styles.imageContainer, 
-                        { backgroundColor: item.image ? 'transparent' : theme.colors.grey.light }
+                        { backgroundColor: item.thumbnailUrl ? 'transparent' : theme.colors.grey.light }
                     ]}
                 >
-                    {item.image ? (
-                        <Image source={{ uri: item.image }} style={styles.imageContainer} />
+                    {item.thumbnailUrl ? (
+                        <Image source={{ uri: item.thumbnailUrl }} style={styles.imageContainer} />
                     ) : (
                         <Text style={styles.placeholderText}>기본이미지</Text>
                     )}
