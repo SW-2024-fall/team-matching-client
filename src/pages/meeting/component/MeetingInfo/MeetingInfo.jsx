@@ -1,4 +1,4 @@
-import { View, Text } from "react-native"
+import { View, Text, Pressable } from "react-native"
 import styled from "styled-components"
 import MeetingAiInfo from "./MeetingAiInfo";
 import hand from '../../../../assets/hand.svg';
@@ -6,6 +6,11 @@ import { WithLocalSvg } from 'react-native-svg/css';
 import location from '../../../../assets/location.svg';
 import calendar from '../../../../assets/calendar.svg';
 import o from '../../../../assets/o.svg'
+import { useContext } from "react";
+import like from '../../../../assets/like.svg';
+import notLike from '../../../../assets/notLike.svg';
+import scrap from '../../../../assets/scrap.svg';
+import notScrap from '../../../../assets/notScrap.svg';
 
 // const daysToKoreanText = (days) => {
 //     const dayMap = {
@@ -21,8 +26,41 @@ import o from '../../../../assets/o.svg'
 //     return `매주 ${koreanDays}`;
 //   };
 
-export default function MeetingInfo({ meetingData }) {
+export default function MeetingInfo({ meetingData, isLike, isScrap }) {
+    const onPressLike = async () => {
+        if (isLike) {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/likes`, { method: "DELETE" });
+                if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
+                nav.navigate(PAGES.MAIN);
+            } catch (error) { console.error("Error 좋아요 취소:", error); }
+        }
+        else {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/likes`, { method: "POST" });
+                if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
+                nav.navigate(PAGES.MAIN);
+            } catch (error) { console.error("Error 좋아요 추가:", error); }
+        }
 
+    }
+    const onPressScrap = async () => {
+        if (isScrap) {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                if (!response.ok) { throw new Error("Failed to 스크랩 취소"); }
+                nav.navigate(PAGES.MAIN);
+            } catch (error) { console.error("Error 스크랩 취소:", error); }
+        }
+        else {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                if (!response.ok) { throw new Error("Failed to 스크랩 추가"); }
+                nav.navigate(PAGES.MAIN);
+            } catch (error) { console.error("Error 스크랩 추가:", error); }
+        }
+
+    }
     return (
         <Container>
 
@@ -31,8 +69,13 @@ export default function MeetingInfo({ meetingData }) {
                 <HeaderContent>{meetingData.content}</HeaderContent>
                 <HeaderFooter>
                     <HeaderFooterLeft>
-                        <HeaderFootText>♡ {meetingData.likes}    </HeaderFootText>
-                        <HeaderFootText>☆ {meetingData.scraps}</HeaderFootText>
+                        <Pressable onPress={onPressLike} >
+                            <HeaderFootText>{isLike ? <WithLocalSvg asset={like} /> : <WithLocalSvg asset={notLike} />} {meetingData.likes}    </HeaderFootText>
+
+                        </Pressable>
+                        <Pressable onPress={onPressScrap}>
+                            <HeaderFootText>{isScrap ? <WithLocalSvg asset={scrap} /> : <WithLocalSvg asset={notScrap} />} {meetingData.scraps}</HeaderFootText>
+                        </Pressable>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
                         <WithLocalSvg
@@ -43,21 +86,21 @@ export default function MeetingInfo({ meetingData }) {
                 </HeaderFooter>
             </Header>
             <Body>
-                <MeetingAiInfo></MeetingAiInfo>
+                <MeetingAiInfo data={meetingData}></MeetingAiInfo>
                 <BodyTextWarraper>
-                    <WithLocalSvg asset={calendar}/>
+                    <WithLocalSvg asset={calendar} />
                     {/* <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText> */}
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg asset={location}/>
+                    <WithLocalSvg asset={location} />
                     <BodyText>  {meetingData.location}</BodyText>
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg asset={o}/>
+                    <WithLocalSvg asset={o} />
                     <BodyText>    {meetingData.meta} </BodyText>
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg asset={o}/>
+                    <WithLocalSvg asset={o} />
                     <BodyText>    참가비: 20000원  </BodyText>
                 </BodyTextWarraper>
             </Body>

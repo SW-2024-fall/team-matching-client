@@ -5,46 +5,19 @@ import profile1 from '../../../../assets/profileExample1.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function WaitingMemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags, userId }) {
+export default function WaitingMemberComponent({ memberData }) {
+    console.log("memberData = " + memberData.name);
     const onPressIn = async () => {
-        const url = `/api/meetings/${meetingId}/members/application/accept`;
-        const data = {                                      
-            targetUserId:{userId}
-        };
         try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                body: JSON.stringify(data)                       
-            });
-            if (response.ok) {                                   
-                const responseBody = await response.json();        
-                console.log("응답 데이터:", responseBody);
-            } else {
-                console.error("요청 실패:", response.status);
-            }
-        } catch (error) {
-            console.error("네트워크 오류:", error);
-        }
+            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application/accept?targetUserId=${memberData.id}`, { method: "PUT" });
+            if (!response.ok) { throw new Error("Failed to 모임원 신청 수락"); }
+          } catch (error) { console.error("Error 모임원 신청 수락", error); }
     };
     const onPressOut = async () => {
-        const url = `/api/meetings/${meetingId}/members/application/reject`;
-        const data = {                                      
-            targetUserId:{userId}
-        };
         try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                body: JSON.stringify(data)                       
-            });
-            if (response.ok) {                                   
-                const responseBody = await response.json();        
-                console.log("응답 데이터:", responseBody);
-            } else {
-                console.error("요청 실패:", response.status);
-            }
-        } catch (error) {
-            console.error("네트워크 오류:", error);
-        }
+            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application/reject?targetUserId=${memberData.id}`, { method: "PUT" });
+            if (!response.ok) { throw new Error("Failed to 모임원 신청 거절"); }
+          } catch (error) { console.error("Error 모임원 신청 거절", error); }
     };
     return (
         <Container>
@@ -53,7 +26,7 @@ export default function WaitingMemberComponent({ name, studentId, phoneNo, atten
                     asset={profile1} />
                 <View>
                     <BaseInfoHeader>
-                        <Name>{name}</Name>
+                        <Name>{memberData.name}</Name>
                         <OutPressable onPress={onPressIn}>
                             <OutText>수락</OutText>
                         </OutPressable>
@@ -62,17 +35,21 @@ export default function WaitingMemberComponent({ name, studentId, phoneNo, atten
                         </OutPressable>
                     </BaseInfoHeader>
                     <DetailInfoContainer>
-                        <SmallFont>{department}  </SmallFont>
-                        <SmallFont>{studentId}학번  </SmallFont>
-                        <SmallFont>{phoneNo}</SmallFont>
+                        <SmallFont>{memberData.department}  </SmallFont>
+                        <SmallFont>{memberData.studentId.substr(0, 2)}학번  </SmallFont>
+                        <SmallFont>{memberData.phoneNumber}</SmallFont>
                     </DetailInfoContainer>
                 </View>
             </BaseInfoContainer>
             <AdditionalInfoContainer>
-                <Score>{attendanceScore}점</Score>
+                <Score>{memberData.attendenceScore}점</Score>
                 <TagContainer>
-                    <Text>#{tags[0]} </Text>
-                    <Text>#{tags[1]}</Text>
+                    {memberData.features &&
+                        <Text>#{tags[0]} </Text>
+                    }
+                    {memberData.features &&
+                        <Text>#{tags[1]}</Text>
+                    }
                 </TagContainer>
             </AdditionalInfoContainer>
         </Container>

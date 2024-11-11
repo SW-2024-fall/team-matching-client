@@ -1,22 +1,21 @@
 import { View, Text } from "react-native";
 import styled from "styled-components";
-import { meetingData } from "../../Meeting";
 
-export default function MeetingAiInfo() {
+export default function MeetingAiInfo({data}) {
     return (
         <Container>
             <Header>
                 <HeaderText>시대AI가 예측한 이 모임은...</HeaderText>
             </Header>
             <Body>
-                <BodyText>{meetingData.analyzedIntroduction}</BodyText>
+                <BodyText>{data.analyzedIntroduction}</BodyText>
             </Body>
             <Footer1>
-                {meetingData.features.map((item,index)=>
+                {data.features && data.features.map((item,index)=>
                     <Footer1Tag># {item} </Footer1Tag>)}
             </Footer1>
             <Footer2>
-                {meetingData.analyzedFeatures.map((item,index)=>
+                {data.analyzedFeatures && data.analyzedFeatures.map((item,index)=>
                 <Footer2TagWrraper><Footer2Tag>{item}</Footer2Tag></Footer2TagWrraper>)}
             </Footer2>
         </Container>

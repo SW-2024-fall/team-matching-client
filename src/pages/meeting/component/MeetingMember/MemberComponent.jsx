@@ -2,49 +2,23 @@ import { View, Text, Pressable } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
 import profile2 from '../../../../assets/profileExample2.svg';
-
+import UserContext from "../../hooks/UserContext";
 import { WithLocalSvg } from "react-native-svg/css";
+import { useContext } from "react";
 
-export default function MemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags, userRole }) {
+export default function MemberComponent({ id, memberData }) {
+    const myContext = useContext(UserContext);
     const onPressOut = async () => {
-        const url = `/api/meetings/${meetingId}/members/leave`;
-        const data = {                                      
-            targetUserId:{userId}
-        };
         try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                body: JSON.stringify(data)                       
-            });
-            if (response.ok) {                                   
-                const responseBody = await response.json();        
-                console.log("응답 데이터:", responseBody);
-            } else {
-                console.error("요청 실패:", response.status);
-            }
-        } catch (error) {
-            console.error("네트워크 오류:", error);
-        }
+            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/leave?targetUserId=${memberData.id}`, { method: "PUT" });
+            if (!response.ok) { throw new Error("Failed to 모임원 내보내기"); }
+          } catch (error) { console.error("Error 모임원 내보내기", error); }
     };
     const onPressUpgrade = async () => {
-        const url = `/api/meetings/${meetingId}/members/upgrade`;
-        const data = {                                      
-            targetUserId:{userId}
-        };
         try {
-            const response = await fetch(url, {
-                method: 'PUT',
-                body: JSON.stringify(data)                       
-            });
-            if (response.ok) {                                   
-                const responseBody = await response.json();        
-                console.log("응답 데이터:", responseBody);
-            } else {
-                console.error("요청 실패:", response.status);
-            }
-        } catch (error) {
-            console.error("네트워크 오류:", error);
-        }
+            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/upgrade?targetUserId=${memberData.id}`, { method: "PUT" });
+            if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+          } catch (error) { console.error("Error 부모임장 승급", error); }
     };
     return (
         <Container>
@@ -52,30 +26,34 @@ export default function MemberComponent({ name, studentId, phoneNo, attendanceSc
                 <WithLocalSvg asset={profile2} />
                 <View>
                     <BaseInfoHeader>
-                        <Name>{name}</Name>
-                        {(userRole === "LEADER" || userRole === "CO_LEADER") &&
+                        <Name>{memberData.name}</Name>
+                        {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
                             <OutPressable onPres={onPressUpgrade}>
                                 <OutText>부모임장 승급 </OutText>
                             </OutPressable>}
-                        {(userRole === "LEADER" || userRole === "CO_LEADER") &&
+                        {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
                             <OutPressable onPress={onPressOut}>
                                 <OutText>내보내기</OutText>
                             </OutPressable>}
                     </BaseInfoHeader>
                     <DetailInfoContainer>
-                        <SmallFont>{department}   </SmallFont>
-                        <SmallFont>{studentId}학번   </SmallFont>
-                        <SmallFont>{phoneNo}   </SmallFont>
+                        <SmallFont>{memberData.department}   </SmallFont>
+                        <SmallFont>{memberData.studentId.substr(0, 2)}학번   </SmallFont>
+                        <SmallFont>{memberData.phoneNumber}   </SmallFont>
                     </DetailInfoContainer>
                 </View>
 
 
             </BaseInfoContainer>
             <AdditionalInfoContainer>
-                <Score>{attendanceScore}점</Score>
+                <Score>{memberData.attendenceScore}점</Score>
                 <TagContainer>
-                    <Text>#{tags[0]} </Text>
-                    <Text>#{tags[1]}</Text>
+                    {memberData.features &&
+                        <Text>#{tags[0]} </Text>
+                    }
+                    {memberData.features &&
+                        <Text>#{tags[1]}</Text>
+                    }
                 </TagContainer>
             </AdditionalInfoContainer>
 

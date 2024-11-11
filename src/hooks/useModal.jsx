@@ -51,9 +51,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-
+    width:'80%',
+    height:'11%',
     backgroundColor: '#fff',
     borderRadius: 8,
+    padding:'5%',
   },
 });
 

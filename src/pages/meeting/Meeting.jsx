@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, Pressable, Dimensions } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { Text, Pressable, Dimensions, ActivityIndicator, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import MeetingInfo from './component/MeetingInfo/MeetingInfo';
@@ -16,174 +16,101 @@ import uploadBtn from '../../assets/uploadBtn.svg';
 import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import MeetingHistory from '../meetingHistory/MeetingHistory';
-import useFetch from '../../hooks/useFetch';
 import { Animated } from 'react-native';
+import UserContext from './hooks/UserContext';
+import useFetch from './hooks/useFetch';
+import useModal from '../../hooks/useModal';
 
-const meetingResponse = {
-  code: "SUCCESS",
-  message: "string",
-  data: {
-    id: 0,
-    userRole: "LEADER", //다른거 넣어보기
-    info: {
-      name: "시대짱 모여라(모임 이름)",
-      type: "REGULAR",
-      title: "시대짱 모집글 입니다",
-      content: "시대짱이 되고 싶으면 모두 모여라!",
-      thumbnailUrls: [
-        "string"
-      ],
-      startDate: "2024-11-06",
-      endDate: "2024-11-06",
-      startTime: {
-        hour: 0,
-        minute: 0,
-        second: 0,
-        nano: 0
-      },
-      endTime: {
-        hour: 0,
-        minute: 0,
-        second: 0,
-        nano: 0
-      },
-      location: "백주념 기념관 나동 980호",
-      currentParticipant: 2,
-      minParticipant: 2,
-      maxParticipant: 4,
-      meta: "meta",
-      categories: [
-        "RESEARCH"
-      ],
-      features: [
-        "모임장이 직접 쓴 특징", "번개", "친근한"
-      ],
-      analyzedFeatures: [
-        "AI가 분석한 특징", "친목", "공부"
-      ],
-      analyzedIntroduction: "승부에 진심인 사람들이 모인 모임이에요!",
-      applicationMethod: "FIRST_COME_FIRST_SERVED",
-      likes: 2,
-      scraps: 2
-    },
-    members: {
-      member: [
-        {
-          id: "string",
-          name: "홍길동",
-          profileUrl: "string",
-          attendenceScore: 60,
-          major: "서얼",
-          studentId: "19",
-          phoneNumber: "010-5555-6666",
-          features: [
-            "도둑",
-            "착함"
-          ],
-          role: "LEADER"
-        },
-        {
-          id: "string",
-          name: "최재원",
-          profileUrl: "string",
-          attendenceScore: 100,
-          major: "컴퓨터과학부",
-          studentId: "22",
-          phoneNumber: "010-1234-5678",
-          features: [
-            "침착",
-            "적극적"
-          ],
-          role: "LEADER"
-        }
-      ],
-      requested: [
-        {
-          id: "string",
-          name: "권민재",
-          profileUrl: "string",
-          attendenceScore: 90,
-          major: "컴퓨터과학부",
-          studentId: "21",
-          phoneNumber: "010-1111-3333",
-          features: [
-            "귀여움",
-            "활발"
-          ],
-          role: "LEADER"
-        },
-        {
-          id: "string",
-          name: "김혜주",
-          profileUrl: "string",
-          attendenceScore: 80,
-          major: "컴퓨터과학부",
-          studentId: "21",
-          phoneNumber: "010-1111-2222",
-          features: [
-            "활발",
-            "리더십"
-          ],
-          role: "LEADER"
-        }
-      ]
-    }
-  },
-  page: {
-    number: 0,
-    size: 0,
-    totalCount: 0,
-    hasNext: true,
-    hasPrevious: true
-  }
-}
-export const meetingData = meetingResponse.data.info;
 export default function Meeting() {
   const route = useRoute();
-  // const { id, title } = route.params;
-  
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const translateY = scrollY.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, 50], // 스크롤이 내려가면서 살짝 아래로 이동
-    extrapolate: 'clamp',
-  });
-  const opacity = scrollY.interpolate({
-    inputRange: [0, 200],
-    outputRange: [1, 0], // 스크롤이 내려가면서 투명해짐
-    extrapolate: 'clamp',
-  });
+  const { id, title } = route.params;
+  const [data, setData] = useState(null);
+  const [memberData, setMemberData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
+  const [userData, setUserData] = useState(null);
+  const [isLike, setIsLike] = useState(false);
+  const [isScrap, setIsScrap] = useState(false);
+  const nav = useNavigation();
+  const { Modal, open, close } = useModal();
+  const userContextValues = {
+    userData: userData,
+    setUserData
+  }
 
-  //**Get meeting Info**
-  // const [meetingData, loading, error] = useFetch(`/api/meeting/${meetingId}`)
-  // if (loading) {
-  //   return <ActivityIndicator size="large" color="#0000ff" />;
-  // }
-  // if (error) {
-  //   return (
-  //     <View>
-  //       <Text>Error: {error}</Text>
-  //     </View>
-  //   );
-  // }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}`, { method: "GET" });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const json = await response.json();
+        setData(json.data.info);
+        setMemberData(json.data.members);
+        setIsLike(json.data.liked);
+        setIsScrap(json.data.scraped);
+        setUserData({
+          userRole: "LEADER"
+        })
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+  }
+
+  if (error) {
+    return <Text style={{ fontSize: 20 }}>Error: {error}</Text>; // 에러 메시지 표시
+  }
+
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
-
+  const onPressDeleteMeeting = async () => {
+    try {
+      const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}`, { method: "DELETE" });
+      if (!response.ok) {throw new Error("Failed to delete the meeting"); }
+      nav.navigate(PAGES.MAIN);
+    } catch (error) {console.error("Error deleting the meeting:", error);}
+  }
+  const onPressFooterBtn = async () => {
+    if (userData.usreRole === "EXTERNAL") {
+      try {
+        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application`, { method: "POST" });
+        if (!response.ok) { throw new Error("Failed to 모임신청"); }
+      } catch (error) { console.error("Error 모임신청", error); }
+    }
+    else if (userData.userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
+      try {
+        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members`, { method: "DELETE" });
+        if (!response.ok) { throw new Error("Failed to 모임탈퇴"); }
+      } catch (error) { console.error("Error 모임탈퇴:", error); }
+    }
+    else if (userData.usreRole === "REQUESTED") {
+      try {
+        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application`, { method: "DELETE" });
+        if (!response.ok) {
+          throw new Error("Failed to 모인 신청 해제");
+        }
+      } catch (error) { console.error("Error 모임신청 해제:", error); }
+    }
+  }
   return (
     // <MeetingHistory></MeetingHistory>
     // <VerifyEmail></VerifyEmail>
     // <Register></Register>
-    <Layout screen={PAGES.MEETING} title={meetingData.name}>
-      <Container>
-        <Animated.ScrollView
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: false } // 애니메이션에 Native Driver 사용
-          )}
-          scrollEventThrottle={16} // 스크롤 이벤트가 자주 발생하도록 설정
-        >
+    <Layout screen={PAGES.MEETING} title={data.name}>
+      <UserContext.Provider value={userContextValues}>
+        <Container>
           <Header><WithLocalSvg asset={runningPhoto} /></Header>
           <TabContainer>
             <TabWrapper isActive={activeTab === 0} onPress={() => handleTabPress(0)}>
@@ -193,27 +120,80 @@ export default function Meeting() {
             <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
               <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
           </TabContainer>
-          {activeTab === 0 && <MeetingInfo meetingData={meetingData} />}
+          {activeTab === 0 && <MeetingInfo meetingData={data} isLike={isLike} isScrap={isScrap}/>}
           {activeTab === 0 && <Line></Line>}
+          {activeTab === 0 && userData.userRole === "LEADER" &&
+            <View>
+              <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
+              <Modal>
+                <ModalHeader>
+                  <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
+                </ModalHeader>
+                <ModalFooter>
+                  <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
+                  <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
+                </ModalFooter>
+              </Modal>
+            </View>}
+          {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
+          {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
+          {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
           {/* {activeTab === 0 && <CommentView comments={comments} />} */}
-          {activeTab === 0 && <CommentInputWrapper>
+          {/* {activeTab === 0 && <CommentInputWrapper>
             <CommentInput placeholder="댓글 예시입니다."></CommentInput>
             <UploadBtnWraaper><WithLocalSvg
-              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>}
-          {activeTab === 1 && (meetingResponse.data.userRole === "LEADER" || meetingResponse.data.userRole === "CO_LEADER") && <WatingMemberList memberList={meetingResponse.data.members.requested}></WatingMemberList>}
-          {activeTab === 1 && (meetingResponse.data.userRole === "LEADER" || meetingResponse.data.userRole === "CO_LEADER") && <Line></Line>}
-          {activeTab === 1 && <TeamMemberList memberList={meetingResponse.data.members.member} userRole={meetingResponse.data.userRole}></TeamMemberList>}
-          {activeTab === 2 && <MeetingRecordList ></MeetingRecordList>}
+              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
+          {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested}></WatingMemberList>}
+          {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
+          {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole}></TeamMemberList>}
+          {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
           <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
-        </Animated.ScrollView>
-        {activeTab === 2 && <PlusBtn
-          style={{ opacity, transform: [{ translateY }] }}
-          onPress={() => console.log(scrollY.__getValue())}
-        ><Text>+</Text></PlusBtn>}
-      </Container>
+          {activeTab === 2 && <PlusBtn><Text>+</Text></PlusBtn>}
+        </Container>
+      </UserContext.Provider>
     </Layout>
   );
 }
+const ModalLable = styled.Text`
+  fontWeight:${(props) => props.theme.font.weight.medium};
+  fontSize:${(props) => props.theme.font.size.primary};
+  
+`;
+const ModalHeader = styled.View`
+  justifyContent:center;
+  alignItems:center;
+  marginBottom:10px;
+`;
+const ModalFooter = styled.View`
+  flexDirection:row;
+  justifyContent:space-between;
+  alginItems:center;
+  width:50%;
+  marginLeft:25%;
+`;
+const ModalYes = styled.Text`
+  fontWeight:${(props) => props.theme.font.weight.medium};
+  fontSize:${(props) => props.theme.font.size.primary};
+  color:${(props) => props.theme.colors.blue.primary};
+`;
+const ModalNo = styled.Text`
+  fontWeight:${(props) => props.theme.font.weight.medium};
+  fontSize:${(props) => props.theme.font.size.primary};
+  color:#FF576B;
+    `;
+const FooterBtn = styled.Pressable`
+  justifyConter:center;
+  alignItems:center;
+  backgroundColor:${(props) => props.theme.colors.blue.primary};
+  margin:20px;
+  borderRadius:14px;
+  padding:10px;
+`;
+const FooterBtnText = styled.Text`
+fontWeight:${(props) => props.theme.font.weight.bold};
+    fontSize:${(props) => props.theme.font.size.primary};
+    color:white;
+`;
 const PlusBtn = styled(Animated.createAnimatedComponent(styled.Pressable`
   position: absolute;
   bottom: 20px;
