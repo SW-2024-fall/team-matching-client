@@ -46,11 +46,37 @@ export default function MeetingCreate() {
   
   const [profileImg, setProfileImg] = useState(null);
 
+  const APPLICATION_METHOD = {
+    '선착순 모임': 'FIRST_COME_FIRST_SERVED' ,
+    '모임장 수락/거절': 'LEADER_ACCEPT',
+  };  
+
+  const apiapplicationMethod = APPLICATION_METHOD[participantMethod];
+
+  const MEETING_TYPE = {
+    '정기 모임': 'REGULAR' ,
+    '일회성 모임': 'ONE_TIME',
+  };  
+
+  const apiMeetingType = MEETING_TYPE[meetingType];
+
   const handleDaySelect = (day) => {
     setSelectedDays((prev) => 
       prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
     );
   };
+
+  const WEEKDAYS = {
+    월: 'MONDAY',
+    화: 'TUESDAY',
+    수: 'WEDNESDAY',
+    목: 'THURSDAY',
+    금: 'FRIDAY',
+    토: 'SATURDAY',
+    일: 'SUNDAY',
+  };  
+
+  const apiSelectedDays = selectedDays.map((day) => WEEKDAYS[day]);
 
   const handleNext = async () => {
     if (!meetingName || !meetingType || !participantMethod) {
@@ -58,34 +84,25 @@ export default function MeetingCreate() {
       return;
     }
 
-    // // 파일 추가 (예: 프로필 이미지)
-      // if (profileImg) {
-      //   formData.append('files', {
-      //     uri: profileImg,
-      //     name: 'profile.jpg', // 파일 이름
-      //     type: 'image/jpeg', // MIME 타입
-      //   });
-      // }
+    const formData = new FormData();
 
-  // FormData 객체 생성
-  const formData = new FormData();
-  const dataToSend = {};
-  formData.append('files', {
-    uri: profileImg,
-    name: 'profile.jpg',
-    type: 'image/jpg'
-  });
-  dataToSend.files = profileImg;
-  // 모임 데이터 추가
+    // 파일 추가 (예: 프로필 이미지)
+      if (profileImg) {
+        formData.append('files', {
+          uri: profileImg,
+          name: 'profile.jpg', // 파일 이름
+          type: 'image/jpg', // MIME 타입
+        });
+      }
 
   const meetingData = {
     name: meetingName,
     title: meetingTitle,
-    type: "REGULAR",
+    type: apiMeetingType,
     categories: [ "RESEARCH" ], // 필요에 따라 수정
-    features: ["특징1", "특징2"],
-    days: ["MONDAY"], //selectedDays
-    minParticipant: 1, // 필요에 따라 수정
+    features: tags,
+    days: apiSelectedDays, //selectedDays
+    minParticipant: 2, // 필요에 따라 수정
     maxParticipant: 10, // 필요에 따라 수정
     content: meetingDescription,
     location: additionalInfo,
@@ -93,15 +110,11 @@ export default function MeetingCreate() {
     endDate: endDate,
     startTime: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}),
     endTime: endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}),
-    meta: 'hi',
-    applicationMethod: "FIRST_COME_FIRST_SERVED",
+    meta: meetingDescription,
+    applicationMethod: apiapplicationMethod,
   };
 
-  formData.append('meeting', new Blob(JSON.stringify(meetingData), {
-    type: "application/json",
-  }),
-  );
-  dataToSend.meeting = meetingData;
+  formData.append('meeting', {"string": JSON.stringify(meetingData), type: "application/json"});
 
   console.log(meetingData);
 
@@ -153,9 +166,21 @@ export default function MeetingCreate() {
     }
   };
 
+  //meetingCategory 와 동일
   const imageSources = {
-    '인문학/책/글': 'humanitiesImg',
-    '사진/영상': 'PhotographyIcon',
+    '인문학/책/글': 'LITERATURE',
+    '사진/영상': 'PHOTOGRAPHY',
+    '학술/연구': 'RESEARCH',
+    '운동': 'EXERCISE',
+    '외국/언어': 'LANGUAGE',
+    '음악/악기': 'MUSIC',
+    '댄스/무용': 'DANCE',
+    '면접/취준': 'JOB_SEARCH',
+    '공연/축제': 'FESTIVAL',
+    '캠핑/여행': 'TRAVEL',
+    '봉사활동': 'VOLUNTEER',
+    '게임/오락': 'ENTERTAINMENT',
+    '기타': 'ETC',
   };
 
   const handleMeetingTypeSelect = (type) => {
@@ -363,6 +388,7 @@ const removeTag = (tagToRemove) => {
       {meetingType === '정기 모임' && (
 <>
       <Text style={styles.label}>요일을 선택해 주세요</Text>
+
       <View style={styles.dayGroup}>
         {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
           <DayButton 

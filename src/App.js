@@ -2,8 +2,10 @@ import { theme } from './styles/ThemeStyles';
 import { ThemeProvider } from 'styled-components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { MeetingCreate } from './pages/meeting/create/MeetingCreate'
 import Navigation from '@navigation/navigation';
+import ProfileEdit from './pages/profile/edit/ProfileEdit';
+import MeetingBoard from './pages/meetingBoard/MeetingBoard';
+import MeetingCreate from './pages/meeting/create/MeetingCreate';
 
 const Stack = createNativeStackNavigator();
 
