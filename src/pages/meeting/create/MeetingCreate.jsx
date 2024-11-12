@@ -167,11 +167,27 @@ export default function MeetingCreate() {
   };
 
   //meetingCategory 와 동일
-  const imageSources = {
+  const meetingCategory = {
     '인문학/책/글': 'LITERATURE',
     '사진/영상': 'PHOTOGRAPHY',
     '학술/연구': 'RESEARCH',
     '운동': 'EXERCISE',
+    '외국/언어': 'LANGUAGE',
+    '음악/악기': 'MUSIC',
+    '댄스/무용': 'DANCE',
+    '면접/취준': 'JOB_SEARCH',
+    '공연/축제': 'FESTIVAL',
+    '캠핑/여행': 'TRAVEL',
+    '봉사활동': 'VOLUNTEER',
+    '게임/오락': 'ENTERTAINMENT',
+    '기타': 'ETC',
+  };
+
+  const imageSources = {
+    '인문학/책/글': require('./img/literatureicon.png'),
+    '사진/영상': './img/photographyicon',
+    '학술/연구': './img/researchicon',
+    '운동': './img/exerciseicon',
     '외국/언어': 'LANGUAGE',
     '음악/악기': 'MUSIC',
     '댄스/무용': 'DANCE',
@@ -360,7 +376,7 @@ const removeTag = (tagToRemove) => {
 </View>
       <SelectLabel style={styles.label} label= '어떤 모임인가요?' />
       <View style={styles.imageGroup}>
-        {['인문/책/글', '사진/영상', '운동', '외국/언어', '음악/악기', '댄스/무용', '공연/축제', '캠핑/여행', '봉사활동', '학술/연구', '면접/취준', '게임/오락'].map((type) => (
+        {['인문학/책/글', '사진/영상', '운동', '외국/언어', '음악/악기', '댄스/무용', '공연/축제', '캠핑/여행', '봉사활동', '학술/연구', '면접/취준', '게임/오락'].map((type) => (
                   <ImageButton
                   key={type}
                   title={type}

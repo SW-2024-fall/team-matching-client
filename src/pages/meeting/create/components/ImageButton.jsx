@@ -8,7 +8,7 @@ const ImageButton = ({ title, onPress, isSelected, imageSource, style }) => {
       onPress={onPress}
     >
       <View style={[styles.imageContainer, isSelected && styles.selectedImageContainer]}>
-        <Image source={imageSource} style={styles.image} />
+        <Image source={imageSource} style={[styles.image, isSelected && styles.selectedImage]} />
       </View>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
@@ -36,8 +36,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   image: {
-    width: 40,  // 실제 이미지 너비
-    height: 40, // 실제 이미지 높이
+    width: 50,  // 실제 이미지 너비
+    height: 50, // 실제 이미지 높이
+  },
+  selectedImage: {
+    opacity: 0.5,
   },
   text: {
     fontSize: 9,
