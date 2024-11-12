@@ -1,5 +1,5 @@
 import React, { useState , useEffect, setLoading} from 'react'; 
-import { Pressable, StyleSheet, View , ScrollView, ActivityIndicator, handleFilterApply} from 'react-native';
+import {Text, Pressable, StyleSheet, View , ScrollView, ActivityIndicator, handleFilterApply} from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import FilterIcon from '@assets/filterIcon.svg';
@@ -9,7 +9,7 @@ import FilterModal from '@pages/meetingBoard/components/FilterModal';
 import FloatingButton from '@pages/meetingBoard/components/FloatingButton';
 import axios from 'axios';
 
-const API_URL = 'http://10.0.84.8:8080/api/meetings'
+const API_URL = 'http://10.0.73.4:8080/api/meetings'
 
 //테스트데이터..
 /*

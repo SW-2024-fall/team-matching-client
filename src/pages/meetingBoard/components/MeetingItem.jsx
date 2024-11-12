@@ -16,7 +16,10 @@ const MeetingItem = ({ item, onPress }) => {
                     ]}
                 >
                     {item.thumbnailUrl ? (
-                        <Image source={{ uri: item.thumbnailUrl }} style={styles.imageContainer} />
+                        <Image 
+                            source={{ uri: item.thumbnailUrl }} 
+                            style={styles.image}
+                        />
                     ) : (
                         <Text style={styles.placeholderText}>기본이미지</Text>
                     )}
@@ -74,6 +77,10 @@ const styles = StyleSheet.create({
         marginRight: 10,
         justifyContent: 'center',
         alignItems: 'center',
+    },image: {
+        width: 80,
+        height: 80,
+        borderRadius: theme.border.radius.small,
     },
     placeholderText: {
         color: theme.font.color.primary,
@@ -114,7 +121,7 @@ const styles = StyleSheet.create({
     },
     separator: {
         color: theme.font.color.light,
-        fontSize: theme.font.size.small,
+        fontSize: theme.font.size.xSmall,
         paddingRight: 8,
     },
     participants: {
