@@ -6,7 +6,6 @@ import profile1 from '../../../../assets/profileExample1.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 
 export default function WaitingMemberComponent({ memberData }) {
-    console.log("memberData = " + memberData.name);
     const onPressIn = async () => {
         try {
             const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application/accept?targetUserId=${memberData.id}`, { method: "PUT" });

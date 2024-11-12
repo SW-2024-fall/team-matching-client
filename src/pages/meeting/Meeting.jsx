@@ -48,6 +48,7 @@ export default function Meeting() {
         }
         const json = await response.json();
         setData(json.data.info);
+        console.log(data);
         setMemberData(json.data.members);
         setIsLike(json.data.liked);
         setIsScrap(json.data.scraped);

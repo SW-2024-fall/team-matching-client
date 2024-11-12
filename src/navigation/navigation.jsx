@@ -10,7 +10,8 @@ import Main from '@pages/main/Main';
 import MeetingBoard from '@pages/meetingBoard/MeetingBoard';
 import Meeting from '@pages/meeting/Meeting';
 import { MeetingCreate } from '@pages/meeting/create/MeetingCreate';
-import { MeetingHistory } from '@pages/meetingHistory/MeetingHistory';
+import MeetingHistory from '@pages/meetingHistory/MeetingHistory';
+// import { MeetingHistory } from '@pages/meetingHistory/MeetingHistory';
 import { MeetingHistoryCreate } from '@pages/meetingHistory/create/MeetingHistoryCreate';
 import { MeetingFeed } from '@pages/meetingFeed/MeetingFeed';
 import { Profile } from '@pages/profile/Profile';
@@ -82,12 +83,12 @@ export default function Navigation() {
         />
         {/* <Stack.Screen name={PAGES.MEETING_CREATE} component={MeetingCreate} /> */}
 
-        {/* <Stack.Screen
+        <Stack.Screen
           name={PAGES.MEETING_HISTORY}
           component={MeetingHistory}
           screenOptions={{ header: DefaultHeader }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name={PAGES.MEETING_HISTORY_CREATE}
           component={MeetingHistoryCreate}
           screenOptions={{ header: DefaultHeader }}

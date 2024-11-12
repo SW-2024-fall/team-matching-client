@@ -5,26 +5,26 @@ import profile2 from '../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function ActivityMemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags }) {
+export default function ActivityMemberComponent({ member }) {
     return (
         <Container>
             <BaseInfoContainer>
                 <WithLocalSvg asset={profile2} />
                 <View>
                     <BaseInfoHeader>
-                        <Name>{name}</Name>
+                        <Name>{member.name}</Name>
                     </BaseInfoHeader>
                     <DetailInfoContainer>
-                        <SmallFont>{department}  |  </SmallFont>
-                        <SmallFont>{studentId}학번</SmallFont>
+                        <SmallFont>{member.major}  |  </SmallFont>
+                        <SmallFont>{member.studentId.substr(0,2)}학번</SmallFont>
                     </DetailInfoContainer>
                 </View>
             </BaseInfoContainer>
             <AdditionalInfoContainer>
-                <Score>{attendanceScore}점</Score>
+                <Score>{member.attendenceScore}점</Score>
                 <TagContainer>
-                    <Text>#{tags[0]}</Text>
-                    <Text>#{tags[1]}</Text>
+                    {member.features && member.features[0] && <Text>#{features[0]}</Text>}
+                    {member.features && member.features[1] && <Text>#{features[1]}</Text>}
                 </TagContainer>
             </AdditionalInfoContainer>
 

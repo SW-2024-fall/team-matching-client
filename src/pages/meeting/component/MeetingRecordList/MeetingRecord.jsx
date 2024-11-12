@@ -6,11 +6,14 @@ import menu from '../../../../assets/menu.svg';
 import runningPhoto from '../../../../assets/runningPhoto.svg';
 import useModal from "../../../../hooks/useModal";
 import { useState } from "react";
+import Navigation from "../../../../navigation/navigation";
+import { PAGES } from '@navigation/constant';
+import { useNavigation } from "@react-navigation/native";
 
 export default function MeetingRecord({ name, group, content, historyId }) {
     const previewText = content.length > 100 ? `${content.substring(0, 100)}...` : content;
     const { Modal, open, close } = useModal();
-    
+    const nav = useNavigation();
     const onPressDelete = async () => {
         try {
             const response = await fetch(`http://192.168.219.101:8080/api/histories/${historyId}`, { method: "DELETE" });
@@ -32,19 +35,25 @@ export default function MeetingRecord({ name, group, content, historyId }) {
             setMenuVisible(false);
         }
     };
+    const onPressEnterDetail = () => {
+        nav.navigate(PAGES.MEETING_HISTORY, id = { historyId });
+    }
     return (
         <TouchableWithoutFeedback onPress={closeMenu}>
             <Container >
-
-
                 <Header>
-                    <HeaderLeft>
-                        <WithLocalSvg asset={profile1} />
-                        <HeaderNameContainer>
-                            <Name>{name}</Name>
-                            <MeetingName >{group}</MeetingName>
-                        </HeaderNameContainer>
-                    </HeaderLeft>
+                    <Pressable onPress={onPressEnterDetail}>
+                        <HeaderLeft>
+
+                            <WithLocalSvg asset={profile1} />
+                            <HeaderNameContainer>
+                                <Name>{name}</Name>
+                                <MeetingName >{group}</MeetingName>
+                            </HeaderNameContainer>
+
+
+                        </HeaderLeft>
+                    </Pressable>
                     {!menuVisible && <Pressable onPress={handlePress}>
                         <WithLocalSvg asset={menu} />
                     </Pressable>}

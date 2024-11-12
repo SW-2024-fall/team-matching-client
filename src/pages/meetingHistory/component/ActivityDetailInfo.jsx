@@ -4,16 +4,16 @@ import location from '../../../assets/location.svg';
 import calendar from '../../../assets/calendar.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function ActivityDatailInfo() {
+export default function ActivityDatailInfo({data}) {
     return (
         <Container>
             <Wrapper>
                 <WithLocalSvg asset={calendar} />
-                <StyledText>  24.04.15 수요일 20:00~21:30</StyledText>
+                <StyledText>  {data.date}</StyledText>
             </Wrapper>
             <Wrapper>
                 <WithLocalSvg asset={location} />
-                <StyledText>   백주년기념관 나동 990호</StyledText>
+                <StyledText>   {data.location}</StyledText>
             </Wrapper>
         </Container>
     )

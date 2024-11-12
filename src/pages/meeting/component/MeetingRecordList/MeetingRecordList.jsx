@@ -16,7 +16,6 @@ export default function MeetingRecordList({id}) {
                 }
                 const json = await response.json();
                 setData(json.data);
-                console.log("Data = "+JSON.stringify(data));
                 setLoading(false);
             } catch (error) {
                 setError(error.message);
