@@ -1,7 +1,7 @@
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import React, { useState } from 'react';
-import { Alert, View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import { Alert, Image, View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import Button from './components/Button'; // 경로를 상황에 맞게 수정하세요.
 import Input from './components/Input';
 import DayButton from './components/DayButton';
@@ -11,12 +11,14 @@ import SelectLabel from './components/SelectLabel';
 import RadioButtonGroup from './components/RadioButtonGroup';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
 import { createMeeting } from './api'; // API 요청 함수 import
 
 export default function MeetingCreate() {
 
   const [meetingName, setMeetingName] = useState('');
-  const [meetingTitle, setMeetingTitle] = useState('');
+  const [meetingTitle, setMeetingTitle] = useState('title');
   const [meetingType, setMeetingType] = useState('');
   const [meetingTopic, setMeetingTopic] = useState('');
   const [meetingDescription, setMeetingDescription] = useState('');
@@ -29,11 +31,6 @@ export default function MeetingCreate() {
 
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  
-  const [startHour, setStartHour] = useState('00');
-  const [startMinute, setStartMinute] = useState('00');
-  const [endHour, setEndHour] = useState('00');
-  const [endMinute, setEndMinute] = useState('00');
 
   const [selectedDate, setSelectedDate] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -47,6 +44,8 @@ export default function MeetingCreate() {
   
   const [participantMethod, setParticipantMethod] = useState('');
   
+  const [profileImg, setProfileImg] = useState(null);
+
   const handleDaySelect = (day) => {
     setSelectedDays((prev) => 
       prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
@@ -59,48 +58,70 @@ export default function MeetingCreate() {
       return;
     }
 
-    const meetingData = {
-      files: [], // 파일 업로드 관련 데이터가 있다면 추가
-      meeting: {
-        name: meetingName,
-        title: meetingTitle,
-        type: meetingType,
-        categories: ['RESEARCH'], // 필요한 카테고리를 정의하세요
-        features: tags, // 태그를 특징으로 사용
-        days: selectedDays,
-        minParticipant: 1, // 최소 참여자 수
-        maxParticipant: 10, // 최대 참여자 수
-        content: meetingDescription,
-        location: additionalInfo, // 추가 정보에 장소 설정
-        startDate: startDate,
-        endDate: endDate,
-        startTime: {
-          hour: startTime.getHours(),
-          minute: startTime.getMinutes(),
-          second: 0,
-          nano: 0,
-        },
-        endTime: {
-          hour: endTime.getHours(),
-          minute: endTime.getMinutes(),
-          second: 0,
-          nano: 0,
-        },
-        meta: '', // 추가 메타 정보가 있다면 설정
-        applicationMethod: participantMethod,
-      },
-    };
+    // // 파일 추가 (예: 프로필 이미지)
+      // if (profileImg) {
+      //   formData.append('files', {
+      //     uri: profileImg,
+      //     name: 'profile.jpg', // 파일 이름
+      //     type: 'image/jpeg', // MIME 타입
+      //   });
+      // }
 
-    try {
-      const response = await createMeeting(meetingData);
-      Alert.alert('성공', '모임이 성공적으로 생성되었습니다.');
-      console.log('Created meeting:', response);
-      // 성공적으로 생성된 후 처리 (예: 내비게이션)
-    } catch (error) {
-      Alert.alert('오류', '모임 생성에 실패했습니다. 다시 시도해 주세요.');
-      console.error('Failed to create meeting:', error);
-    }
+  // FormData 객체 생성
+  const formData = new FormData();
+  const dataToSend = {};
+  formData.append('files', {
+    uri: profileImg,
+    name: 'profile.jpg',
+    type: 'image/jpg'
+  });
+  dataToSend.files = profileImg;
+  // 모임 데이터 추가
+
+  const meetingData = {
+    name: meetingName,
+    title: meetingTitle,
+    type: "REGULAR",
+    categories: [ "RESEARCH" ], // 필요에 따라 수정
+    features: ["특징1", "특징2"],
+    days: ["MONDAY"], //selectedDays
+    minParticipant: 1, // 필요에 따라 수정
+    maxParticipant: 10, // 필요에 따라 수정
+    content: meetingDescription,
+    location: additionalInfo,
+    startDate: startDate,
+    endDate: endDate,
+    startTime: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}),
+    endTime: endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}),
+    meta: 'hi',
+    applicationMethod: "FIRST_COME_FIRST_SERVED",
   };
+
+  formData.append('meeting', JSON.stringify(meetingData));
+  dataToSend.meeting = meetingData;
+
+  console.log(meetingData);
+
+  try {
+    const response = await fetch('http://localhost:8080/api/meetings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    Alert.alert('성공', '모임이 성공적으로 생성되었습니다.');
+    console.log('Created meeting:', response.data);
+  } catch (error) {
+    Alert.alert('오류', '모임 생성에 실패했습니다. 다시 시도해 주세요.');
+    console.error('Failed to create meeting:', error);
+  }
+};
 
   // 정기/일회성 이동 시 요일 초기화 필요
   // const handleMeetingType = (type) => {
@@ -108,6 +129,26 @@ export default function MeetingCreate() {
   //   if (type === '일회성 모임')
   //     setSelectedDays([]);
   // }
+
+  const handleChoosePhoto = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert('권한이 필요합니다!', '이미지 선택을 위해 사진 라이브러리 접근 권한이 필요합니다.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImg(result.assets[0].uri);
+    }
+  };
 
   const imageSources = {
     '인문학/책/글': 'humanitiesImg',
@@ -130,7 +171,7 @@ const handleKeyPress = (event) => {
     setIsEditing(false);
   }
 }
-
+ 
 const addTag = () => {
   const trimmedValue = inputValue.trim();
   if (trimmedValue && !tags.includes(`#${trimmedValue}`)) {
@@ -187,8 +228,8 @@ const removeTag = (tagToRemove) => {
 
       if (meetingType === '일회성 모임') {
         setSelectedDate(day.dateString);
-        setStartDate('');
-        setEndDate('');
+        setStartDate(day.dateString);
+        setEndDate(day.dateString);
       } else if (meetingType === '정기 모임') {
         if (!startDate) {
           setStartDate(day.dateString);
@@ -224,7 +265,7 @@ const removeTag = (tagToRemove) => {
     };
   
   return (
-    <Layout screen={PAGES.MEETING_CREATE}>
+    // <Layout screen={PAGES.MEETING_CREATE}>
        <ScrollView style={styles.container}>
       
       <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
@@ -363,11 +404,20 @@ const removeTag = (tagToRemove) => {
         buttonStyle={styles.participantMethodDefault}
       />
       
-
+      <Text style={styles.headLabel}> 프로필 사진 </Text>
+      <View style={styles.imgcontainer}>
+      <TouchableOpacity onPress={handleChoosePhoto} style={styles.button}>
+        {profileImg ? (
+          <Image source={profileImg} style={styles.image} />
+        ) : (
+          <Text style={styles.buttonText}>기본 프로필</Text>
+        )}
+      </TouchableOpacity>
+      </View>
       <Button title="다음" onPress={handleNext} isNextButton={true} />
       
     </ScrollView>
-    </Layout>
+    // </Layout>
   );
 }
 
@@ -521,5 +571,36 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
-  }
+  },
+  headLabel: {
+    fontsize: 14,
+    fontWeight: 'bold',
+    color : '#333D4B'
+  },
+  button: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#333D4B',
+    borderRadius: 12,
+    width: 70,
+    height: 70,
+    marginBottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+  },
+  btmtextcontainer: {
+    marginTop: 30,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  inputcontainer: {
+    marginBottom: 30,
+  },
 });
