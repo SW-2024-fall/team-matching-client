@@ -155,7 +155,7 @@ export default function MeetingCreate() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -185,18 +185,18 @@ export default function MeetingCreate() {
 
   const imageSources = {
     '인문학/책/글': require('./img/literatureicon.png'),
-    '사진/영상': './img/photographyicon',
-    '학술/연구': './img/researchicon',
-    '운동': './img/exerciseicon',
-    '외국/언어': 'LANGUAGE',
-    '음악/악기': 'MUSIC',
-    '댄스/무용': 'DANCE',
-    '면접/취준': 'JOB_SEARCH',
-    '공연/축제': 'FESTIVAL',
-    '캠핑/여행': 'TRAVEL',
-    '봉사활동': 'VOLUNTEER',
-    '게임/오락': 'ENTERTAINMENT',
-    '기타': 'ETC',
+    '사진/영상':  require('./img/photographyicon.png'),
+    '학술/연구':  require('./img/researchicon.png'),
+    '운동': require('./img/exerciseicon.png'),
+    '외국/언어': require('./img/languageicon.png'),
+    '음악/악기': require('./img/musicicon.png'),
+    '댄스/무용': require('./img/danceicon.png'),
+    '면접/취준': require('./img/job_searchicon.png'),
+    '공연/축제': require('./img/festivalicon.png'),
+    '캠핑/여행': require('./img/travelicon.png'),
+    '봉사활동': require('./img/volunteericon.png'),
+    '게임/오락': require('./img/entertainmenticon.png'),
+    '기타': './img/etcicon.png',
   };
 
   const handleMeetingTypeSelect = (type) => {
@@ -218,8 +218,8 @@ const handleKeyPress = (event) => {
  
 const addTag = () => {
   const trimmedValue = inputValue.trim();
-  if (trimmedValue && !tags.includes(`#${trimmedValue}`)) {
-    setTags((prevTags) => [`#${trimmedValue}`, ...prevTags]); // 태그 추가
+  if (trimmedValue && !tags.includes(`${trimmedValue}`)) {
+    setTags((prevTags) => [`${trimmedValue}`, ...prevTags]); // 태그 추가
     setInputValue(''); // 입력 필드 초기화
     setIsEditing(false); // 입력 필드 숨기기
   } else {
@@ -370,7 +370,7 @@ const removeTag = (tagToRemove) => {
   )}
   {tags.map((tag, index) => (
     <TouchableOpacity key={index} style={styles.tag} onPress = {()=>removeTag(tag)}>
-      <Text style={styles.tagText}>{tag}</Text>
+      <Text style={styles.tagText}>{'#'+tag}</Text>
     </TouchableOpacity>
   ))}
 </View>
@@ -453,7 +453,7 @@ const removeTag = (tagToRemove) => {
       <View style={styles.imgcontainer}>
       <TouchableOpacity onPress={handleChoosePhoto} style={styles.button}>
         {profileImg ? (
-          <Image source={profileImg} style={styles.image} />
+          <Image source={{profileImg}} style={styles.image} />
         ) : (
           <Text style={styles.buttonText}>기본 프로필</Text>
         )}
@@ -635,8 +635,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: 70,
+    height: 70,
     borderRadius: 12,
   },
   btmtextcontainer: {
