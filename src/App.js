@@ -2,6 +2,7 @@ import { theme } from './styles/ThemeStyles';
 import { ThemeProvider } from 'styled-components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { MeetingCreate } from './pages/meeting/create/MeetingCreate'
 import Navigation from '@navigation/navigation';
 
 const Stack = createNativeStackNavigator();

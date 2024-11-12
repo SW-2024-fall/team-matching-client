@@ -97,7 +97,10 @@ export default function MeetingCreate() {
     applicationMethod: "FIRST_COME_FIRST_SERVED",
   };
 
-  formData.append('meeting', JSON.stringify(meetingData));
+  formData.append('meeting', new Blob(JSON.stringify(meetingData), {
+    type: "application/json",
+  }),
+  );
   dataToSend.meeting = meetingData;
 
   console.log(meetingData);
