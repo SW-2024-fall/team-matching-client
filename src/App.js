@@ -9,7 +9,9 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      {/* <Navigation /> */}
+      <Navigation />
+      {/* <ProfileEdit/> */}
+      <MeetingCreate />
     </ThemeProvider>
   );
 }
