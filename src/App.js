@@ -10,6 +10,10 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       {/* <Navigation /> */}
+<<<<<<< HEAD
+=======
+      <MeetingCreate />
+>>>>>>> 2efc930 (Meeting API Connecting (NOT FIXED))
     </ThemeProvider>
   );
 }
