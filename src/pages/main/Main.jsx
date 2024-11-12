@@ -17,14 +17,14 @@ export default function Main({ navigation }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-            const response = await fetch("http://10.0.73.4:8080/api/meetings",{method:"GET"});
+            const response = await fetch("http://10.0.73.4:8080/api/histories",{method:"GET"});
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const json = await response.json(); 
             setData(json);
             setLoading(false);
-            console.log(json); // 반환된 JSON 구조 확인
+            //console.log(json); // 반환된 JSON 구조 확인
             } catch (error) {
             setError(error.message);
             } finally {
@@ -47,9 +47,9 @@ export default function Main({ navigation }) {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.storyList}>
                     {data.data.map((item) => (
                         <StoryCircle 
-                        key={item.userId} 
-                        imageUrl={item.imageUrl} 
-                        userId={item.userId} 
+                        key={item.id} 
+                        imageUrl={item.thumbnailUrl} 
+                        userId={item.id} 
                         />
                     ))}
                 </ScrollView>
@@ -61,11 +61,11 @@ export default function Main({ navigation }) {
                     {data.data.map((item) => (
                         <FeedPost 
                             key={item.id}
-                            name={item.name}
-                            title={item.title}
-                            profileUrl={item.profileUrl}
+                            name={item.writer.name}
+                            title={item.meetingName}
+                            profileUrl={item.writer.profileUrl}
                             thumbnailUrl={item.thumbnailUrl}
-                            preview={item.preview}
+                            preview={item.content}
                         />
                     ))}
                 </ScrollView>
