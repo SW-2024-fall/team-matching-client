@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: theme.font.color.primary,
         fontSize: theme.font.size.primary,
+        marginBottom: 4,
     },
     title: {
         fontWeight: '500',
