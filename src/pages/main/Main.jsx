@@ -11,7 +11,7 @@ export default function Main({ navigation }) {
     useEffect(() => {
         const fetchData = async () => {
         try {
-            const response = await fetch("http://10.0.84.8:8080/api/meetings",{method:"GET"});
+            const response = await fetch("http://10.0.73.4:8080/api/meetings",{method:"GET"});
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
