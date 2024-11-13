@@ -116,8 +116,6 @@ export default function MeetingCreate() {
 
   formData.append('meeting', {"string": JSON.stringify(meetingData), type: "application/json"});
 
-  console.log(meetingData);
-
   try {
     const response = await fetch('http://localhost:8080/api/meetings', {
       method: 'POST',

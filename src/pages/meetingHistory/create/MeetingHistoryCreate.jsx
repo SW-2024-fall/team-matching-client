@@ -1,10 +1,11 @@
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Alert, View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Input from './components/Input';
 import AttendanceCheck from './components/AttendanceCheck';
 import * as ImagePicker from 'expo-image-picker'
+import Button from './components/Button';
 import { Calendar } from 'react-native-calendars';
 
 export default function MeetingHistoryCreate() {
@@ -15,6 +16,61 @@ export default function MeetingHistoryCreate() {
   const [isPublic, setIsPublic] = useState(true);
   const [participants, setParticipants] = useState([]);
   const [images, setImages] = useState([]);
+
+  const handleNext = async () => {
+
+  const formData = new FormData();
+
+  const historyData = {
+    title: title,
+    content: activityDetails,
+    date: selectedDate,
+    isPublic: isPublic,
+    meetingId: 10,
+    location: activityPlace,
+    attendanceStates: [
+      {
+        userId: "test",
+        attendanceState: "TRUANCY"
+      },
+      {
+        userId: "test3",
+        attendanceState: "LATE"
+      }
+    ]
+  };
+
+  formData.append('history', {"string": JSON.stringify(historyData), type: "application/json"});
+
+  images.forEach((image, index) => {
+    formData.append('files', {
+      uri : image.uri,
+      name : 'image_${index}.jpg',
+      type : 'image/jpeg'
+    })
+  })
+
+  try {
+    const response = await fetch('http://localhost:8080/api/histories', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    Alert.alert('성공', '모임 기록이 로 생성되었습니다.');
+    console.log('Created History:', response.data);
+  } catch (error) {
+    Alert.alert('오류', '모임 기록 생성에 실패했습니다. 다시 시도해 주세요.');
+    console.error('Failed to create History:', error);
+  }
+};
+
 
   const removeImage = (uri) => {
     setImages((prevImages) => prevImages.filter(image => image !== uri));
@@ -60,7 +116,7 @@ export default function MeetingHistoryCreate() {
 
   return (
     <Layout screen={PAGES.MEETING_HISTORY_CREATE}>
-       <ScrollView style={styles.container}>
+      <ScrollView style={styles.container}>
       <Text style={styles.label}>제목을 작성해 주세요</Text>
       <Input
         placeholder="제목을 입력하세요"
@@ -135,8 +191,10 @@ export default function MeetingHistoryCreate() {
 
 	  <AttendanceCheck />
   
+    <Button title="저장" onPress={handleNext} isNextButton={true} />
+
     </ScrollView>
-      </Layout>
+    </Layout>
   );
 }
 
