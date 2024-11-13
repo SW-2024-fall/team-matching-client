@@ -130,7 +130,7 @@ export default function MeetingBoard({ navigation }) {
         <Layout screen={PAGES.MEETING_BOARD} 
                 RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
             <View style={styles.container}>
-                <ScrollView>
+                <ScrollView contentContainerStyle={styles.scrollContainer}>
                     {(filteredData.length > 0 ? filteredData : data).map((item) => (
                         <MeetingItem 
                             key={item.id} 
@@ -157,6 +157,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 15,
+    },
+    scrollContainer: {
+        flexGrow: 1,
     },
     floatingButton: {
         position: 'absolute',
