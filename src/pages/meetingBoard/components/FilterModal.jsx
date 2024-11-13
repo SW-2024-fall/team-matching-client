@@ -7,37 +7,51 @@ import { theme } from '@styles/ThemeStyles';
 const FilterModal = ({ visible, onClose, onApply }) => {
     const [selectedCategory, setSelectedCategory] = useState([]);
     const [meetingType, setMeetingType] = useState(null);
-    const [minParticipants, setMinParticipants] = useState('2');
-    const [maxParticipants, setMaxParticipants] = useState('99');
+    const [minParticipants, setMinParticipants] = useState(2);
+    const [maxParticipants, setMaxParticipants] = useState(99);
     const [activeFilter, setActiveFilter] = useState('category'); // 기본 활성화 필터는 '카테고리'
 
-    const categories = [
-        "학술/연구",
-        "인문학/책/글",
-        "사진/영상",
-        "운동",
-        "외국/언어",
-        "음악/악기",
-        "댄스/무용",
-        "면접/취준",
-        "공연/축제",
-        "캠핑/여행",
-        "봉사활동",
-        "게임/오락",
-    ];
+    const categoryMapping = {
+        "학술/연구": "RESEARCH",
+        "인문학/책/글": "LITERATURE",
+        "사진/영상": "PHOTOGRAPHY",
+        "운동": "EXERCISE",
+        "외국/언어": "LANGUAGE",
+        "음악/악기": "MUSIC",
+        "댄스/무용": "DANCE",
+        "면접/취준": "JOB_SEARCH",
+        "공연/축제": "FESTIVAL",
+        "캠핑/여행": "TRAVEL",
+        "봉사활동": "VOLUNTEER",
+        "게임/오락": "ENTERTAINMENT",
+    };
+    const categories = Object.keys(categoryMapping);
 
     const toggleCategory = (category) => {
-        setSelectedCategory(prev => 
-            prev.includes(category) ? prev.filter(item => item !== category) : [...prev, category]
+        setSelectedCategory((prev) =>
+            prev.includes(category)
+                ? prev.filter((item) => item !== category)
+                : [...prev, category]
         );
     };
 
+    const meetingTypeMapping = {
+        "일회성": "ONE_TIME",
+        "정기": "REGULAR",
+    };
+
+
     const handleApply = () => {
+        const selectedCategoriesInEnglish = selectedCategory.map(
+            (category) => categoryMapping[category]
+        );
+        const meetingTypeInEnglish = meetingType ? meetingTypeMapping[meetingType] : null;
+
         const filters = {
-            categories: selectedCategory,
-            meetingType,
-            minParticipants,
-            maxParticipants,
+            categories: selectedCategoriesInEnglish,
+            meetingType: meetingTypeInEnglish,
+            minParticipants: Number(minParticipants),
+            maxParticipants: Number(maxParticipants),
         };
         onApply(filters);
         onClose();
@@ -114,7 +128,7 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                                         <View style ={styles.inputTextContainer}> 
                                             <TextInput
                                                 keyboardType="numeric"
-                                                value={minParticipants.toString()}
+                                                //value={minParticipants.toString()}
                                                 onChangeText={text => setMinParticipants(Number(text))}
                                                 style={styles.participantsInput}
                                                 placeholder="2"
@@ -128,7 +142,7 @@ const FilterModal = ({ visible, onClose, onApply }) => {
                                         <View style={styles.inputTextContainer}>
                                             <TextInput
                                                 keyboardType="numeric"
-                                                value={maxParticipants.toString()}
+                                                //value={maxParticipants.toString()}
                                                 onChangeText={text => setMaxParticipants(Number(text))}
                                                 style={styles.participantsInput}
                                                 placeholder="99"
@@ -299,15 +313,17 @@ const styles = StyleSheet.create({
         color: theme.font.color.primary
     },
     participantsInput :{//숫자 박스
-        borderWidth: 1,  
+        borderWidth: 1,
+        width: 49,
         borderColor: theme.border.color,  
         paddingHorizontal: 10,
         paddingVertical: 8, 
-        flex: 1,
+        //flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
         marginRight: 8,
+        textAlign: 'center',
     },
     buttonContainer: {
         backgroundColor: theme.colors.blue.primary,

@@ -1,5 +1,5 @@
-import React, { useState , useEffect, setLoading} from 'react'; 
-import {Text, Pressable, StyleSheet, View , ScrollView, ActivityIndicator, handleFilterApply} from 'react-native';
+import React, { useState, useEffect } from 'react'; 
+import { Text, Pressable, StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import FilterIcon from '@assets/filterIcon.svg';
@@ -7,21 +7,8 @@ import { WithLocalSvg } from 'react-native-svg/css';
 import MeetingItem from '@pages/meetingBoard/components/MeetingItem.jsx';
 import FilterModal from '@pages/meetingBoard/components/FilterModal';
 import FloatingButton from '@pages/meetingBoard/components/FloatingButton';
-import axios from 'axios';
 
-const API_URL = 'http://10.0.73.4:8080/api/meetings'
-
-//테스트데이터..
-/*
-const DATA = [
-    { id: '1', name: '모임 이름 1', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
-    { id: '2', name: '모임 이름 2', features: ['#문화', '#여행'], currentParticipants: 12, maxParticipants: 25, startDate: '2020.05.05', endDate: '2024.1.2', likeCount: 39, commentCount: 1, preview: '문화 관련 모임으로 다양한 여행 정보를 공유합니다.', image: null, meetingType: 'oneTime', recruitmentStatus: 'completed' },
-    { id: '3', name: '모임 이름 3', features: ['#스포츠'], currentParticipants: 8, maxParticipants: 15, startDate: '2020.06.06', endDate: '2024.1.2', likeCount: 93, commentCount: 1, preview: '스포츠 관련 모임으로 매주 모여서 운동을 합니다.', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' },
-    { id: '4', name: '모임 이름 4', features: ['#친목', '#학술'], currentParticipants: 10, maxParticipants: 20, startDate: '2020.04.04', endDate: '2024.1.2', likeCount: 3, commentCount: 1, preview: '시대생 모여라는 시대생 여러분의 원활한 모임 활동을 위해 만들어졌습니다. 시립대의 시대짱 모임입니다!!!! 2줄이상인 경우 잘립니...', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' }, 
-    { id: '5', name: '모임 이름 5', features: ['#문화', '#여행'], currentParticipants: 12, maxParticipants: 25, startDate: '2020.05.05', endDate: '2024.1.2', likeCount: 39, commentCount: 1, preview: '문화 관련 모임으로 다양한 여행 정보를 공유합니다.', image: null, meetingType: 'oneTime', recruitmentStatus: 'completed' },
-    { id: '6', name: '모임 이름 6', features: ['#스포츠'], currentParticipants: 8, maxParticipants: 15, startDate: '2020.06.06', endDate: '2024.1.2', likeCount: 93, commentCount: 1, preview: '스포츠 관련 모임으로 매주 모여서 운동을 합니다.', image: null, meetingType: 'regular', recruitmentStatus: 'ongoing' },
-];
-*/
+const API_URL = 'http://10.0.73.4:8080/api/meetings';
 
 function FilterBtn({ onOpen }) {
     return (
@@ -32,73 +19,100 @@ function FilterBtn({ onOpen }) {
 }
 
 export default function MeetingBoard({ navigation }) {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);  // 초기 값은 빈 배열
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const[filter, filterVisible] = useState();
-    useEffect(() => {
-    const fetchData = async () => {
-        try {
-        const response = await fetch(API_URL,{method:"GET"});
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const json = await response.json(); 
-        setData(json);
-        setLoading(false);
-        } catch (error) {
-        setError(error.message);
-        } finally {
-        setLoading(false);
-        }
-    };
+    const [filterVisible, setFilterVisible] = useState(false);
+    const [filteredData, setFilteredData] = useState([]);  // 초기 값은 빈 배열
 
-    fetchData();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // 모든 모임 목록을 가져오기
+                const response = await fetch(API_URL, { method: 'GET' });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const json = await response.json();
+
+                // 각 모임의 세부 정보를 비동기적으로 가져오기
+                const detailedData = await Promise.all(
+                    json.data.map(async (item) => {
+                        const meetingResponse = await fetch(`${API_URL}/${item.id}`);
+                        //console.log("API URL for details:", `${API_URL}/${item.id}`);
+                        //console.log("API 내용: ", meetingResponse);
+                        const meetingDetailsText = await meetingResponse.text();
+                        //console.log(meetingDetails);
+                        const meetingDetails = JSON.parse(meetingDetailsText);
+                        const mergedItem = { ...item, 
+                            categories: meetingDetails.data.info.categories, 
+                            meetingType: meetingDetails.data.info.type,
+                            minParticipant: meetingDetails.data.info.minParticipant,
+                            maxParticipant: meetingDetails.data.info.maxParticipant,
+                            ...meetingDetails };
+                        //console.log(mergedItem)
+                        return mergedItem;  // 기존 모임 데이터와 세부 정보 병합
+                        
+                    })
+                );
+
+                setData(detailedData);  // 상세 정보를 포함한 데이터를 상태에 저장
+                setLoading(false);  // 로딩 완료
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
 
     if (loading) {
-    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+        return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
     }
 
     if (error) {
-    return <Text>Error: {error}</Text>; // 에러 메시지 표시
+        return <Text>Error: {error}</Text>; // 에러 메시지 표시
     }
-    
-    /* //테스트 데이터 일때, 필터 적용
+
     const handleFilterApply = (filters) => {
         const { categories, meetingType, minParticipants, maxParticipants } = filters;
-
-        const newData = DATA.filter(item => {
-            const meetsCategory = categories.length === 0 || categories.some(category => item.features.includes(category));
+    
+        // 필터링 조건을 적용
+        const newData = data.filter(item => {
+            // 카테고리 필터
+            const meetsCategory = categories.length > 0 ? categories.some(category => item.categories.includes(category)) : true;
+            console.log("categories: ", categories, "item.categories: ", item.categories, "meetsCategory: ", meetsCategory);
+    
+            // 미팅 타입 필터 (meetingType이 설정된 경우에만 적용)
             const meetsMeetingType = meetingType ? item.meetingType === meetingType : true;
-            const meetsParticipants = item.currentParticipants >= minParticipants && item.currentParticipants <= maxParticipants;
-
-            return meetsCategory && meetsMeetingType && meetsParticipants;
+            console.log("item.meetingType", item.meetingType, " meetingType: ", meetingType, "meetsMeetingType: ", meetsMeetingType);
+    
+            // 참가자 수 필터
+            const meetsParticipants = 
+            (minParticipants !== undefined && maxParticipants !== undefined) // 둘 다 선택되었을 때
+                ? item.minParticipant >= minParticipants && item.maxParticipant <= maxParticipants
+                : (minParticipants !== undefined) // minParticipants만 선택된 경우
+                    ? item.minParticipant >= minParticipants
+                    : (maxParticipants !== undefined) // maxParticipants만 선택된 경우
+                        ? item.maxParticipant <= maxParticipants
+                        : true; // 선택되지 않으면 true 반환
+            console.log("item.minParticipants", item.minParticipant,"item.maxParticipants", item.maxParticipant, "min: ", minParticipants, "max: ", maxParticipants, "meetsParticipants: ", meetsParticipants);
+    
+            // 조건 결합
+            const result = 
+                (meetsCategory || meetsCategory === null) &&
+                (meetsMeetingType === null || meetsMeetingType) &&
+                (meetsParticipants === null || meetsParticipants);
+            console.log("result: ", result);
+    
+            return result;
         });
 
-        setFilteredData(newData);
-        setFilterVisible(false);
-    };*/
-
-    const handleFilterApply = async (filters) => {
-        const {meetingType, minParticipants, maxParticipants } = filters;
-        try {
-            setLoading(true);
-            const response = await axios.get(API_URL, {
-                params: {
-                    categories: selectedCategories.join(','),
-                    meetingType,
-                    minParticipants,
-                    maxParticipants,
-                }
-            });
-            setFilteredData(response.data);
-        } catch (error) {
-            console.error('Error fetching filtered meetings:', error);
-        } finally {
-            setLoading(false);
-            setFilterVisible(false);
-        }
+        setFilteredData(newData);  // 필터링된 데이터 저장
+        //console.log(newData,"\n\n")
+        setFilterVisible(false);  // 필터 모달 닫기
     };
 
     const renderItem = ({ item }) => (
@@ -117,7 +131,7 @@ export default function MeetingBoard({ navigation }) {
                 RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
             <View style={styles.container}>
                 <ScrollView>
-                    {data.data.map((item) => (
+                    {(filteredData.length > 0 ? filteredData : data).map((item) => (
                         <MeetingItem 
                             key={item.id} 
                             item={item} 
@@ -144,10 +158,10 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 15,
     },
-    FloatingButton: {
+    floatingButton: {
         position: 'absolute',
-        bottom: 20, // 화면 하단에서의 위치
-        right: 20, // 화면 오른쪽에서의 위치
-        zIndex: 1, // 다른 컴포넌트 위에 표시되도록 z-index 설정
+        bottom: 20,  // 화면 하단에서의 위치
+        right: 20,   // 화면 오른쪽에서의 위치
+        zIndex: 1,   // 다른 컴포넌트 위에 표시되도록 z-index 설정
     },
 });
