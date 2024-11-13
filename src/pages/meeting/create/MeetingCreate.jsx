@@ -13,7 +13,6 @@ import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
-import { createMeeting } from './api'; // API 요청 함수 import
 
 export default function MeetingCreate() {
 
