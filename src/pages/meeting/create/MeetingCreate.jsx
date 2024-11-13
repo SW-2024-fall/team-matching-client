@@ -52,6 +52,24 @@ export default function MeetingCreate() {
 
   const apiapplicationMethod = APPLICATION_METHOD[participantMethod];
 
+  const MEETING_CATEGORY = {
+    '인문학/책/글': 'LITERATURE',
+    '사진/영상': 'PHOTOGRAPHY',
+    '학술/연구': 'RESEARCH',
+    '운동': 'EXERCISE',
+    '외국/언어': 'LANGUAGE',
+    '음악/악기': 'MUSIC',
+    '댄스/무용': 'DANCE',
+    '면접/취준': 'JOB_SEARCH',
+    '공연/축제': 'FESTIVAL',
+    '캠핑/여행': 'TRAVEL',
+    '봉사활동': 'VOLUNTEER',
+    '게임/오락': 'ENTERTAINMENT',
+    '기타': 'ETC',
+  };
+
+  const apiMeetingCategory = selectedMeetingTypes.map((type) => MEETING_CATEGORY[type]);
+
   const MEETING_TYPE = {
     '정기 모임': 'REGULAR' ,
     '일회성 모임': 'ONE_TIME',
@@ -98,7 +116,7 @@ export default function MeetingCreate() {
     name: meetingName,
     title: meetingTitle,
     type: apiMeetingType,
-    categories: [ "RESEARCH" ], // 필요에 따라 수정
+    categories: apiMeetingCategory, // 필요에 따라 수정
     features: tags,
     days: apiSelectedDays, //selectedDays
     minParticipant: 2, // 필요에 따라 수정
@@ -165,22 +183,6 @@ export default function MeetingCreate() {
     }
   };
 
-  //meetingCategory 와 동일
-  const meetingCategory = {
-    '인문학/책/글': 'LITERATURE',
-    '사진/영상': 'PHOTOGRAPHY',
-    '학술/연구': 'RESEARCH',
-    '운동': 'EXERCISE',
-    '외국/언어': 'LANGUAGE',
-    '음악/악기': 'MUSIC',
-    '댄스/무용': 'DANCE',
-    '면접/취준': 'JOB_SEARCH',
-    '공연/축제': 'FESTIVAL',
-    '캠핑/여행': 'TRAVEL',
-    '봉사활동': 'VOLUNTEER',
-    '게임/오락': 'ENTERTAINMENT',
-    '기타': 'ETC',
-  };
 
   const imageSources = {
     '인문학/책/글': require('./img/literatureicon.png'),
