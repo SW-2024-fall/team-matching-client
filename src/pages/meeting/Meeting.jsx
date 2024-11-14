@@ -20,6 +20,8 @@ import { Animated } from 'react-native';
 import UserContext from './hooks/UserContext';
 import useFetch from './hooks/useFetch';
 import useModal from '../../hooks/useModal';
+import MeetingCreate from './create/MeetingCreate';
+import MeetingHistoryCreate from '../meetingHistory/create/MeetingHistoryCreate';
 
 export default function Meeting() {
   const route = useRoute();
@@ -38,11 +40,11 @@ export default function Meeting() {
     userData: userData,
     setUserData
   }
-
+  console.log(id);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}`, { method: "GET" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET" });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -78,7 +80,7 @@ export default function Meeting() {
   };
   const onPressDeleteMeeting = async () => {
     try {
-      const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}`, { method: "DELETE" });
+      const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" });
       if (!response.ok) {throw new Error("Failed to delete the meeting"); }
       nav.navigate(PAGES.MAIN);
     } catch (error) {console.error("Error deleting the meeting:", error);}
@@ -86,19 +88,19 @@ export default function Meeting() {
   const onPressFooterBtn = async () => {
     if (userData.usreRole === "EXTERNAL") {
       try {
-        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application`, { method: "POST" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" });
         if (!response.ok) { throw new Error("Failed to 모임신청"); }
       } catch (error) { console.error("Error 모임신청", error); }
     }
     else if (userData.userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
       try {
-        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members`, { method: "DELETE" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { method: "DELETE" });
         if (!response.ok) { throw new Error("Failed to 모임탈퇴"); }
       } catch (error) { console.error("Error 모임탈퇴:", error); }
     }
     else if (userData.usreRole === "REQUESTED") {
       try {
-        const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application`, { method: "DELETE" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "DELETE" });
         if (!response.ok) {
           throw new Error("Failed to 모인 신청 해제");
         }
@@ -109,50 +111,51 @@ export default function Meeting() {
     // <MeetingHistory></MeetingHistory>
     // <VerifyEmail></VerifyEmail>
     // <Register></Register>
-    <Layout screen={PAGES.MEETING} title={data.name}>
-      <UserContext.Provider value={userContextValues}>
-        <Container>
-          <Header><WithLocalSvg asset={runningPhoto} /></Header>
-          <TabContainer>
-            <TabWrapper isActive={activeTab === 0} onPress={() => handleTabPress(0)}>
-              <Tab isActive={activeTab === 0}>모임 정보</Tab></TabWrapper>
-            <TabWrapper isActive={activeTab === 1} onPress={() => handleTabPress(1)}>
-              <Tab isActive={activeTab === 1}>구성원</Tab></TabWrapper>
-            <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
-              <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
-          </TabContainer>
-          {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap}/>}
-          {activeTab === 0 && <Line></Line>}
-          {activeTab === 0 && userData.userRole === "LEADER" &&
-            <View>
-              <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
-              <Modal>
-                <ModalHeader>
-                  <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
-                </ModalHeader>
-                <ModalFooter>
-                  <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
-                  <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
-                </ModalFooter>
-              </Modal>
-            </View>}
-          {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
-          {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
-          {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
-          {/* {activeTab === 0 && <CommentView comments={comments} />} */}
-          {/* {activeTab === 0 && <CommentInputWrapper>
+    <MeetingHistoryCreate></MeetingHistoryCreate>
+    // <Layout screen={PAGES.MEETING} title={data.name}>
+      // <UserContext.Provider value={userContextValues}>
+        // <Container>
+          // <Header><WithLocalSvg asset={runningPhoto} /></Header>
+          // <TabContainer>
+            // <TabWrapper isActive={activeTab === 0} onPress={() => handleTabPress(0)}>
+              // <Tab isActive={activeTab === 0}>모임 정보</Tab></TabWrapper>
+            // <TabWrapper isActive={activeTab === 1} onPress={() => handleTabPress(1)}>
+          //     <Tab isActive={activeTab === 1}>구성원</Tab></TabWrapper>
+          //   <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
+          //     <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
+          // </TabContainer>
+          // {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap}/>}
+          // {activeTab === 0 && <Line></Line>}
+          // {activeTab === 0 && userData.userRole === "LEADER" &&
+          //   <View>
+          //     <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
+          //     <Modal>
+          //       <ModalHeader>
+          //         <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
+          //       </ModalHeader>
+          //       <ModalFooter>
+          //         <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
+          //         <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
+          //       </ModalFooter>
+          //     </Modal>
+            // </View>}
+          // {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
+          // {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
+          // {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
+          /* {activeTab === 0 && <CommentView comments={comments} />} */
+          /* {activeTab === 0 && <CommentInputWrapper>
             <CommentInput placeholder="댓글 예시입니다."></CommentInput>
             <UploadBtnWraaper><WithLocalSvg
-              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
-          {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested}></WatingMemberList>}
-          {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
-          {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole}></TeamMemberList>}
-          {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
-          <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
-          {activeTab === 2 && <PlusBtn><Text>+</Text></PlusBtn>}
-        </Container>
-      </UserContext.Provider>
-    </Layout>
+              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */
+          // {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested}></WatingMemberList>}
+          // {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
+          // {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole}></TeamMemberList>}
+          // {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
+          // <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
+          // {activeTab === 2 && <PlusBtn><Text>+</Text></PlusBtn>}
+        // </Container>
+      // </UserContext.Provider>
+    // </Layout>
   );
 }
 const ModalLable = styled.Text`

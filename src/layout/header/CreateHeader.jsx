@@ -2,7 +2,7 @@
 // 저장 시 해당 페이지 pop
 
 import BaseHeader from '@layout/header/BaseHeader';
-import { Pressable } from 'react-native';
+import { Pressable, Text } from 'react-native';
 
 export default function CreateHeader() {
   function Cancel() {

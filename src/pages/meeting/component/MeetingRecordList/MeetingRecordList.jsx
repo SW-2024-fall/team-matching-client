@@ -7,10 +7,11 @@ export default function MeetingRecordList({id}) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    console.log(id);
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/histories?page=0&size=1&sort=asc`, { method: "GET" });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/histories?page=0&size=1&sort=asc`, { method: "GET" });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

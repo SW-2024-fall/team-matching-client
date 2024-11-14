@@ -22,10 +22,11 @@ export default function MeetingHistory() {
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
+  console.log(historyId);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        ; const response = await fetch(`http://192.168.219.101:8080/api/histories/${historyId}`, { method: "GET" });
+        ; const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "GET" });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
