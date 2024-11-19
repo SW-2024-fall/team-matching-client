@@ -6,7 +6,7 @@ import { theme } from '../../styles/ThemeStyles';
 import StoryCircle from '@pages/main/components/StoryCircle';
 import FeedPost from '@pages/main/components/FeedPost';
 import { useEffect, useState } from 'react';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Main({ navigation }) {
   const [data, setData] = useState(null);

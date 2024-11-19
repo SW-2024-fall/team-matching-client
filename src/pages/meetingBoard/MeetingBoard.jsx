@@ -180,7 +180,7 @@ alignItems:center;
 const CreateText = styled.Text`
 color:white;
 fontWeight:900;
-fontSize:20;
+fontSize:20px;
 marignBottom:10px;
 `;
 const styles = StyleSheet.create({
