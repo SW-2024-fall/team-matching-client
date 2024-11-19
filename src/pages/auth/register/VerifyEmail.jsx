@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import { greyBlueColors, blueColors, greyColors } from '../../../styles/ThemeStyles';
 import { WithLocalSvg } from 'react-native-svg/css';
 import logo from '../../../assets/logo.svg';
-
+import { Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { PAGES } from '../../../navigation/constant';
 export default function VerifyEmail() {
     const [inputValue, setInputValue] = useState('');
-
+    const nav = useNavigation();
     const handleInputChange = (text) => {
         setInputValue(text);
     };
@@ -22,7 +24,7 @@ export default function VerifyEmail() {
 
             <BaseTextInput placeholder='이메일' onChangeText={handleInputChange}>{inputValue}</BaseTextInput>
             <AuthBtnWrapper>
-                <AuthBtn>
+                <AuthBtn onPress={()=>nav.navigate(PAGES.REGISTER)}>
                     <AuthBtnText>다음</AuthBtnText>
                 </AuthBtn>
             </AuthBtnWrapper>
@@ -70,7 +72,7 @@ const AuthBtnText = styled.Text`
     marginTop:3px;
 `;
 
-const AuthBtn = styled.View`
+const AuthBtn = styled.Pressable`
     backgroundColor: ${(props) => props.theme.colors.blue.primary};
     alignItems: center;
     justifyContent:center;

@@ -5,8 +5,10 @@ import meetingIcon from '@assets/meetingIcon.svg';
 import profileIcon from '@assets/profileIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
 import { PAGES } from '@navigation/constant';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Appbar({ navigation }) {
+  const nav = useNavigation();
   const Wrapper = styled.View`
     width: 100%;
     padding: 20px;
@@ -30,21 +32,25 @@ export default function Appbar({ navigation }) {
   `;
 
   const goHome = () => {
-    navigation.navigate(PAGES.MAIN);
+    // navigation.navigate(PAGES.MAIN);
+    nav.navigate(PAGES.MAIN);
   };
 
   const goBoard = () => {
-    navigation.navigate(PAGES.MEETING_BOARD);
+    // navigation.navigate(PAGES.MEETING_BOARD);
+    nav.navigate(PAGES.MEETING_BOARD);
   };
 
   const goMeetingFeed = () => {
     // navigation.navigate(PAGES.MEETING_FEED);
     // 당장에는 모임 피드가 없기 때문에 메인으로 이동
-    navigation.navigate(PAGES.MAIN);
+    // navigation.navigate(PAGES.MAIN);
+    nav.navigate(PAGES.MAIN);
   };
 
   const goProfile = () => {
-    navigation.navigate(PAGES.PROFILE, {access: "me"});
+    // navigation.navigate(PAGES.PROFILE, {access: "me"});
+    nav.navigate(PAGES.PROFILE);
   };
 
   return (

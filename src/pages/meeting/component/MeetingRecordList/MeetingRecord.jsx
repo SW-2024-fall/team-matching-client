@@ -6,7 +6,6 @@ import menu from '../../../../assets/menu.svg';
 import runningPhoto from '../../../../assets/runningPhoto.svg';
 import useModal from "../../../../hooks/useModal";
 import { useState } from "react";
-import Navigation from "../../../../navigation/navigation";
 import { PAGES } from '@navigation/constant';
 import { useNavigation } from "@react-navigation/native";
 
@@ -16,7 +15,7 @@ export default function MeetingRecord({ name, group, content, historyId }) {
     const nav = useNavigation();
     const onPressDelete = async () => {
         try {
-            const response = await fetch(`http://192.168.219.101:8080/api/histories/${historyId}`, { method: "DELETE" });
+            const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "DELETE" });
             if (!response.ok) { throw new Error("Failed to 히스토리 삭제"); }
         } catch (error) { console.error("Error 히스토리 삭제:", error); }
     };

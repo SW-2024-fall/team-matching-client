@@ -15,6 +15,7 @@ const screenWidth = Dimensions.get('window').width;
 export default function MeetingHistory() {
   const route = useRoute();
   const { historyId, title } = route.params;
+  console.log(route.params);
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,6 @@ export default function MeetingHistory() {
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
-  console.log(historyId);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,6 +32,7 @@ export default function MeetingHistory() {
         }
         const json = await response.json();
         setData(json.data);
+        console.log("data = " + JSON.stringify(data));
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -48,14 +49,22 @@ export default function MeetingHistory() {
   if (error) {
     return <Text style={{ fontSize: 20 }}>Error: {error}</Text>; // 에러 메시지 표시
   }
+
   return (
     <Layout screen={PAGES.MEETING_HISTORY}>
-      {data &&
+      {data  &&
         <Container>
           <Header>
-            <WithLocalSvg
-              asset={runningPhoto}
-            />
+            {/* <WithLocalSvg
+                asset={runningPhoto}
+              /> */}
+            {/* {data.files.length > 0 && data.files[0].url ? (
+              <ImageContainer>
+                <StyledImage source={{ uri: data.files[0].url }} />
+              </ImageContainer>
+            ) : (
+              <Text>1</Text>
+            )} */}
           </Header>
           <TabContainer>
             <TabWrapper
@@ -82,6 +91,8 @@ export default function MeetingHistory() {
       }
     </Layout>
   );
+
+
 }
 
 const Container = styled.ScrollView`

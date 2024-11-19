@@ -10,7 +10,7 @@ export default function MemberComponent({ id, memberData }) {
     const myContext = useContext(UserContext);
     const onPressOut = async () => {
         try {
-            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/leave?targetUserId=${memberData.id}`, {
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/leave?targetUserId=${memberData.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export default function MemberComponent({ id, memberData }) {
     };
     const onPressUpgrade = async () => {
         try {
-            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/upgrade?targetUserId=${memberData.id}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/upgrade?targetUserId=${memberData.id}`, { method: "PUT" });
             if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
         } catch (error) { console.error("Error 부모임장 승급", error); }
     };

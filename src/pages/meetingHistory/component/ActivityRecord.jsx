@@ -24,7 +24,7 @@ export default function ActivityRecord({ data }) {
     }
     const onPressDelete = async() => {
         try {
-            const response = await fetch(`http://192.168.219.101:8080/api/histories/${historyId}`, { method: "DELETE" });
+            const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "DELETE" });
             if (!response.ok) { throw new Error("Failed to 히스토리 삭제"); }
         } catch (error) { console.error("Error 히스토리 삭제:", error); }
     }
@@ -36,7 +36,7 @@ export default function ActivityRecord({ data }) {
 
                         <Header><HeaderText>{data.title}</HeaderText></Header>
                         <Body><BodyText>{data.content}</BodyText></Body>
-                        <ActivityRecorder name={data.writer.name} meetingName={data.meetingName}></ActivityRecorder>
+                        <ActivityRecorder name={data.writer.name} meetingName={data.meetingName} profileUrl={data.profileUrl}></ActivityRecorder>
                         <Footer>
                             {!menuVisible && <Pressable onPress={handlePress}>
                                 <WithLocalSvg asset={menu} />

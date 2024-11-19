@@ -8,13 +8,13 @@ import { WithLocalSvg } from "react-native-svg/css";
 export default function WaitingMemberComponent({ memberData }) {
     const onPressIn = async () => {
         try {
-            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application/accept?targetUserId=${memberData.id}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/accept?targetUserId=${memberData.id}`, { method: "PUT" });
             if (!response.ok) { throw new Error("Failed to 모임원 신청 수락"); }
           } catch (error) { console.error("Error 모임원 신청 수락", error); }
     };
     const onPressOut = async () => {
         try {
-            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/application/reject?targetUserId=${memberData.id}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/reject?targetUserId=${memberData.id}`, { method: "PUT" });
             if (!response.ok) { throw new Error("Failed to 모임원 신청 거절"); }
           } catch (error) { console.error("Error 모임원 신청 거절", error); }
     };

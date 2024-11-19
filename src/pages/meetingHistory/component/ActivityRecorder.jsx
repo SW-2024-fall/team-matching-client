@@ -5,11 +5,18 @@ import profile2 from '../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function ActivityRecorder({ name, meetingName}) {
+export default function ActivityRecorder({ name, meetingName, profileUrl}) {
     return (
         <Container>
             <BaseInfoContainer>
+                
+                {profileUrl ? (
+                <ImageContainer>
+                  <StyledImage source={{ uri: profileUrl }} />
+                </ImageContainer>
+              ) : (
                 <WithLocalSvg asset={profile2} />
+              )}
                 <View>
                     <BaseInfoHeader>
                         <Name>{name}</Name>

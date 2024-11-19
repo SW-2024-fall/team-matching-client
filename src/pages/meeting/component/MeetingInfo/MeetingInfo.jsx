@@ -32,13 +32,13 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
     const onPressLike = async () => {
         if (isLike) {
             try {
-                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/likes`, { method: "DELETE" });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" });
                 if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
             } catch (error) { console.error("Error 좋아요 취소:", error); }
         }
         else {
             try {
-                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/likes`, { method: "POST" });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "POST" });
                 if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
             } catch (error) { console.error("Error 좋아요 추가:", error); }
         }
@@ -47,13 +47,13 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
     const onPressScrap = async () => {
         if (isScrap) {
             try {
-                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
                 if (!response.ok) { throw new Error("Failed to 스크랩 취소"); }
             } catch (error) { console.error("Error 스크랩 취소:", error); }
         }
         else {
             try {
-                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
                 if (!response.ok) { throw new Error("Failed to 스크랩 추가"); }
             } catch (error) { console.error("Error 스크랩 추가:", error); }
         }

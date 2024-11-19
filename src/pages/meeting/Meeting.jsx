@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, Pressable, Dimensions, ActivityIndicator, View } from 'react-native';
+import { Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
@@ -40,7 +41,7 @@ export default function Meeting() {
     userData: userData,
     setUserData
   }
-  console.log(id);
+  console.log(route.params);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,7 +51,7 @@ export default function Meeting() {
         }
         const json = await response.json();
         setData(json.data.info);
-        console.log(data);
+        console.log("meetingData = " + JSON.stringify(data));
         setMemberData(json.data.members);
         setIsLike(json.data.liked);
         setIsScrap(json.data.scraped);
@@ -67,7 +68,7 @@ export default function Meeting() {
     fetchData();
   }, []);
 
-  if (loading) {
+  if (!data || loading) {
     return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
   }
 
@@ -81,9 +82,9 @@ export default function Meeting() {
   const onPressDeleteMeeting = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" });
-      if (!response.ok) {throw new Error("Failed to delete the meeting"); }
+      if (!response.ok) { throw new Error("Failed to delete the meeting"); }
       nav.navigate(PAGES.MAIN);
-    } catch (error) {console.error("Error deleting the meeting:", error);}
+    } catch (error) { console.error("Error deleting the meeting:", error); }
   }
   const onPressFooterBtn = async () => {
     if (userData.usreRole === "EXTERNAL") {
@@ -107,57 +108,78 @@ export default function Meeting() {
       } catch (error) { console.error("Error 모임신청 해제:", error); }
     }
   }
-  return (
-    // <MeetingHistory></MeetingHistory>
-    // <VerifyEmail></VerifyEmail>
-    // <Register></Register>
-    <MeetingHistoryCreate></MeetingHistoryCreate>
-    // <Layout screen={PAGES.MEETING} title={data.name}>
-      // <UserContext.Provider value={userContextValues}>
-        // <Container>
-          // <Header><WithLocalSvg asset={runningPhoto} /></Header>
-          // <TabContainer>
-            // <TabWrapper isActive={activeTab === 0} onPress={() => handleTabPress(0)}>
-              // <Tab isActive={activeTab === 0}>모임 정보</Tab></TabWrapper>
-            // <TabWrapper isActive={activeTab === 1} onPress={() => handleTabPress(1)}>
-          //     <Tab isActive={activeTab === 1}>구성원</Tab></TabWrapper>
-          //   <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
-          //     <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
-          // </TabContainer>
-          // {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap}/>}
-          // {activeTab === 0 && <Line></Line>}
-          // {activeTab === 0 && userData.userRole === "LEADER" &&
-          //   <View>
-          //     <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
-          //     <Modal>
-          //       <ModalHeader>
-          //         <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
-          //       </ModalHeader>
-          //       <ModalFooter>
-          //         <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
-          //         <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
-          //       </ModalFooter>
-          //     </Modal>
-            // </View>}
-          // {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
-          // {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
-          // {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
-          /* {activeTab === 0 && <CommentView comments={comments} />} */
-          /* {activeTab === 0 && <CommentInputWrapper>
+  if (data !== null) {
+    console.log(data.thumbnailUrls);
+    return (
+      // <MeetingHistory></MeetingHistory>
+      // <VerifyEmail></VerifyEmail>
+      // <Register></Register>
+      // <MeetingHistoryCreate></MeetingHistoryCreate>
+      // <MeetingBoard></MeetingBoard>
+      <Layout screen={PAGES.MEETING} title={data.name}>
+        <UserContext.Provider value={userContextValues}>
+          <Container>
+            <Header>
+              {data.thumbnailUrls ? (
+                <ImageContainer>
+                  <StyledImage source={{ uri: data.thumbnailUrls[0] }} />
+                </ImageContainer>
+              ) : (
+                <Text>기본이미지</Text>
+              )}
+            </Header>
+            <TabContainer>
+              <TabWrapper isActive={activeTab === 0} onPress={() => handleTabPress(0)}>
+                <Tab isActive={activeTab === 0}>모임 정보</Tab></TabWrapper>
+              <TabWrapper isActive={activeTab === 1} onPress={() => handleTabPress(1)}>
+                <Tab isActive={activeTab === 1}>구성원</Tab></TabWrapper>
+              <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
+                <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
+            </TabContainer>
+            {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} />}
+            {activeTab === 0 && <Line></Line>}
+            {activeTab === 0 && userData.userRole === "LEADER" &&
+              <View>
+                <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
+                <Modal>
+                  <ModalHeader>
+                    <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
+                  </ModalHeader>
+                  <ModalFooter>
+                    <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
+                    <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
+                  </ModalFooter>
+                </Modal>
+              </View>}
+            {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
+            {/* {activeTab === 0 && <CommentView comments={comments} />}
+          {activeTab === 0 && <CommentInputWrapper>
             <CommentInput placeholder="댓글 예시입니다."></CommentInput>
             <UploadBtnWraaper><WithLocalSvg
-              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */
-          // {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested}></WatingMemberList>}
-          // {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
-          // {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole}></TeamMemberList>}
-          // {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
-          // <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
-          // {activeTab === 2 && <PlusBtn><Text>+</Text></PlusBtn>}
-        // </Container>
-      // </UserContext.Provider>
-    // </Layout>
-  );
+              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
+            {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested}></WatingMemberList>}
+            {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
+            {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole}></TeamMemberList>}
+            {activeTab === 2 && <PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{})}><Text>+</Text></PlusBtn>}
+            {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
+            
+          </Container>
+        </UserContext.Provider>
+      </Layout>
+    );
+  }
 }
+const ImageContainer = styled.View`
+  height:auto;
+  width:100%;  
+`;
+const StyledImage = styled.Image`
+  height:auto;
+  width:100%;
+  aspect-ratio: 20 / 9;
+`;
 const ModalLable = styled.Text`
   fontWeight:${(props) => props.theme.font.weight.medium};
   fontSize:${(props) => props.theme.font.size.primary};
@@ -199,20 +221,13 @@ fontWeight:${(props) => props.theme.font.weight.bold};
     color:white;
 `;
 const PlusBtn = styled(Animated.createAnimatedComponent(styled.Pressable`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
   background-color: #007aff;
+  marginLeft:80%;
   width: 60px;
   height: 60px;
   border-radius: 30px;
   justify-content: center;
   align-items: center;
-  shadow-color: #000;
-  shadow-opacity: 0.3;
-  shadow-offset: 0px 2px;
-  shadow-radius: 5px;
-  elevation: 5;
 `))``;
 const Container = styled.ScrollView`
   flex:1;
@@ -261,7 +276,7 @@ const CommentInput = styled.TextInput`
   padding:3px;
   width:100%;
   borderRadius:12px;
-  borderColor:${greyBlueColors[500]};
+  borderColor: #005EB8;
   border-width:1px;
 `;
 const UploadBtnWraaper = styled.View`
@@ -269,7 +284,6 @@ const UploadBtnWraaper = styled.View`
   right:18px;
   top:10px;
 `;
-
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
