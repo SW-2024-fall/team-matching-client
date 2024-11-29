@@ -1,33 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { Alert, View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { PAGES } from '../../../navigation/constant';
 import { useAuth } from '../AuthProvider';
 import Layout from '../../../layout/layout';
 import logo from '../../../assets/logo.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserTokenContext from '../../../hooks/UserTokenContext';
+import { useContext } from 'react';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const nav = useNavigation();
   const { doLogin } = useAuth(); 
+  const { userToken, setUserToken } = useContext(UserTokenContext);
   const handleLogin = () => {
-    const {token} = "testToken";
-    // 로그인 처리 로직 추가
-    // 예: 이메일 유효성 검사
     if (!email || !password) {
       setEmailError('이메일 또는 비밀번호를 확인해주세요.');
       return;
     }
-    // 이메일과 비밀번호가 유효할 경우 로그인 처리
-    else loginGo(token)
+    else tryLogin();
    
   };
-  const loginGo = async (token) => {
-     console.log('로그인 시도:', { email, password });
-    doLogin(token);
-    nav.navigate(PAGES.MAIN, {});
+  // const [data, setData] = useState(null);
+  const tryLogin = async () => {
+    console.log('로그인 시도:', { email, password });
+    try {
+      const response = await fetch(`http://localhost:8080/api/auth/login`, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // JSON 형식으로 전송
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        })
+      })
+      .then(response =>{
+        if (!response.ok) {
+          Alert.alert("아이디 또는 비밀번호를 확인하세요.");
+        }
+        return response.json()
+      })
+      .then(data =>{
+        console.log(data.data.accessToken);
+        // doLogin(data.data.token);
+        setUserToken(data.data.accessToken);
+        AsyncStorage.setItem('userToken', data.data.accessToken).then(nav.navigate(PAGES.MAIN));
+        // nav.navigate(PAGES.MAIN,{});
+
+      })
+      // .then(nav.navigate(PAGES.MAIN,{}));
+
+
+    } catch (error) {}
+
+    // nav.navigate(PAGES.MAIN, {});
 
   };
 
@@ -35,7 +65,6 @@ const LoginScreen = () => {
 
     <View style={styles.container}>
       <WithLocalSvg asset={logo} width={147} height={24}/>
-      {/* <Text style={{fontSize: 25, marginBottom: 10}}> 대충 로고 </Text> */}
       <Text style={styles.title}>이메일을 입력해주세요</Text>
       <View style={styles.emailContainer}>
         <TextInput
@@ -65,7 +94,7 @@ const LoginScreen = () => {
       </TouchableOpacity>
 
     <View style={styles.signupContainer}>
-          <Pressable onPress={()=>nav.navigate(PAGES.VERIFY_EMAIL)}>
+          <Pressable onPress={()=>nav.navigate(PAGES.REGISTER)}>
             <Text style={styles.detailedText}>회원가입하기</Text>
           </Pressable>
     </View>

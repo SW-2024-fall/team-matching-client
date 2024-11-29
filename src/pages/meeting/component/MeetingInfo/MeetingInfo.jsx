@@ -13,33 +13,40 @@ import scrap from '../../../../assets/scrap.svg';
 import notScrap from '../../../../assets/notScrap.svg';
 import blueHand from '../../../../assets/blueHand.svg';
 import UserContext from "../../hooks/UserContext";
-// const daysToKoreanText = (days) => {
-//     const dayMap = {
-//       MON: '월',
-//       TUE: '화',
-//       WED: '수',
-//       THU: '목',
-//       FRI: '금',
-//       SAT: '토',
-//       SUN: '일',
-//     };
-//     const koreanDays = days.map(day => dayMap[day]).join('/');
-//     return `매주 ${koreanDays}`;
-//   };
+import UserTokenContext from "../../../../hooks/UserTokenContext";
+const daysToKoreanText = (days) => {
+    const dayMap = {
+      MONDAY: '월',
+      TUESDAY: '화',
+      WEDNESDAH: '수',
+      THURSDAY: '목',
+      FRIDAY: '금',
+      SATURDAY: '토',
+      SUNDAY: '일',
+    };
+    const koreanDays = days.map(day => dayMap[day]).join('/');
+    return `매주 ${koreanDays}`;
+  };
 
-export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
+export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe }) {
+    console.log(meetingData);
     const myContext = useContext(UserContext);
+    const {userToken, setUserToken} = useContext(UserTokenContext);
     const onPressLike = async () => {
         if (isLike) {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" });
+                console.log("Like delete");
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
                 if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
+                else{setRe(!re)}
             } catch (error) { console.error("Error 좋아요 취소:", error); }
         }
         else {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "POST" });
+                console.log("Liked");
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "POST",headers: {'Authorization': `Bearer ${userToken}`} });
                 if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
+                else{setRe(!re)}
             } catch (error) { console.error("Error 좋아요 추가:", error); }
         }
 
@@ -47,14 +54,18 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
     const onPressScrap = async () => {
         if (isScrap) {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
+                console.log("Scrap Deleted");
                 if (!response.ok) { throw new Error("Failed to 스크랩 취소"); }
+                else{setRe(!re)}
             } catch (error) { console.error("Error 스크랩 취소:", error); }
         }
         else {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                console.log("Scrap");
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "POST" ,headers: {'Authorization': `Bearer ${userToken}`}});
                 if (!response.ok) { throw new Error("Failed to 스크랩 추가"); }
+                else{setRe(!re)}
             } catch (error) { console.error("Error 스크랩 추가:", error); }
         }
 
@@ -79,7 +90,7 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
                         {myContext.userData.userRole === "EXTERNAL" || myContext.userData.userRole === "REQUESTED" ? 
                         <WithLocalSvg asset={hand}/> : <WithLocalSvg asset={blueHand}/>}
                         
-                        <HeaderFootText>  {meetingData.currentParticipant}/{meetingData.maxParticipant}</HeaderFootText>
+                        <HeaderFootText>  {meetingData.currentParticipants}/{meetingData.maxParticipant}</HeaderFootText>
                     </HeaderFooterRight>
                 </HeaderFooter>
             </Header>
@@ -87,7 +98,7 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
                 <MeetingAiInfo data={meetingData}></MeetingAiInfo>
                 <BodyTextWarraper>
                     <WithLocalSvg asset={calendar} />
-                    {/* <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText> */}
+                    <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText>
                 </BodyTextWarraper>
                 <BodyTextWarraper>
                     <WithLocalSvg asset={location} />
@@ -96,10 +107,6 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
                 <BodyTextWarraper>
                     <WithLocalSvg asset={o} />
                     <BodyText>    {meetingData.meta} </BodyText>
-                </BodyTextWarraper>
-                <BodyTextWarraper>
-                    <WithLocalSvg asset={o} />
-                    <BodyText>    참가비: 20000원  </BodyText>
                 </BodyTextWarraper>
             </Body>
         </Container>
@@ -155,5 +162,6 @@ const BodyText = styled.Text`
     fontWeight:${(props) => props.theme.font.weight.regular};
     fontSize:${(props) => props.theme.font.size.small};
     color:${(props) => props.theme.font.color.primary};
+    marginLeft:5px;
    
 `;

@@ -1,41 +1,58 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Alert } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
 import profile2 from '../../../../assets/profileExample2.svg';
 import UserContext from "../../hooks/UserContext";
 import { WithLocalSvg } from "react-native-svg/css";
-import { useContext } from "react";
-
-export default function MemberComponent({ id, memberData }) {
+import { useContext, useState } from "react";
+import UserTokenContext from "../../../../hooks/UserTokenContext";
+import { Image } from "react-native-svg";
+export default function MemberComponent({ id, memberData, re, setRe}) {
     const myContext = useContext(UserContext);
+    const { userToken, setUserToken } = useContext(UserTokenContext);
+    
     const onPressOut = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/leave?targetUserId=${memberData.id}`, {
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/leave`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${userToken}`
                 },
                 body: JSON.stringify({ targetUserId: memberData.id }), // JSON 형식으로 데이터 설정
             });
             if (!response.ok) { throw new Error("Failed to 모임원 내보내기"); }
+            else{Alert.alert('성공','모임원을 내보내었습니다.'); setRe(!re)}
         } catch (error) { console.error("Error 모임원 내보내기", error); }
     };
     const onPressUpgrade = async () => {
+        console.log("dasdsds")
         try {
-            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/upgrade?targetUserId=${memberData.id}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/upgrade`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${userToken}`
+                },
+                body: JSON.stringify({ targetUserId: memberData.id }), // JSON 형식으로 데이터 설정
+            });
             if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+            else{Alert.alert('성공','부모임장 승급이 완료되었습니다.'); setRe(!re)}
         } catch (error) { console.error("Error 부모임장 승급", error); }
     };
     return (
         <Container>
             <BaseInfoContainer>
-                <WithLocalSvg asset={profile2} />
+                <StyledImage
+                source={{uri:memberData.profileUrl}}
+               
+            />
                 <View>
                     <BaseInfoHeader>
                         <Name>{memberData.name}</Name>
                         {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
-                            <OutPressable onPres={onPressUpgrade}>
-                                <OutText>부모임장 승급 </OutText>
+                            <OutPressable onPress={onPressUpgrade}>
+                                <OutText> 부모임장 승급 </OutText>
                             </OutPressable>}
                         {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
                             <OutPressable onPress={onPressOut}>
@@ -67,7 +84,12 @@ export default function MemberComponent({ id, memberData }) {
         </Container>
     )
 }
+const StyledImage = styled.Image`
+width:30px;
+height:30px;
+borderRadius:15px;
 
+`;
 const Container = styled.View`
     flex:1;
     flexDirection:row;

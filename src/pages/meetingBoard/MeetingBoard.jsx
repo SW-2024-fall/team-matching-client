@@ -8,6 +8,10 @@ import MeetingItem from './components/MeetingItem';
 import FilterModal from './components/FilterModal';
 import FloatingButton from './components/FloatingButton';
 import styled from 'styled-components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserTokenContext from '../../hooks/UserTokenContext';
+import { useContext } from 'react';
+import { theme } from '../../styles/ThemeStyles';
 
 const API_URL = 'http://localhost:8080/api/meetings';
 
@@ -25,25 +29,39 @@ export default function MeetingBoard({ navigation }) {
     const [error, setError] = useState(null);
     const [filterVisible, setFilterVisible] = useState(false);
     const [filteredData, setFilteredData] = useState([]);  // 초기 값은 빈 배열
-
+    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(0);
+    const [pagedData, setPagedData] = useState(null);
+    useEffect(()=>{
+        console.log("page = "+page);
+        setPagedData(data.slice((page-1)*10 , page*10));
+    },[page])
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // 모든 모임 목록을 가져오기
-                const response = await fetch(API_URL, { method: 'GET' });
+                const response = await fetch(API_URL, { 
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`, // JWT 포함
+                      },
+                 });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const json = await response.json();
-
+                setMaxPage(Math.ceil(json.data.length/10));
                 // 각 모임의 세부 정보를 비동기적으로 가져오기
                 const detailedData = await Promise.all(
                     json.data.map(async (item) => {
-                        const meetingResponse = await fetch(`${API_URL}/${item.id}`);
-                        //console.log("API URL for details:", `${API_URL}/${item.id}`);
-                        //console.log("API 내용: ", meetingResponse);
+                        const meetingResponse = await fetch(`${API_URL}/${item.id}`,{
+                            method: 'GET',
+                            headers: {
+                              'Authorization': `Bearer ${userToken}`, // JWT 포함
+                            },
+                        });
                         const meetingDetailsText = await meetingResponse.text();
-                        //console.log(meetingDetails);
                         const meetingDetails = JSON.parse(meetingDetailsText);
                         const mergedItem = { ...item, 
                             categories: meetingDetails.data.info.categories, 
@@ -51,14 +69,16 @@ export default function MeetingBoard({ navigation }) {
                             minParticipant: meetingDetails.data.info.minParticipant,
                             maxParticipant: meetingDetails.data.info.maxParticipant,
                             ...meetingDetails };
-                        //console.log(mergedItem)
                         return mergedItem;  // 기존 모임 데이터와 세부 정보 병합
                         
                     })
                 );
+                
 
                 setData(detailedData);  // 상세 정보를 포함한 데이터를 상태에 저장
-                setLoading(false);  // 로딩 완료
+                setPagedData(data.slice((page-1)*10 , page*10));
+                
+                // setLoading(false);  // 로딩 완료
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -112,7 +132,6 @@ export default function MeetingBoard({ navigation }) {
         });
 
         setFilteredData(newData);  // 필터링된 데이터 저장
-        //console.log(newData,"\n\n")
         setFilterVisible(false);  // 필터 모달 닫기
     };
 
@@ -136,7 +155,7 @@ export default function MeetingBoard({ navigation }) {
                 <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
             </Header>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    {(filteredData.length > 0 ? filteredData : data).map((item) => (
+                    {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
                         <MeetingItem 
                             key={item.id} 
                             item={item} 
@@ -149,12 +168,27 @@ export default function MeetingBoard({ navigation }) {
                     onClose={() => setFilterVisible(false)} 
                     onApply={handleFilterApply} 
                 />
+                <PageContainer>
+                    {maxPage >0 && <Pressable onPress={()=>setPage(1)}><PageText isPage={page===1}>1</PageText></Pressable>}
+                    {maxPage >1 && <Pressable onPress={()=>setPage(2)}><PageText isPage={page===2}>2</PageText></Pressable>}
+                    {maxPage >2 && <Pressable onPress={()=>setPage(3)}><PageText isPage={page===3}>3</PageText></Pressable>}
+                    {maxPage >3 && <Pressable onPress={()=>setPage(4)}><PageText isPage={page===4}>4</PageText></Pressable>}
+                    {maxPage >4 && <Pressable onPress={()=>setPage(5)}><PageText isPage={page===5}>5</PageText></Pressable>}
+                </PageContainer>
             </View>
-            <FloatingButton onPress={handleFloatingButtonPress} style={styles.floatingButton} />
+            {/* <FloatingButton onPress={handleFloatingButtonPress} style={styles.floatingButton} /> */}
         </Layout>
     );
 }
-
+const PageText = styled.Text`
+    color: ${(props) => (props.isPage ? 'blue' : 'black')};
+`;
+const PageContainer = styled.View`
+    flexDirection:row;
+    justifyContent:space-between;
+    marginLeft:40%;
+    width:20%
+`;
 const Header = styled.View`
 width:20%;
 justifyContent:space-between;
@@ -172,7 +206,7 @@ alignItems:center;
 const CreatePressable = styled.Pressable`
 width:30px;
 height:30px;
-backgroundColor:blue;
+backgroundColor:${(props) => props.theme.colors.blue.primary};
 borderRadius:15px;
 justifyContent:center;
 alignItems:center;
@@ -180,7 +214,7 @@ alignItems:center;
 const CreateText = styled.Text`
 color:white;
 fontWeight:900;
-fontSize:20;
+
 marignBottom:10px;
 `;
 const styles = StyleSheet.create({

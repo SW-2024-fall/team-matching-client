@@ -12,9 +12,14 @@ import RadioButtonGroup from './components/RadioButtonGroup';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
-
+import UserTokenContext from '../../../hooks/UserTokenContext';
+import { useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 export default function MeetingCreate() {
+  const {userToken, setUserToken} = useContext(UserTokenContext);
+  const nav = useNavigation();
 
+  const [meetingId, setMeetingId] = useState('');
   const [meetingName, setMeetingName] = useState('');
   const [meetingTitle, setMeetingTitle] = useState('title');
   const [meetingType, setMeetingType] = useState('');
@@ -139,6 +144,7 @@ export default function MeetingCreate() {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${userToken}`
       },
       body: formData
     });
@@ -146,13 +152,46 @@ export default function MeetingCreate() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
-    Alert.alert('성공', '모임이 성공적으로 생성되었습니다.');
+    // setMeetingId(response.data.id)
+    Alert.alert(
+      '성공',
+      '모임이 성공적으로 생성되었습니다.',
+      [
+        {
+          text: '확인',
+          onPress: () => {
+            // 여기서 원하는 이벤트를 발생시킵니다.
+            nav.navigate(PAGES.MEETING_BOARD);
+            // 추가적인 이벤트 처리 로직을 여기에 작성
+          },
+        },
+      ],
+      { cancelable: false } // 배경을 클릭해도 닫히지 않게 설정
+    );
     console.log('Created meeting:', response.data);
   } catch (error) {
     Alert.alert('오류', '모임 생성에 실패했습니다. 다시 시도해 주세요.');
     console.error('Failed to create meeting:', error);
   }
+
+  // 모임 생성 시 모임장 권한 부여
+  // try {
+  //     const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}`, { 
+  //     method: 'POST',
+  //     headers: {
+  //       'Authorization': `Bearer ${userToken}`
+  //     },
+      
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+
+  //   console.log('Created meeting:', response.data);
+  // } catch (error) {
+  //   console.error('Failed to create meeting:', error);
+  // }
 };
 
   // 정기/일회성 이동 시 요일 초기화 필요
@@ -171,7 +210,7 @@ export default function MeetingCreate() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaType,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,

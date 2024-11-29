@@ -7,6 +7,7 @@ import { WithLocalSvg } from "react-native-svg/css";
 import { useState } from "react";
 
 export default function ActivityRecord({ data }) {
+    console.log(data);
     const [menuVisible, setMenuVisible] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
     const handlePress = (event) => {
@@ -36,7 +37,7 @@ export default function ActivityRecord({ data }) {
 
                         <Header><HeaderText>{data.title}</HeaderText></Header>
                         <Body><BodyText>{data.content}</BodyText></Body>
-                        <ActivityRecorder name={data.writer.name} meetingName={data.meetingName} profileUrl={data.profileUrl}></ActivityRecorder>
+                        <ActivityRecorder name={data.writer.name} meetingName={data.meetingName} profileUrl={data.writer.profileUrl}></ActivityRecorder>
                         <Footer>
                             {!menuVisible && <Pressable onPress={handlePress}>
                                 <WithLocalSvg asset={menu} />

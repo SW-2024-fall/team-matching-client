@@ -9,7 +9,8 @@ import runningPhoto from '../../assets/runningPhoto.svg';
 import ActivityDatailInfo from './component/ActivityDetailInfo';
 import ActivityMemberList from './component/ActivityMemberList';
 import ActivityRecord from './component/ActivityRecord';
-
+import UserTokenContext from '../../hooks/UserTokenContext';
+import { useContext } from 'react';
 const screenWidth = Dimensions.get('window').width;
 
 export default function MeetingHistory() {
@@ -20,13 +21,16 @@ export default function MeetingHistory() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { userToken, setUserToken } = useContext(UserTokenContext);
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        ; const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "GET" });
+        ; const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "GET",headers: {
+          'Authorization': `Bearer ${userToken}`, // JWT 포함
+        }, });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

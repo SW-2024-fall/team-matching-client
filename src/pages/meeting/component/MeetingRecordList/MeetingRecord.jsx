@@ -8,8 +8,9 @@ import useModal from "../../../../hooks/useModal";
 import { useState } from "react";
 import { PAGES } from '@navigation/constant';
 import { useNavigation } from "@react-navigation/native";
+import { Image } from "react-native-svg";
 
-export default function MeetingRecord({ name, group, content, historyId }) {
+export default function MeetingRecord({ name, group, content, historyId , uri, thumbnailUrl}) {
     const previewText = content.length > 100 ? `${content.substring(0, 100)}...` : content;
     const { Modal, open, close } = useModal();
     const nav = useNavigation();
@@ -44,7 +45,9 @@ export default function MeetingRecord({ name, group, content, historyId }) {
                     <Pressable onPress={onPressEnterDetail}>
                         <HeaderLeft>
 
-                            <WithLocalSvg asset={profile1} />
+                            {/* <WithLocalSvg asset={profile1} /> */}
+                            <StyledImg
+                            source={{uri:uri}}></StyledImg>
                             <HeaderNameContainer>
                                 <Name>{name}</Name>
                                 <MeetingName >{group}</MeetingName>
@@ -81,7 +84,10 @@ export default function MeetingRecord({ name, group, content, historyId }) {
                 </Modal> */}
                 </Header>
                 <PhotoWrapper>
-                    <WithLocalSvg asset={runningPhoto} />
+                    {/* <WithLocalSvg asset={runningPhoto} /> */}
+                    {thumbnailUrl === null ? <View></View> : 
+                    <StyledImg2 source={{uri:thumbnailUrl}}></StyledImg2>
+                    }
                 </PhotoWrapper>
 
                 <Content numberOfLines={3}>{previewText}</Content>
@@ -89,6 +95,15 @@ export default function MeetingRecord({ name, group, content, historyId }) {
         </TouchableWithoutFeedback>
     )
 }
+const StyledImg2 = styled.Image`
+    width:100%;
+    height:200px;
+`;
+const StyledImg = styled.Image`
+    width:30px;
+    height:30px;
+    borderRadius:15px;
+`;
 const Line = styled.View`
   borderBottomWidth:1px;
   width:100%;

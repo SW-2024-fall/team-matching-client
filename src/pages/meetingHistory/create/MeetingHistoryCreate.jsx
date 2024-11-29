@@ -1,21 +1,32 @@
 import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert, View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Input from './components/Input';
 import AttendanceCheck from './components/AttendanceCheck';
 import * as ImagePicker from 'expo-image-picker'
 import Button from './components/Button';
 import { Calendar } from 'react-native-calendars';
-import { useNavigation } from '@react-navigation/native';
+import UserTokenContext from '../../../hooks/UserTokenContext';
+import { useContext } from 'react'
+
 export default function MeetingHistoryCreate() {
+  const route = useRoute();
+  const { id } = route.params;
   const [title, setTitle] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [activityDetails, setActivityDetails] = useState('');
   const [activityPlace, setActivityPlace] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [participants, setParticipants] = useState([]);
   const [images, setImages] = useState([]);
+  const {userToken, setUserToken} = useContext(UserTokenContext);
+
+  const [statuses, setStatuses] = useState([]);
+  const [attendanceState, setAttendanceState] = useState([]);
   const nav = useNavigation();
   const handleNext = async () => {
 
@@ -26,19 +37,17 @@ export default function MeetingHistoryCreate() {
       content: activityDetails,
       date: selectedDate,
       isPublic: isPublic,
-      meetingId: 10,
+      meetingId: id,
       location: activityPlace,
-      attendanceStates: [
-        {
-          userId: "test",
-          attendanceState: "TRUANCY"
-        },
-        {
-          userId: "test3",
-          attendanceState: "LATE"
-        }
-      ]
+      // attendanceStates: [
+      //   {
+      //     userId: "test",
+      //     attendanceState: statuses[userId]
+      //   },
+      // ]
+      attendanceStates: attendanceState
     };
+
 
     formData.append('history', { "string": JSON.stringify(historyData), type: "application/json" });
 
@@ -55,6 +64,7 @@ export default function MeetingHistoryCreate() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
         },
         body: formData
       });
@@ -66,7 +76,6 @@ export default function MeetingHistoryCreate() {
       Alert.alert('성공', '모임 기록이 로 생성되었습니다.');
       console.log('Created History:', response.data);
       nav.navigate(PAGES.MAIN,{});
-      nav
     } catch (error) {
       Alert.alert('오류', '모임 기록 생성에 실패했습니다. 다시 시도해 주세요.');
       console.error('Failed to create History:', error);
@@ -117,7 +126,7 @@ export default function MeetingHistoryCreate() {
   };
 
   return (
-    <Layout screen={PAGES.MEETING_HISTORY_CREATE}>
+    // <Layout screen={PAGES.MEETING_HISTORY_CREATE}>
       <ScrollView style={styles.container}>
         <Text style={styles.label}>제목을 작성해 주세요</Text>
         <Input
@@ -191,12 +200,12 @@ export default function MeetingHistoryCreate() {
           </View>
         ))}
 
-        <AttendanceCheck />
+        <AttendanceCheck id={id} attendanceState={attendanceState} setAttendanceState={setAttendanceState}/>
 
         <Button title="저장" onPress={handleNext} isNextButton={true} />
 
       </ScrollView>
-    </Layout>
+    // </Layout>
   );
 }
 

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 
 const FeedPost = ({ id, name, title, profileUrl, thumbnailUrl, preview , navigation}) => {
+    console.log(thumbnailUrl)
     return (
         <View style={styles.postContainer}>
             <Pressable onPress={() => navigation.navigate(PAGES.MEETING_HISTORY, { historyId: id, title:title })}  >
@@ -20,7 +21,7 @@ const FeedPost = ({ id, name, title, profileUrl, thumbnailUrl, preview , navigat
             </View>
             {thumbnailUrl && (
                 <Image 
-                    source={typeof thumbnailUrl === 'string' ? { uri: thumbnailUrl } : thumbnailUrl} 
+                    source={{ uri: thumbnailUrl }} 
                     style={styles.thumbnailUrl} 
                 />
             )}
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
         height: 200,
         marginBottom: 10,
         borderRadius: 12,
-        backgroundColor: theme.colors.grey.light, // 이미지가 로드되지 않을 경우의 배경색
+        // backgroundColor: theme.colors.grey.light, // 이미지가 로드되지 않을 경우의 배경색
     },
     postPreview: {
         color: theme.font.color.primary,

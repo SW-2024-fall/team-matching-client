@@ -23,7 +23,7 @@ import DefaultHeader from '@layout/header/DefaultHeader';
 import MainHeader from '@layout/header/MainHeader';
 import TitleHeader from '@layout/header/TitleHeader';
 import { useAuth } from '../pages/auth/AuthProvider';
-
+import MyProfile from '../pages/profile/MyProfile.jsx';
 const Stack = createNativeStackNavigator();
 
 const AuthGuard = () => {
@@ -115,7 +115,7 @@ export default function Navigation() {
             <Stack.Screen name={PAGES.MEETING_BOARD} component={MeetingBoard} />
 
             {/* <Stack.Screen name={PAGES.PROFILE_STACK} component={ProfileStack} /> */}
-            <Stack.Screen name={PAGES.PROFILE} component={Profile}  />
+            <Stack.Screen name={PAGES.PROFILE} component={MyProfile}  />
             <Stack.Screen name={PAGES.PROFILE_EDIT} component={ProfileEdit} />
 
 

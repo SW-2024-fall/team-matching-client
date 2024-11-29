@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AsyncStorage } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // 인증 상태를 관리하는 Context 생성
 const AuthContext = createContext();
 

@@ -1,28 +1,46 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Alert } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
 import profile1 from '../../../../assets/profileExample1.svg';
-
+import UserTokenContext from "../../../../hooks/UserTokenContext";
+import { useContext, useState } from "react";
 import { WithLocalSvg } from "react-native-svg/css";
 
-export default function WaitingMemberComponent({ memberData }) {
+export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
+    const { userToken, setUserToken } = useContext(UserTokenContext);
+   console.log(memberData);
     const onPressIn = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/accept?targetUserId=${memberData.id}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/accept`, 
+                { 
+                    method: "PUT" ,
+                headers: {
+                    'Authorization': `Bearer ${userToken}`,
+                    'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ targetUserId: memberData.id }) 
+            });
             if (!response.ok) { throw new Error("Failed to 모임원 신청 수락"); }
+            else{Alert.alert('성공','모임신청이 수락되었습니다'); setRe(!re)}
           } catch (error) { console.error("Error 모임원 신청 수락", error); }
     };
     const onPressOut = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/reject?targetUserId=${memberData.id}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/reject`, 
+                { method: "PUT",headers: {'Authorization': `Bearer ${userToken}`},
+                headers: {
+                    'Authorization': `Bearer ${userToken}`,
+                    'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ targetUserId: memberData.id }) });
             if (!response.ok) { throw new Error("Failed to 모임원 신청 거절"); }
+            else{Alert.alert('성공','모임신청이 거절되었습니다'); setRe(!re)}
           } catch (error) { console.error("Error 모임원 신청 거절", error); }
     };
     return (
         <Container>
             <BaseInfoContainer>
-                <WithLocalSvg
-                    asset={profile1} />
+                <StyledImage source={{uri:memberData.profileUrl}}/>
                 <View>
                     <BaseInfoHeader>
                         <Name>{memberData.name}</Name>
@@ -54,7 +72,12 @@ export default function WaitingMemberComponent({ memberData }) {
         </Container>
     )
 }
+const StyledImage = styled.Image`
+width:30px;
+height:30px;
+borderRadius:15px;
 
+`;
 const Container = styled.View`
     flex:1;
     flexDirection:row;

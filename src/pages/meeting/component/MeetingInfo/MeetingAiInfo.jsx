@@ -12,11 +12,11 @@ export default function MeetingAiInfo({data}) {
             </Body>
             <Footer1>
                 {data.features && data.features.map((item,index)=>
-                    <Footer1Tag># {item} </Footer1Tag>)}
+                    <Footer1Tag key={index}># {item} </Footer1Tag>)}
             </Footer1>
             <Footer2>
                 {data.analyzedFeatures && data.analyzedFeatures.map((item,index)=>
-                <Footer2TagWrraper><Footer2Tag>{item}</Footer2Tag></Footer2TagWrraper>)}
+                <Footer2TagWrraper key={index}><Footer2Tag>{item}</Footer2Tag></Footer2TagWrraper>)}
             </Footer2>
         </Container>
     );

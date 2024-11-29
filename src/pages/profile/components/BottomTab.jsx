@@ -1,8 +1,10 @@
 import { WithLocalSvg } from 'react-native-svg/css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { theme } from '../../../styles/ThemeStyles';
 import MeetingItem from '@pages/profile/components/MeetingItem';
+import UserTokenContext from '../../../hooks/UserTokenContext';
+import { useContext } from 'react'
 
 const tabIcons = {
     모임: require('@assets/teamIcon.svg'),
@@ -26,7 +28,97 @@ const tabTitles = {
 };
 
 const BottomTab = () => {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [loading2, setLoading2] = useState(true);
+    const [error2, setError2] = useState(null);
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
+    const [likedMeeting, setLikedMeeting] = useState([]); // Default tab
+    const [scrappedMeeting, setScrappedMeeting] = useState(''); // Default tab
+    const {userToken, setUserToken} = useContext(UserTokenContext);
+    const [Data, setData] = useState({
+        스크랩: [],
+        모임: [],
+        댓글: [],
+        좋아요: [],
+      });
+
+      useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/meetings/user`, { 
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const json = await response.json();
+                setData((prevData) => ({
+                    ...prevData, // 이전 상태 복사
+                    모임: json.data // 좋아요 속성만 업데이트
+                  }));
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/users/likes`, { 
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const json = await response.json();
+                setData((prevData) => ({
+                    ...prevData, // 이전 상태 복사
+                    좋아요: json.data // 좋아요 속성만 업데이트
+                  }));
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/users/scraped`, { 
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const json = await response.json();
+                setData((prevData) => ({
+                    ...prevData, // 이전 상태 복사
+                    스크랩: json.data // 좋아요 속성만 업데이트
+                  }));
+            } catch (error) {
+                setError2(error.message);
+            } finally {
+                setLoading2(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const mockData = {
         모임: [{ id: '1', name: '모임1', preview: '모임 소개1 입니다. 최대 2줄까지 보여줍니다. 모임 소개1 입니다. 최대 2줄까지 보여줍니다.모임 소개1 입니다. 최대 2줄까지 보여줍니다. ', features: ['#특징1'], likeCount: 10, commentCount: 5, currentParticipants: 3, maxParticipants: 10, startDate: '2024-11-01', endDate: '2024-11-15' },
@@ -66,10 +158,10 @@ const BottomTab = () => {
             <Text style={styles.title}>
                 {tabTitles[selectedTab]}
             </Text>
-
+            
             {/* Meeting List */}
             <View style={styles.listContainer}>
-                {mockData[selectedTab].map((item) => (
+                {Data[selectedTab].map((item) => (
                     <MeetingItem key={item.id} item={item} />
                 ))}
             </View>

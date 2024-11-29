@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, Pressable, Dimensions, ActivityIndicator, View } from 'react-native';
+import { Text, Pressable, Dimensions, ActivityIndicator, View, Alert } from 'react-native';
 import { Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
@@ -23,7 +23,8 @@ import useFetch from './hooks/useFetch';
 import useModal from '../../hooks/useModal';
 import MeetingCreate from './create/MeetingCreate';
 import MeetingHistoryCreate from '../meetingHistory/create/MeetingHistoryCreate';
-
+import UserTokenContext from '../../hooks/UserTokenContext';
+import { useContext } from 'react';
 export default function Meeting() {
   const route = useRoute();
   const { id, title } = route.params;
@@ -36,28 +37,31 @@ export default function Meeting() {
   const [isLike, setIsLike] = useState(false);
   const [isScrap, setIsScrap] = useState(false);
   const nav = useNavigation();
+  const { userToken, setUserToken } = useContext(UserTokenContext);
   const { Modal, open, close } = useModal();
+  const [re, setRe] = useState(false);
   const userContextValues = {
     userData: userData,
     setUserData
   }
-  console.log(route.params);
   useEffect(() => {
+    console.log(id);
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`} });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const json = await response.json();
+        const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`}});
+        const memberJson = await memberRes.json()
         setData(json.data.info);
-        console.log("meetingData = " + JSON.stringify(data));
         setMemberData(json.data.members);
         setIsLike(json.data.liked);
         setIsScrap(json.data.scraped);
         setUserData({
-          userRole: "LEADER"
-        })
+          userRole: memberJson.data
+        }) 
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -66,7 +70,7 @@ export default function Meeting() {
       }
     };
     fetchData();
-  }, []);
+  }, [re]);
 
   if (!data || loading) {
     return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
@@ -81,35 +85,39 @@ export default function Meeting() {
   };
   const onPressDeleteMeeting = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" });
+      const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
       if (!response.ok) { throw new Error("Failed to delete the meeting"); }
       nav.navigate(PAGES.MAIN);
     } catch (error) { console.error("Error deleting the meeting:", error); }
   }
   const onPressFooterBtn = async () => {
-    if (userData.usreRole === "EXTERNAL") {
+    console.log(userData.userRole)
+    if (userData.userRole === "EXTERNAL") {
+      
+      console.log("모임 신청")
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" ,headers: {'Authorization': `Bearer ${userToken}`}});
         if (!response.ok) { throw new Error("Failed to 모임신청"); }
+        else{Alert.alert('성공','모임 신청되었습니다'); setRe(!re)}
       } catch (error) { console.error("Error 모임신청", error); }
     }
     else if (userData.userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { method: "DELETE" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { method: "DELETE",headers: {'Authorization': `Bearer ${userToken}`} });
         if (!response.ok) { throw new Error("Failed to 모임탈퇴"); }
       } catch (error) { console.error("Error 모임탈퇴:", error); }
     }
-    else if (userData.usreRole === "REQUESTED") {
+    else if (userData.userRole === "REQUESTED") {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "DELETE" });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
         if (!response.ok) {
           throw new Error("Failed to 모인 신청 해제");
         }
+        else{Alert.alert('성공','모임신청이 취소되었습니다'); setRe(!re)}
       } catch (error) { console.error("Error 모임신청 해제:", error); }
     }
   }
   if (data !== null) {
-    console.log(data.thumbnailUrls);
     return (
       // <MeetingHistory></MeetingHistory>
       // <VerifyEmail></VerifyEmail>
@@ -136,7 +144,7 @@ export default function Meeting() {
               <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
                 <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
             </TabContainer>
-            {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} />}
+            {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} re={re} setRe={setRe}/>}
             {activeTab === 0 && <Line></Line>}
             {activeTab === 0 && userData.userRole === "LEADER" &&
               <View>
@@ -159,10 +167,10 @@ export default function Meeting() {
             <CommentInput placeholder="댓글 예시입니다."></CommentInput>
             <UploadBtnWraaper><WithLocalSvg
               asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
-            {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested}></WatingMemberList>}
+            {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
             {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
-            {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole}></TeamMemberList>}
-            {activeTab === 2 && <PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{})}><Text>+</Text></PlusBtn>}
+            {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole} re={re} setRe={setRe}></TeamMemberList>}
+            {activeTab === 2 && <PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
             {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
             
           </Container>

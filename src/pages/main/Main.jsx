@@ -6,44 +6,34 @@ import { theme } from '../../styles/ThemeStyles';
 import StoryCircle from '@pages/main/components/StoryCircle';
 import FeedPost from '@pages/main/components/FeedPost';
 import { useEffect, useState } from 'react';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserTokenContext from '../../hooks/UserTokenContext';
+import { useContext } from 'react';
+import MyProfile from '../profile/MyProfile';
 
 export default function Main({ navigation }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [token, setToken] = useState(null);  // 상태로 토큰 값을 저장
-
-  // useEffect(() => {
-  //   const checkToken = async () => {
-  //     try {
-  //       const storedToken = await AsyncStorage.getItem('userToken'); // AsyncStorage에서 'userToken'을 읽어옴
-  //       if (storedToken) {
-  //         setToken(storedToken);  // 토큰이 있으면 상태에 저장
-  //         console.log("token = "+token);
-  //       } else {
-  //         setToken(null);  // 토큰이 없으면 null 설정
-  //       }
-  //     } catch (error) {
-  //       console.error("토큰을 읽는 중 오류 발생:", error);
-  //     }
-  //   };
-
-  //   checkToken();  // 컴포넌트가 마운트 될 때 토큰을 확인
-  // }, []);  // 빈 배열을 넣어서 한 번만 실행되도록 설정
-
+  const { userToken, setUserToken } = useContext(UserTokenContext);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/histories`, { method: 'GET' });
+        console.log("userToken main = "+userToken);
+        const response = await fetch(`http://localhost:8080/api/histories`, { 
+          method: 'GET' ,
+          headers: {
+            'Authorization': `Bearer ${userToken}`, // JWT 포함
+          },
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const json = await response.json();
         setData(json);
         setLoading(false);
-        //console.log(json); // 반환된 JSON 구조 확인
+        console.log(json); // 반환된 JSON 구조 확인
       } catch (error) {
         setError(error.message);
       } finally {
@@ -60,6 +50,7 @@ export default function Main({ navigation }) {
 
   return (
     <Layout screen={PAGES.MAIN} navigation={navigation}>
+      {/* <MyProfile></MyProfile> */}
         {data && 
 
         <View>

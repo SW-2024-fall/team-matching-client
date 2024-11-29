@@ -8,22 +8,24 @@ import { PAGES } from '@navigation/constant';
 export default function BaseHeader({ left, center, right }) {
   const LeftWrapper = styled(View)`
     position: absolute;
-    left: 15px;
-    bottom: 15px;
+    width:25%;
+    marginTop:30px;
+    marginLeft:5%;
   `;
 
   const CenterWrapper = styled(View)`
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 15px;
+    marginTop:30px;
+    width:25%;
+    marginLeft:42%;
     align-items: center;
   `;
 
   const RightWrapper = styled(View)`
     position: absolute;
-    right: 15px;
-    bottom: 15px;
+    marginTop:30px;
+    width:25%;
+    marginLeft:80%;
   `;
 
   const HeaderWrapper = styled(View)`

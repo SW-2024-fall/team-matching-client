@@ -3,11 +3,13 @@
 
 import BaseHeader from '@layout/header/BaseHeader';
 import { Pressable, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CreateHeader() {
+  const nav = useNavigation();
   function Cancel() {
     return (
-      <Pressable onPress={() => navigation.pop()}>
+      <Pressable onPress={() => nav.pop()}>
         <Text>취소</Text>
       </Pressable>
     );
@@ -15,7 +17,7 @@ export default function CreateHeader() {
 
   function Save() {
     return (
-      <Pressable onPress={() => navigation.pop()}>
+      <Pressable onPress={() => nav.pop()}>
         <Text>저장</Text>
       </Pressable>
     );

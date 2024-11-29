@@ -4,12 +4,14 @@ import styled from "styled-components";
 import profile2 from '../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
+import { Image } from "react-native-svg";
 
 export default function ActivityMemberComponent({ member }) {
     return (
         <Container>
             <BaseInfoContainer>
-                <WithLocalSvg asset={profile2} />
+                {/* <WithLocalSvg asset={profile2} /> */}
+                <StyledImg source={{uri:member.profileUrl}}></StyledImg>
                 <View>
                     <BaseInfoHeader>
                         <Name>{member.name}</Name>
@@ -32,7 +34,11 @@ export default function ActivityMemberComponent({ member }) {
         </Container>
     )
 }
-
+const StyledImg = styled.Image`
+    width:30px;
+    height:30px;
+    borderRadius:15px;
+`;
 const Container = styled.View`
     flex:1;
     flexDirection:row;
