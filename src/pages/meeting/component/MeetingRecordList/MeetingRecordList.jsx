@@ -1,23 +1,52 @@
-import { Text, View, FlatList, } from "react-native";
+import { ActivityIndicator, View,Text } from "react-native";
 import MeetingRecord from "./MeetingRecord";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 
-const data = [
-    { id: '1', name: '홍길동', group: '독서 모임', content: '오늘 독서 모임 정말 좋았어요! 오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!오늘 독서 모임 정말 좋았어요!' },
-    { id: '2', name: '최재원', group: '개발 모임', content: '오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.오늘 React Native 배웠어요.' },
-    { id: '3', name: '권민재', group: '운동 모임', content: '축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.축구 모임에서 많은 친구를 만났어요.' },
-];
+export default function MeetingRecordList({id}) {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/histories?page=0&size=1&sort=asc`, { method: "GET" });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const json = await response.json();
+                setData(json.data);
+                console.log("Data = "+JSON.stringify(data));
+                setLoading(false);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
-export default function MeetingRecordList() {
+    if (loading) {
+        return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+    }
+
+    if (error) {
+        return <Text style={{ fontSize: 20 }}>Error: {error}</Text>; // 에러 메시지 표시
+    }
     return (
         <Container>
-            <FlatList
-                data={data}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <MeetingRecord name={item.name} group={item.group} content={item.content} />
-                )}
-            />
+            <View>
+                {data.map((item) => (
+                    <MeetingRecord
+                        key={item.id}
+                        name={item.writer.name}
+                        group={item.meetingName}
+                        content={item.content}
+                        historyId={item.id}
+                    />
+                ))}
+            </View>
         </Container>
     )
 }

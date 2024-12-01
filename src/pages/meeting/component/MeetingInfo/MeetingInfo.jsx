@@ -1,4 +1,4 @@
-import { View, Text } from "react-native"
+import { View, Text, Pressable } from "react-native"
 import styled from "styled-components"
 import MeetingAiInfo from "./MeetingAiInfo";
 import hand from '../../../../assets/hand.svg';
@@ -6,51 +6,101 @@ import { WithLocalSvg } from 'react-native-svg/css';
 import location from '../../../../assets/location.svg';
 import calendar from '../../../../assets/calendar.svg';
 import o from '../../../../assets/o.svg'
-export default function MeetingInfo({ title }) {
+import { useContext } from "react";
+import like from '../../../../assets/like.svg';
+import notLike from '../../../../assets/notLike.svg';
+import scrap from '../../../../assets/scrap.svg';
+import notScrap from '../../../../assets/notScrap.svg';
+import blueHand from '../../../../assets/blueHand.svg';
+import UserContext from "../../hooks/UserContext";
+// const daysToKoreanText = (days) => {
+//     const dayMap = {
+//       MON: '월',
+//       TUE: '화',
+//       WED: '수',
+//       THU: '목',
+//       FRI: '금',
+//       SAT: '토',
+//       SUN: '일',
+//     };
+//     const koreanDays = days.map(day => dayMap[day]).join('/');
+//     return `매주 ${koreanDays}`;
+//   };
 
+export default function MeetingInfo({id, meetingData, isLike, isScrap }) {
+    const myContext = useContext(UserContext);
+    const onPressLike = async () => {
+        if (isLike) {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/likes`, { method: "DELETE" });
+                if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
+            } catch (error) { console.error("Error 좋아요 취소:", error); }
+        }
+        else {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/likes`, { method: "POST" });
+                if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
+            } catch (error) { console.error("Error 좋아요 추가:", error); }
+        }
+
+    }
+    const onPressScrap = async () => {
+        if (isScrap) {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                if (!response.ok) { throw new Error("Failed to 스크랩 취소"); }
+            } catch (error) { console.error("Error 스크랩 취소:", error); }
+        }
+        else {
+            try {
+                const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/scraps`, { method: "DELETE" });
+                if (!response.ok) { throw new Error("Failed to 스크랩 추가"); }
+            } catch (error) { console.error("Error 스크랩 추가:", error); }
+        }
+
+    }
     return (
         <Container>
 
             <Header>
-                <HeaderTitle>{title}</HeaderTitle>
-                <HeaderContent>배드민턴 치고 싶은데 혼자 치기는 싫은 사람 모여!</HeaderContent>
+                <HeaderTitle>{meetingData.title}</HeaderTitle>
+                <HeaderContent>{meetingData.content}</HeaderContent>
                 <HeaderFooter>
                     <HeaderFooterLeft>
-                        <HeaderFootText>♡ 998    </HeaderFootText>
-                        <HeaderFootText>☆ 998</HeaderFootText>
+                        <Pressable onPress={onPressLike} >
+                            <HeaderFootText>{isLike ? <WithLocalSvg asset={like} /> : <WithLocalSvg asset={notLike} />} {meetingData.likes}    </HeaderFootText>
+
+                        </Pressable>
+                        <Pressable onPress={onPressScrap}>
+                            <HeaderFootText>{isScrap ? <WithLocalSvg asset={scrap} /> : <WithLocalSvg asset={notScrap} />} {meetingData.scraps}</HeaderFootText>
+                        </Pressable>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
-                        <WithLocalSvg
-                            asset={hand}
-                        />
-                        <HeaderFootText>  2/4</HeaderFootText>
+                        {myContext.userData.userRole === "EXTERNAL" || myContext.userData.userRole === "REQUESTED" ? 
+                        <WithLocalSvg asset={hand}/> : <WithLocalSvg asset={blueHand}/>}
+                        
+                        <HeaderFootText>  {meetingData.currentParticipant}/{meetingData.maxParticipant}</HeaderFootText>
                     </HeaderFooterRight>
                 </HeaderFooter>
             </Header>
             <Body>
-                <MeetingAiInfo></MeetingAiInfo>
+                <MeetingAiInfo data={meetingData}></MeetingAiInfo>
                 <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={calendar}
-                    /><BodyText>  24.04.15~24.10.23 매주 월/수/금요일 20:00~21:30</BodyText>
-                </BodyTextWarraper>
-
-                <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={location}
-                    /><BodyText>  백주념기념관 나동 990호</BodyText>
+                    <WithLocalSvg asset={calendar} />
+                    {/* <BodyText> {meetingData.startDate}~{meetingData.endDate} {daysToKoreanText(meetingData.days)} {meetingData.startTime}~{meetingData.endTime}</BodyText> */}
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={o}
-                    /><BodyText>    출석점수 60점 이하 참여 불가 </BodyText>
+                    <WithLocalSvg asset={location} />
+                    <BodyText>  {meetingData.location}</BodyText>
                 </BodyTextWarraper>
                 <BodyTextWarraper>
-                    <WithLocalSvg
-                        asset={o}
-                    /><BodyText>    참가비: 20000원  </BodyText>
+                    <WithLocalSvg asset={o} />
+                    <BodyText>    {meetingData.meta} </BodyText>
                 </BodyTextWarraper>
-    
+                <BodyTextWarraper>
+                    <WithLocalSvg asset={o} />
+                    <BodyText>    참가비: 20000원  </BodyText>
+                </BodyTextWarraper>
             </Body>
         </Container>
     )

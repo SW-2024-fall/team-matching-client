@@ -1,29 +1,23 @@
 import { View, Text } from "react-native";
 import styled from "styled-components";
 
-export default function MeetingAiInfo() {
+export default function MeetingAiInfo({data}) {
     return (
         <Container>
             <Header>
                 <HeaderText>시대AI가 예측한 이 모임은...</HeaderText>
             </Header>
             <Body>
-                <BodyText>승부에 진심인 사람들이 모인 모임이에요!</BodyText>
-                <BodyText>열정적으로 참여하고 싶은 분께 적절할 것 같아요!</BodyText>
+                <BodyText>{data.analyzedIntroduction}</BodyText>
             </Body>
             <Footer1>
-
-                <Footer1Tag># 모임장이 직접 쓴 특징 </Footer1Tag>
-                <Footer1Tag># 번개 </Footer1Tag>
-                <Footer1Tag># 가족같은 </Footer1Tag>
+                {data.features && data.features.map((item,index)=>
+                    <Footer1Tag># {item} </Footer1Tag>)}
             </Footer1>
             <Footer2>
-                <Footer2TagWrraper><Footer2Tag>운동/스포츠</Footer2Tag></Footer2TagWrraper>
-                <Footer2TagWrraper><Footer2Tag>친목</Footer2Tag></Footer2TagWrraper>
-                <Footer2TagWrraper><Footer2Tag>카테고리1</Footer2Tag></Footer2TagWrraper>
-                <Footer2TagWrraper><Footer2Tag>카테고리2</Footer2Tag></Footer2TagWrraper>
+                {data.analyzedFeatures && data.analyzedFeatures.map((item,index)=>
+                <Footer2TagWrraper><Footer2Tag>{item}</Footer2Tag></Footer2TagWrraper>)}
             </Footer2>
-
         </Container>
     );
 }

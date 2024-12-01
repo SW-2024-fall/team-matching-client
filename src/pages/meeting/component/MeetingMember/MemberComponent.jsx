@@ -2,44 +2,64 @@ import { View, Text, Pressable } from "react-native";
 import Foundation from '@expo/vector-icons/Foundation';
 import styled from "styled-components";
 import profile2 from '../../../../assets/profileExample2.svg';
-
+import UserContext from "../../hooks/UserContext";
 import { WithLocalSvg } from "react-native-svg/css";
+import { useContext } from "react";
 
-export default function MemberComponent({ name, studentId, phoneNo, attendanceScore, department, tags }) {
+export default function MemberComponent({ id, memberData }) {
+    const myContext = useContext(UserContext);
+    const onPressOut = async () => {
+        try {
+            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/leave?targetUserId=${memberData.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ targetUserId: memberData.id }), // JSON 형식으로 데이터 설정
+            });
+            if (!response.ok) { throw new Error("Failed to 모임원 내보내기"); }
+        } catch (error) { console.error("Error 모임원 내보내기", error); }
+    };
+    const onPressUpgrade = async () => {
+        try {
+            const response = await fetch(`http://192.168.219.101:8080/api/meetings/${id}/members/upgrade?targetUserId=${memberData.id}`, { method: "PUT" });
+            if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+        } catch (error) { console.error("Error 부모임장 승급", error); }
+    };
     return (
         <Container>
             <BaseInfoContainer>
                 <WithLocalSvg asset={profile2} />
-
                 <View>
                     <BaseInfoHeader>
-                        <View>
-
-                        </View>
-                        <Name>{name}</Name>
-                        <OutPressable>
-                            <OutText>부모임장 승급 </OutText>
-                        </OutPressable>
-                        <OutPressable>
-                            <OutText>내보내기</OutText>
-                        </OutPressable>
-
+                        <Name>{memberData.name}</Name>
+                        {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
+                            <OutPressable onPres={onPressUpgrade}>
+                                <OutText>부모임장 승급 </OutText>
+                            </OutPressable>}
+                        {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
+                            <OutPressable onPress={onPressOut}>
+                                <OutText>내보내기</OutText>
+                            </OutPressable>}
                     </BaseInfoHeader>
-
                     <DetailInfoContainer>
-                        <SmallFont>{department}</SmallFont>
-                        <SmallFont>{studentId}학번</SmallFont>
-                        <SmallFont>{phoneNo}</SmallFont>
+                        <SmallFont>{memberData.department}   </SmallFont>
+                        <SmallFont>{memberData.studentId.substr(0, 2)}학번   </SmallFont>
+                        <SmallFont>{memberData.phoneNumber}   </SmallFont>
                     </DetailInfoContainer>
                 </View>
 
 
             </BaseInfoContainer>
             <AdditionalInfoContainer>
-                <Score>{attendanceScore}점</Score>
+                <Score>{memberData.attendenceScore}점</Score>
                 <TagContainer>
-                    <Text>#{tags[0]}</Text>
-                    <Text>#{tags[1]}</Text>
+                    {memberData.features &&
+                        <Text>#{tags[0]} </Text>
+                    }
+                    {memberData.features &&
+                        <Text>#{tags[1]}</Text>
+                    }
                 </TagContainer>
             </AdditionalInfoContainer>
 
