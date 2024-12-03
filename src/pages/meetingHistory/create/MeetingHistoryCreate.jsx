@@ -59,6 +59,8 @@ export default function MeetingHistoryCreate() {
       })
     })
 
+    console.log(formData);
+
     try {
       const response = await fetch('http://localhost:8080/api/histories', {
         method: 'POST',
@@ -74,7 +76,6 @@ export default function MeetingHistoryCreate() {
       }
 
       Alert.alert('성공', '모임 기록이 로 생성되었습니다.');
-      console.log('Created History:', response.data);
       nav.navigate(PAGES.MAIN,{});
     } catch (error) {
       Alert.alert('오류', '모임 기록 생성에 실패했습니다. 다시 시도해 주세요.');

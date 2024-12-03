@@ -106,7 +106,7 @@ export default function Register() {
             quality: 0,
             selectionLimit: 1, // 최대 5장 선택 가능
         });
-
+        console.log(result);
         if (!result.cancelled) {
             const newImage = result.assets.map(asset => asset.uri);
             console.log("newImage = " + newImage);
@@ -142,8 +142,8 @@ export default function Register() {
       
             if (image) {
               formData.append('profile', {
-                uri: image,
-                name: 'profile_image.jpeg', // 파일 이름
+                uri: image.uri,
+                name: 'profile_image.jpg', // 파일 이름
                 type: 'image/jpeg', // MIME 타입
               });
             }
@@ -157,7 +157,6 @@ export default function Register() {
             phoneNumber: phoneNo,
             prefeeredCategories: apipressedInterest,
         };
-      
         formData.append('signupRequest', {"string": JSON.stringify(signupData), type: "application/json"});
       
         try {
@@ -209,12 +208,14 @@ export default function Register() {
                     <InputLable>비밀번호를 설정해주세요.</InputLable>
                     <BaseTextInput
                         value={pwd}
+                        secureTextEntry
                         onChangeText={setPwd}></BaseTextInput>
                 </InputContainer>
                 <InputContainer>
                     <InputLable>비밀번호를 다시 한 번 입력해주세요.</InputLable>
                     <BaseTextInput
                         value={pwd2}
+                        secureTextEntry
                         onChangeText={setPwd2}></BaseTextInput>
                 </InputContainer>
                 <InputContainer>

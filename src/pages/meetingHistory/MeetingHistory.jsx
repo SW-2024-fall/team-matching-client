@@ -36,7 +36,7 @@ export default function MeetingHistory() {
         }
         const json = await response.json();
         setData(json.data);
-        console.log("data = " + JSON.stringify(data));
+        console.log("data = " + JSON.stringify(data.files));
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -62,13 +62,13 @@ export default function MeetingHistory() {
             {/* <WithLocalSvg
                 asset={runningPhoto}
               /> */}
-            {/* {data.files.length > 0 && data.files[0].url ? (
-              <ImageContainer>
+            {data.files.length > 0 && data.files[0].url ? (
+             <ImageContainer>
                 <StyledImage source={{ uri: data.files[0].url }} />
               </ImageContainer>
             ) : (
-              <Text>1</Text>
-            )} */}
+              <Text></Text>
+            )}
           </Header>
           <TabContainer>
             <TabWrapper
@@ -98,6 +98,16 @@ export default function MeetingHistory() {
 
 
 }
+
+const ImageContainer = styled.View`
+  height:auto;
+  width:100%;  
+`;
+const StyledImage = styled.Image`
+  height:auto;
+  width:100%;
+  aspect-ratio: 20 / 9;
+`;
 
 const Container = styled.ScrollView`
   width:100%;

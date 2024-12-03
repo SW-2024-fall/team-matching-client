@@ -133,6 +133,7 @@ export default function Meeting() {
                   <StyledImage source={{ uri: data.thumbnailUrls[0] }} />
                 </ImageContainer>
               ) : (
+
                 <Text>기본이미지</Text>
               )}
             </Header>

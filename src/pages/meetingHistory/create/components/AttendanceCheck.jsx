@@ -15,6 +15,7 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
     "무단결석":"TRUANCY"
   }
 
+
   const Major = {
     PUBLIC_ADMINISTRATION: "행정학과",
     INTERNATIONAL_RELATIONS: "국제관계학과",
@@ -124,6 +125,8 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
 					key={status}
 					style={[
 						styles.statusButton,
+            
+
             attendanceState.some(item => item.userId === attendee.id && item.attendanceState === Attend[status]) && styles.selectedButton
 					]}
 					onPress={() => handleStatusChange(attendee.id, status)}
