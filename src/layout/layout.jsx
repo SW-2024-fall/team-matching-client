@@ -1,28 +1,29 @@
 import { PAGES } from '@navigation/constant';
 import { View, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
-import DefaultHeader from '@layout/header/DefaultHeader';
-import TitleHeader from '@layout/header/TitleHeader';
-import CreateHeader from '@layout/header/CreateHeader';
-import MainHeader from '@layout/header/MainHeader';
+import { CreateHeader, ProfileHeader, BoardHeader, MainHeader, DetailHeader } from '@layout/header';
 import Appbar from '@layout/appbar/Appbar';
 
-export default function Layout({ screen, title = '', children, navigation }) {
-  var Header = <DefaultHeader />;
+export default function Layout({ screen, title = '', children, navigation, RightComponent }) {
+  var Header = <View />;
   const useAppbar =
     screen == PAGES.MAIN ||
-    screen == PAGES.MEETING_FEED ||
+    screen == PAGES.RECOMMEND ||
     screen == PAGES.MEETING_BOARD ||
-    screen == PAGES.PROFILE;
+    screen == PAGES.MYPROFILE;
 
-  if (screen == PAGES.MAIN) {
-    Header = <MainHeader />;
+  if (screen == PAGES.MEETING_BOARD) {
+    Header = <BoardHeader FilterComponent={RightComponent} />;
   } else if (screen == PAGES.MEETING) {
-    Header = <TitleHeader title={title} />;
+    Header = <DetailHeader title={title} />;
   } else if (screen == PAGES.MEETING_CREATE || screen == PAGES.MEETING_HISTORY_CREATE) {
     Header = <CreateHeader />;
-  } else if (screen == PAGES.AUTH) {
-    Header = <View />;
+  } else if (screen == PAGES.MAIN || screen == PAGES.RECOMMEND) {
+    Header = <MainHeader />;
+  } else if (screen == PAGES.MYPROFILE) {
+    Header = <ProfileHeader isMe={true} />;
+  } else if (screen == PAGES.PROFILE) {
+    Header = <ProfileHeader />;
   }
 
   const Wrapper = styled.SafeAreaView`

@@ -1,37 +1,41 @@
-import { useNavigation } from '@react-navigation/native';
-import { View, Text, Pressable } from 'react-native';
+import { View } from 'react-native';
 
 import styled from 'styled-components/native';
 import Constants from 'expo-constants';
-import { PAGES } from '@navigation/constant';
 
-export default function BaseHeader({ left, center, right }) {
+export default function BaseHeader({ left, center, right, backgroundColor = null }) {
   const LeftWrapper = styled(View)`
     position: absolute;
-    width:25%;
-    marginTop:30px;
-    marginLeft:5%;
+    left: 15px;
+    top: ${Constants.statusBarHeight}px;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
   `;
 
   const CenterWrapper = styled(View)`
     position: absolute;
-    marginTop:30px;
-    width:25%;
-    marginLeft:42%;
+    left: 0;
+    right: 0;
+    top: ${Constants.statusBarHeight}px;
+    bottom: 0;
     align-items: center;
+    justify-content: center;
   `;
 
   const RightWrapper = styled(View)`
     position: absolute;
-    marginTop:30px;
-    width:25%;
-    marginLeft:80%;
+    right: 15px;
+    top: ${Constants.statusBarHeight}px;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
   `;
 
   const HeaderWrapper = styled(View)`
     width: 100%;
     height: 60px;
-    background-color: white;
+    background-color: ${backgroundColor};
     padding-top: ${Constants.statusBarHeight + 30}px;
     padding-bottom: 15px;
     padding-left: 15px;
@@ -39,6 +43,7 @@ export default function BaseHeader({ left, center, right }) {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: ${(props) => props.theme.colors.grey.light};
+    color: ${(props) => (backgroundColor ? 'white' : props.theme.colors.grey.dark)};
   `;
 
   return (

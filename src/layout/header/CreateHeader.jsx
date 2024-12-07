@@ -1,27 +1,32 @@
-// 뒤로가기 시 모달 필요
-// 저장 시 해당 페이지 pop
-
 import BaseHeader from '@layout/header/BaseHeader';
-import { Pressable, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Pressable } from 'react-native';
+import styled from 'styled-components';
+
+const HeaderText = styled.Text`
+  font-size: ${(props) => props.theme.font.size.primary};
+  font-weight: ${(props) => props.theme.font.weight.semiBold};
+  color: white;
+`;
 
 export default function CreateHeader() {
   const nav = useNavigation();
   function Cancel() {
     return (
-      <Pressable onPress={() => nav.pop()}>
-        <Text>취소</Text>
+      <Pressable onPress={() => navigation.pop()}>
+        <HeaderText>취소</HeaderText>
       </Pressable>
     );
   }
 
   function Save() {
     return (
-      <Pressable onPress={() => nav.pop()}>
-        <Text>저장</Text>
+      <Pressable onPress={() => navigation.pop()}>
+        <HeaderText>저장</HeaderText>
       </Pressable>
     );
   }
 
-  return <BaseHeader left={<Cancel />} right={<Save />} />;
+  return (
+    <BaseHeader left={<Cancel />} right={<Save />} backgroundColor={theme.colors.blue.primary} />
+  );
 }
