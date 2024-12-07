@@ -4,8 +4,9 @@ import { WithLocalSvg } from 'react-native-svg/css';
 import commentIcon from '@assets/commentIcon.svg';
 import likeIcon from '@assets/likeIcon.svg';
 import { theme } from '../../../styles/ThemeStyles';
-
+import scrapIcon from '../../../assets/scrapIcon.svg';
 const MeetingItem = ({ item, onPress }) => {
+    console.log(item.data.info.likes);
     return (
         <Pressable style={styles.itemContainer} onPress={onPress}>
             <View style={styles.itemContent}>
@@ -37,9 +38,9 @@ const MeetingItem = ({ item, onPress }) => {
                     <View style={styles.participantsStartEndContainer}>
                         <View style ={styles.likesComments}>
                             <WithLocalSvg asset={likeIcon} />
-                            <Text style={styles.itemLikeCount}>{item.likeCount}</Text>
-                            <WithLocalSvg asset={commentIcon} />
-                            <Text style={styles.itemCommentCount}>{item.commentCount} </Text>
+                            <Text style={styles.itemLikeCount}>{item.data.info.likes}</Text>
+                            <WithLocalSvg asset={scrapIcon} width={13} height={13}/>
+                            <Text style={styles.itemCommentCount}>{item.data.info.scraps} </Text>
                         </View>
                         <Text style={styles.separator}> | </Text>
                         <View style ={styles.participants}>

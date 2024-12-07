@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
 
 const FeedPost = ({ id, name, title, profileUrl, thumbnailUrl, preview , navigation}) => {
-    console.log(thumbnailUrl)
     return (
         <View style={styles.postContainer}>
             <Pressable onPress={() => navigation.navigate(PAGES.MEETING_HISTORY, { historyId: id, title:title })}  >

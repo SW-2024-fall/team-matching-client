@@ -5,8 +5,36 @@ import profile2 from '../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 import { Image } from "react-native-svg";
-
+import { Major } from "../../auth/register/Register";
+import { useNavigation } from "@react-navigation/native";
+import UserTokenContext from "../../../hooks/UserTokenContext";
+import { useContext } from "react";
+import { PAGES } from "../../../navigation/constant";
 export default function ActivityMemberComponent({ member }) {
+    console.log("member = "+JSON.stringify(member));
+    const nav = useNavigation();
+    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const onPressProfile= async()=>{
+        try {
+            const response = await fetch(`http://localhost:8080/api/users`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                },
+            });
+            if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+            else{
+                const json = await response.json();
+                const myUserId = json.data.id;
+                if(myUserId === member.id){
+                    nav.navigate(PAGES.PROFILE);
+                }
+                else {
+                    nav.navigate(PAGES.EXTERNAL_PROFILE,{id:member.id});
+                }
+            }
+        } catch (error) { console.error("Error go profile", error); }
+    }
     return (
         <Container>
             <BaseInfoContainer>
@@ -14,10 +42,12 @@ export default function ActivityMemberComponent({ member }) {
                 <StyledImg source={{uri:member.profileUrl}}></StyledImg>
                 <View>
                     <BaseInfoHeader>
+                    <Pressable onPress={onPressProfile}>
                         <Name>{member.name}</Name>
+                    </Pressable>
                     </BaseInfoHeader>
                     <DetailInfoContainer>
-                        <SmallFont>{member.major}  |  </SmallFont>
+                        <SmallFont>{Major[member.major]}  |  </SmallFont>
                         <SmallFont>{member.studentId.substr(0,2)}학번</SmallFont>
                     </DetailInfoContainer>
                 </View>
@@ -25,8 +55,8 @@ export default function ActivityMemberComponent({ member }) {
             <AdditionalInfoContainer>
                 <Score>{member.attendenceScore}점</Score>
                 <TagContainer>
-                    {member.features && member.features[0] && <Text>#{features[0]}</Text>}
-                    {member.features && member.features[1] && <Text>#{features[1]}</Text>}
+                    {member.features && member.features[0] && <Text>#{member.features[0]}</Text>}
+                    {member.features && member.features[1] && <Text>#{member.features[1]}</Text>}
                 </TagContainer>
             </AdditionalInfoContainer>
 

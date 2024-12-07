@@ -5,11 +5,14 @@ import ActivityRecorder from "./ActivityRecorder"
 import menu from '../../../assets/menu.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 import { useState } from "react";
-
-export default function ActivityRecord({ data }) {
-    console.log(data);
+import { useContext } from "react";
+import UserTokenContext from "../../../hooks/UserTokenContext";
+export default function ActivityRecord({ data, historyId}) {
+    console.log(data.writer);
+    console.log("history id = "+historyId);
     const [menuVisible, setMenuVisible] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+    const { userToken, setUserToken } = useContext(UserTokenContext);
     const handlePress = (event) => {
         const { pageX, pageY } = event.nativeEvent;
         setMenuPosition({ x: pageX, y: pageY });
@@ -25,7 +28,10 @@ export default function ActivityRecord({ data }) {
     }
     const onPressDelete = async() => {
         try {
-            const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "DELETE" });
+            const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "DELETE",headers: {
+                'Authorization': `Bearer ${userToken}`, // JWT 포함
+              } 
+            });
             if (!response.ok) { throw new Error("Failed to 히스토리 삭제"); }
         } catch (error) { console.error("Error 히스토리 삭제:", error); }
     }
@@ -37,7 +43,7 @@ export default function ActivityRecord({ data }) {
 
                         <Header><HeaderText>{data.title}</HeaderText></Header>
                         <Body><BodyText>{data.content}</BodyText></Body>
-                        <ActivityRecorder name={data.writer.name} meetingName={data.meetingName} profileUrl={data.writer.profileUrl}></ActivityRecorder>
+                        <ActivityRecorder name={data.writer.name} meetingName={data.meetingName} profileUrl={data.writer.profileUrl} id={data.writer.id}></ActivityRecorder>
                         <Footer>
                             {!menuVisible && <Pressable onPress={handlePress}>
                                 <WithLocalSvg asset={menu} />

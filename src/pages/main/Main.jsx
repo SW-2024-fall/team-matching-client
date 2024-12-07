@@ -20,7 +20,6 @@ export default function Main({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("userToken main = "+userToken);
         const response = await fetch(`http://localhost:8080/api/histories`, { 
           method: 'GET' ,
           headers: {
@@ -32,15 +31,14 @@ export default function Main({ navigation }) {
         }
         const json = await response.json();
         setData(json);
+        console.log("main data ="+JSON.stringify(data));
         setLoading(false);
-        console.log(json); // 반환된 JSON 구조 확인
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -55,7 +53,7 @@ export default function Main({ navigation }) {
 
         <View>
         {/* Story Section: 모임 활동에 관한 것 */}
-        <View style={styles.storyContainer}>
+        {/* <View style={styles.storyContainer}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -65,14 +63,14 @@ export default function Main({ navigation }) {
               <StoryCircle key={item.id} imageUrl={item.thumbnailUrl} userId={item.id} />
             ))}
           </ScrollView>
-        </View>
+        </View> */}
       
         {/* Feed Section: 모임장 이름 + 그 사람이 작성한 활동  */}
         <View style={styles.feedPostContainer}>
           <ScrollView>
-            {data.data.map((item) => (
+            {data.data.map((item, index) => (
               <FeedPost
-                key={item.id}
+                key={index}
                 id={item.id}
                 name={item.writer.name}
                 title={item.meetingName}

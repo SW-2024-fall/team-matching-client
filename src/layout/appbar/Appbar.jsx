@@ -47,7 +47,9 @@ export default function Appbar({ navigation }) {
     // navigation.navigate(PAGES.MAIN);
     nav.navigate(PAGES.MAIN);
   };
-
+  const goRecommend = () =>{
+    nav.navigate(PAGES.RECOMMEND);
+  }
   const goProfile = () => {
     // navigation.navigate(PAGES.PROFILE, {access: "me"});
     nav.navigate(PAGES.PROFILE);
@@ -63,9 +65,9 @@ export default function Appbar({ navigation }) {
         <WithLocalSvg asset={boardIcon} />
         <Label>게시판</Label>
       </IconBtnWrapper>
-      <IconBtnWrapper onPress={goMeetingFeed}>
+      <IconBtnWrapper onPress={goRecommend}>
         <WithLocalSvg asset={meetingIcon} />
-        <Label>모임 피드</Label>
+        <Label>모임 추천</Label>
       </IconBtnWrapper>
       <IconBtnWrapper onPress={goProfile}>
         <WithLocalSvg asset={profileIcon} />

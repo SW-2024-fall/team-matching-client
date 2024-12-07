@@ -14,7 +14,6 @@ import MeetingHistory from '@pages/meetingHistory/MeetingHistory';
 import MeetingHistoryCreate from '../pages/meetingHistory/create/MeetingHistoryCreate';
 import { MeetingFeed } from '@pages/meetingFeed/MeetingFeed';
 
-import Profile from '../pages/profile/Profile.jsx';
 import ProfileEdit from '../pages/profile/edit/ProfileEdit';
 import { LikeHistory } from '@pages/profile/history/like/LikeHistory';
 import { ScrapHistory } from '@pages/profile/history/scrap/ScrapHistory';
@@ -24,6 +23,9 @@ import MainHeader from '@layout/header/MainHeader';
 import TitleHeader from '@layout/header/TitleHeader';
 import { useAuth } from '../pages/auth/AuthProvider';
 import MyProfile from '../pages/profile/MyProfile.jsx';
+import Recommend from '../pages/recommend/Recommend.jsx';
+import MeetingEdit from '../pages/meeting/edit/MeetingEdit.jsx';
+import Profile from '../pages/profile/Profile.jsx';
 const Stack = createNativeStackNavigator();
 
 const AuthGuard = () => {
@@ -116,8 +118,10 @@ export default function Navigation() {
 
             {/* <Stack.Screen name={PAGES.PROFILE_STACK} component={ProfileStack} /> */}
             <Stack.Screen name={PAGES.PROFILE} component={MyProfile}  />
+            <Stack.Screen name={PAGES.EXTERNAL_PROFILE} component={Profile}  />
             <Stack.Screen name={PAGES.PROFILE_EDIT} component={ProfileEdit} />
-
+            <Stack.Screen name={PAGES.RECOMMEND} component={Recommend} />
+            <Stack.Screen name={PAGES.MEETING_EDIT} component={MeetingEdit}/>
 
       </Stack.Navigator>
     </NavigationContainer>

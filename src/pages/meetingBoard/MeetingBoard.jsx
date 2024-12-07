@@ -30,13 +30,13 @@ export default function MeetingBoard({ navigation }) {
     const [filterVisible, setFilterVisible] = useState(false);
     const [filteredData, setFilteredData] = useState([]);  // 초기 값은 빈 배열
     const { userToken, setUserToken } = useContext(UserTokenContext);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [maxPage, setMaxPage] = useState(0);
     const [pagedData, setPagedData] = useState(null);
     useEffect(()=>{
         console.log("page = "+page);
         setPagedData(data.slice((page-1)*10 , page*10));
-    },[page])
+    },[page,data])
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -72,17 +72,30 @@ export default function MeetingBoard({ navigation }) {
                         return mergedItem;  // 기존 모임 데이터와 세부 정보 병합
                         
                     })
+                ).then((res)=>
+                    setData(res)
+                ).then(
+                    setPage(1)
+                ).then(
+                    // filteredData ? setPagedData(filteredData.slice((page-1)*10, page*10)):setPagedData(data.slice((page-1)*10, page*10))
+                ).then(
+                    // console.log("paged data = "+pagedData)
+                ).then(
+                    setLoading(false)
                 );
                 
 
-                setData(detailedData);  // 상세 정보를 포함한 데이터를 상태에 저장
-                setPagedData(data.slice((page-1)*10 , page*10));
+
+                // setData(detailedData);  // 상세 정보를 포함한 데이터를 상태에 저장
+                // const abc = await setPagedData().
+
+                // filteredData ? setPagedData(filteredData.slice((page-1)*10, page*10)):setPagedData(data.slice((page-1)*10, page*10))
                 
                 // setLoading(false);  // 로딩 완료
             } catch (error) {
                 setError(error.message);
             } finally {
-                setLoading(false);
+                // setLoading(false);
             }
         };
 
@@ -155,7 +168,14 @@ export default function MeetingBoard({ navigation }) {
                 <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
             </Header>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
+                    {/* {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
+                        <MeetingItem 
+                            key={item.id} 
+                            item={item} 
+                            onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title:item.name })} 
+                        />
+                    ))} */}
+                    {pagedData.map((item) => (
                         <MeetingItem 
                             key={item.id} 
                             item={item} 
@@ -180,6 +200,8 @@ export default function MeetingBoard({ navigation }) {
         </Layout>
     );
 }
+
+
 const PageText = styled.Text`
     color: ${(props) => (props.isPage ? 'blue' : 'black')};
 `;

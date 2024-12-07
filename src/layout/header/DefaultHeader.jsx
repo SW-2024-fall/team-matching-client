@@ -8,7 +8,6 @@ function GoBackButton({ canGoBack, goBack }) {
     return (
       <Pressable
         onPress={() => {
-          console.log("press go back");
           goBack();
         }}
       >
@@ -33,7 +32,6 @@ export default function DefaultHeader({ title = '', hasLogo = true, isLogoCenter
 
   const canGoBack = navigation.canGoBack();
   const goBack = () => {
-    console.log("go back");
     navigation.goBack();
   };
   const goHome = () => {

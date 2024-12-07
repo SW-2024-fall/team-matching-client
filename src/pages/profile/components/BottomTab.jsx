@@ -4,6 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { theme } from '../../../styles/ThemeStyles';
 import MeetingItem from '@pages/profile/components/MeetingItem';
 import UserTokenContext from '../../../hooks/UserTokenContext';
+import { PAGES } from '../../../navigation/constant';
+import { useNavigation } from '@react-navigation/native';
 import { useContext } from 'react'
 
 const tabIcons = {
@@ -28,6 +30,7 @@ const tabTitles = {
 };
 
 const BottomTab = () => {
+    const nav=useNavigation();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [loading2, setLoading2] = useState(true);
@@ -81,6 +84,7 @@ const BottomTab = () => {
                     throw new Error('Network response was not ok');
                 }
                 const json = await response.json();
+
                 setData((prevData) => ({
                     ...prevData, // 이전 상태 복사
                     좋아요: json.data // 좋아요 속성만 업데이트
@@ -162,7 +166,10 @@ const BottomTab = () => {
             {/* Meeting List */}
             <View style={styles.listContainer}>
                 {Data[selectedTab].map((item) => (
-                    <MeetingItem key={item.id} item={item} />
+                    <MeetingItem key={item.id} item={item} onPress={()=>{
+                        const id = item.id;
+                        const name = item.name;
+                        nav.navigate(PAGES.MEETING, { id, title: name})}}/>
                 ))}
             </View>
         </View>

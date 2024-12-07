@@ -5,10 +5,11 @@ import profile1 from '../../../../assets/profileExample1.svg';
 import UserTokenContext from "../../../../hooks/UserTokenContext";
 import { useContext, useState } from "react";
 import { WithLocalSvg } from "react-native-svg/css";
-
+import { useNavigation } from "@react-navigation/native";
+import { PAGES } from "../../../../navigation/constant";
 export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
     const { userToken, setUserToken } = useContext(UserTokenContext);
-   console.log(memberData);
+    const nav = useNavigation();
     const onPressIn = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/accept`, 
@@ -37,13 +38,34 @@ export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
             else{Alert.alert('성공','모임신청이 거절되었습니다'); setRe(!re)}
           } catch (error) { console.error("Error 모임원 신청 거절", error); }
     };
+    const onPressProfile= async()=>{
+        try {
+            const response = await fetch(`http://localhost:8080/api/users`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                },
+            });
+            if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+            else{
+                const json = await response.json();
+                const myUserId = json.data.id;
+                if(myUserId === memberData.id){
+                    nav.navigate(PAGES.PROFILE);
+                }
+                else {
+                    nav.navigate(PAGES.EXTERNAL_PROFILE,{id:memberData.id});
+                }
+            }
+        } catch (error) { console.error("Error go profile", error); }
+    }
     return (
         <Container>
             <BaseInfoContainer>
                 <StyledImage source={{uri:memberData.profileUrl}}/>
                 <View>
                     <BaseInfoHeader>
-                        <Name>{memberData.name}</Name>
+                    <Pressable onPress={onPressProfile}><Name>{memberData.name}</Name></Pressable>
                         <OutPressable onPress={onPressIn}>
                             <OutText>수락</OutText>
                         </OutPressable>

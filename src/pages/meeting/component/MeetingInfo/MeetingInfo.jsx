@@ -29,13 +29,11 @@ const daysToKoreanText = (days) => {
   };
 
 export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe }) {
-    console.log(meetingData);
     const myContext = useContext(UserContext);
     const {userToken, setUserToken} = useContext(UserTokenContext);
     const onPressLike = async () => {
         if (isLike) {
             try {
-                console.log("Like delete");
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
                 if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
                 else{setRe(!re)}
@@ -43,7 +41,6 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
         }
         else {
             try {
-                console.log("Liked");
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "POST",headers: {'Authorization': `Bearer ${userToken}`} });
                 if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
                 else{setRe(!re)}
@@ -55,14 +52,12 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
         if (isScrap) {
             try {
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
-                console.log("Scrap Deleted");
                 if (!response.ok) { throw new Error("Failed to 스크랩 취소"); }
                 else{setRe(!re)}
             } catch (error) { console.error("Error 스크랩 취소:", error); }
         }
         else {
             try {
-                console.log("Scrap");
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "POST" ,headers: {'Authorization': `Bearer ${userToken}`}});
                 if (!response.ok) { throw new Error("Failed to 스크랩 추가"); }
                 else{setRe(!re)}
@@ -74,7 +69,7 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
         <Container>
 
             <Header>
-                <HeaderTitle>{meetingData.title}</HeaderTitle>
+                <HeaderTitle>{meetingData.name}</HeaderTitle>
                 <HeaderContent>{meetingData.content}</HeaderContent>
                 <HeaderFooter>
                     <HeaderFooterLeft>

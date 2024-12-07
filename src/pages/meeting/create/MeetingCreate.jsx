@@ -137,7 +137,6 @@ export default function MeetingCreate() {
 
   formData.append('meeting', {"string": JSON.stringify(meetingData), type: "application/json"});
 
-  console.log(meetingData);
 
   try {
     const response = await fetch('http://localhost:8080/api/meetings', {
@@ -168,7 +167,6 @@ export default function MeetingCreate() {
       ],
       { cancelable: false } // 배경을 클릭해도 닫히지 않게 설정
     );
-    console.log('Created meeting:', response.data);
   } catch (error) {
     Alert.alert('오류', '모임 생성에 실패했습니다. 다시 시도해 주세요.');
     console.error('Failed to create meeting:', error);
@@ -488,11 +486,11 @@ const removeTag = (tagToRemove) => {
         buttonStyle={styles.participantMethodDefault}
       />
       
-      <Text style={styles.headLabel}> 프로필 사진 </Text>
+      <Text style={styles.headLabel}> 모임 대표 사진 </Text>
       <View style={styles.imgcontainer}>
       <TouchableOpacity onPress={handleChoosePhoto} style={styles.button}>
         {profileImg ? (
-          <Image source={{profileImg}} style={styles.image} />
+          <Image source={{uri: profileImg}} style={styles.image} />
         ) : (
           <Text style={styles.buttonText}>기본 프로필</Text>
         )}

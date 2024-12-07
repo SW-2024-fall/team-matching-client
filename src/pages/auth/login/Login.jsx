@@ -26,7 +26,6 @@ const LoginScreen = () => {
   };
   // const [data, setData] = useState(null);
   const tryLogin = async () => {
-    console.log('로그인 시도:', { email, password });
     try {
       const response = await fetch(`http://localhost:8080/api/auth/login`, { 
         method: 'POST',
@@ -42,14 +41,15 @@ const LoginScreen = () => {
         if (!response.ok) {
           Alert.alert("아이디 또는 비밀번호를 확인하세요.");
         }
+        
         return response.json()
       })
       .then(data =>{
         console.log(data.data.accessToken);
         // doLogin(data.data.token);
         setUserToken(data.data.accessToken);
-        AsyncStorage.setItem('userToken', data.data.accessToken).then(nav.navigate(PAGES.MAIN));
-        // nav.navigate(PAGES.MAIN,{});
+        // AsyncStorage.setItem('userToken', data.data.accessToken).then(nav.navigate(PAGES.MAIN));
+        nav.navigate(PAGES.MAIN,{});
 
       })
       // .then(nav.navigate(PAGES.MAIN,{}));

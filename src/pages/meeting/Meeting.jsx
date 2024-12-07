@@ -39,13 +39,13 @@ export default function Meeting() {
   const nav = useNavigation();
   const { userToken, setUserToken } = useContext(UserTokenContext);
   const { Modal, open, close } = useModal();
+  const myContext = useContext(UserContext);
   const [re, setRe] = useState(false);
   const userContextValues = {
     userData: userData,
     setUserData
   }
   useEffect(() => {
-    console.log(id);
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`} });
@@ -63,6 +63,7 @@ export default function Meeting() {
           userRole: memberJson.data
         }) 
         setLoading(false);
+
       } catch (error) {
         setError(error.message);
       } finally {
@@ -91,10 +92,7 @@ export default function Meeting() {
     } catch (error) { console.error("Error deleting the meeting:", error); }
   }
   const onPressFooterBtn = async () => {
-    console.log(userData.userRole)
     if (userData.userRole === "EXTERNAL") {
-      
-      console.log("모임 신청")
       try {
         const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" ,headers: {'Authorization': `Bearer ${userToken}`}});
         if (!response.ok) { throw new Error("Failed to 모임신청"); }
@@ -163,6 +161,7 @@ export default function Meeting() {
             {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
             {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
             {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && (userData.userRole === "LEADER") && <FooterBtn onPress={()=>nav.navigate(PAGES.MEETING_EDIT,{id: id})}><FooterBtnText>모임 수정하기</FooterBtnText></FooterBtn>}
             {/* {activeTab === 0 && <CommentView comments={comments} />}
           {activeTab === 0 && <CommentInputWrapper>
             <CommentInput placeholder="댓글 예시입니다."></CommentInput>
@@ -171,7 +170,7 @@ export default function Meeting() {
             {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
             {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
             {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole} re={re} setRe={setRe}></TeamMemberList>}
-            {activeTab === 2 && <PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
+            {activeTab === 2 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
             {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
             
           </Container>
@@ -220,7 +219,9 @@ const FooterBtn = styled.Pressable`
   justifyConter:center;
   alignItems:center;
   backgroundColor:${(props) => props.theme.colors.blue.primary};
-  margin:20px;
+  marginLeft:20px;
+  marginRight:20px;
+  marginTop:5px;
   borderRadius:14px;
   padding:10px;
 `;
@@ -231,10 +232,10 @@ fontWeight:${(props) => props.theme.font.weight.bold};
 `;
 const PlusBtn = styled(Animated.createAnimatedComponent(styled.Pressable`
   background-color: #007aff;
-  marginLeft:80%;
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  marginLeft:90%;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
   justify-content: center;
   align-items: center;
 `))``;

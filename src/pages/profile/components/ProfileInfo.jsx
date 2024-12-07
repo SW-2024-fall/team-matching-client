@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { theme } from '../../../styles/ThemeStyles';
 
 const ProfileInfo = ({ id, name, major, studentID, attendanceScore, features, profileURL }) => {
+    console.log(attendanceScore);
     return (
         <View style={styles.profileContainer}>
             <Image 
@@ -17,8 +18,9 @@ const ProfileInfo = ({ id, name, major, studentID, attendanceScore, features, pr
                 </View>
             </View>
             <View style={styles.userScoreFeatures}>
-                <Text style={styles.attendanceScore}>{attendanceScore}</Text>
-                <Text style={styles.features}>{features}</Text>
+                <Text style={styles.attendanceScore}>{attendanceScore}점</Text>
+                <Text style={styles.features}>#{features[0]} </Text>
+                <Text style={styles.features}>#{features[1]} </Text>
             </View>
         </View>
     );
@@ -75,7 +77,8 @@ const styles = StyleSheet.create({
     },
     features: {
         color: theme.colors.blue.hover,
-        fontSize: theme.font.size.primary,
+        fontSize: theme.font.size.small,
+        fontWeight:theme.font.weight.regular
     },
 });
 

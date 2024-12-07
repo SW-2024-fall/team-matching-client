@@ -4,21 +4,45 @@ import styled from "styled-components";
 import profile2 from '../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
-
-export default function ActivityRecorder({ name, meetingName, profileUrl}) {
-    console.log(profileUrl)
+import { PreventRemoveContext } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import UserTokenContext from "../../../hooks/UserTokenContext";
+import { useContext } from "react";
+import { PAGES } from "../../../navigation/constant";
+export default function ActivityRecorder({ name, meetingName, profileUrl ,id}) {
+    console.log(profileUrl);
+    const nav = useNavigation();
+    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const onPressProfile= async()=>{
+        try {
+            const response = await fetch(`http://localhost:8080/api/users`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                },
+            });
+            if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+            else{
+                const json = await response.json();
+                const myUserId = json.data.id;
+                if(myUserId === id){
+                    nav.navigate(PAGES.PROFILE);
+                }
+                else {
+                    nav.navigate(PAGES.EXTERNAL_PROFILE,{id:id});
+                }
+            }
+        } catch (error) { console.error("Error go profile", error); }
+    }
     return (
         <Container>
             <BaseInfoContainer>
-                
-             
-                
                   <StyledImage source={{ uri: profileUrl }} />
-                
-              
                 <View>
                     <BaseInfoHeader>
+                    <Pressable onPress={onPressProfile}>
                         <Name>{name}</Name>
+                    </Pressable>
                     </BaseInfoHeader>
                     <DetailInfoContainer>
                         <SmallFont>{meetingName}</SmallFont>

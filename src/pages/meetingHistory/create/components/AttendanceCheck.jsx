@@ -77,6 +77,7 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
         setLoading(false);
       }
     };
+    
     fetchData();
   }, [id, userToken]);
   
@@ -108,9 +109,7 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
       );
     });
   };
-  
   console.log("attendee = "+JSON.stringify(attendanceState));
-  
   return (
     <ScrollView style={styles.container}>
       {attendee.map((attendee) => (
@@ -125,7 +124,7 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
 					key={status}
 					style={[
 						styles.statusButton,
-            
+
 
             attendanceState.some(item => item.userId === attendee.id && item.attendanceState === Attend[status]) && styles.selectedButton
 					]}

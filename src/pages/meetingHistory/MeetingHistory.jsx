@@ -18,7 +18,7 @@ export default function MeetingHistory() {
   const { historyId, title } = route.params;
   console.log(route.params);
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
-  const [data, setData] = useState(null);
+  const [data, setData] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { userToken, setUserToken } = useContext(UserTokenContext);
@@ -36,7 +36,6 @@ export default function MeetingHistory() {
         }
         const json = await response.json();
         setData(json.data);
-        console.log("data = " + JSON.stringify(data.files));
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -58,6 +57,7 @@ export default function MeetingHistory() {
     <Layout screen={PAGES.MEETING_HISTORY}>
       {data  &&
         <Container>
+          
           <Header>
             {/* <WithLocalSvg
                 asset={runningPhoto}
@@ -87,7 +87,7 @@ export default function MeetingHistory() {
               <Tab isActive={activeTab === 2}>세부 정보</Tab>
             </TabWrapper>
           </TabContainer>
-          {activeTab === 0 && <ActivityRecord data={data}></ActivityRecord>}
+          {activeTab === 0 && <ActivityRecord data={data} historyId={historyId} ></ActivityRecord>}
           {activeTab === 1 && <ActivityMemberList data={data}></ActivityMemberList>}
           {activeTab === 2 && <ActivityDatailInfo data={data}></ActivityDatailInfo>}
           <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>

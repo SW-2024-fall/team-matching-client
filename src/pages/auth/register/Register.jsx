@@ -27,7 +27,7 @@ import logo from '../../../assets/logo.svg';
 const interests = [
     "인문학/사회/글", "사진/영상","운동","외국/언어","음악/악기","댄스/무용","공연/축제","캠핑/여행","봉사활동","학술/연구","면접/취준","게임"
 ]
-const Major = {
+export const Major = {
     PUBLIC_ADMINISTRATION: "행정학과",
     INTERNATIONAL_RELATIONS: "국제관계학과",
     ECONOMICS: "경제학부",
@@ -106,10 +106,8 @@ export default function Register() {
             quality: 0,
             selectionLimit: 1, // 최대 5장 선택 가능
         });
-        console.log(result);
         if (!result.cancelled) {
-            const newImage = result.assets.map(asset => asset.uri);
-            console.log("newImage = " + newImage);
+            const newImage = result.assets[0].uri;
             setImage(newImage)
         }
     };
@@ -142,7 +140,7 @@ export default function Register() {
       
             if (image) {
               formData.append('profile', {
-                uri: image.uri,
+                uri: image,
                 name: 'profile_image.jpg', // 파일 이름
                 type: 'image/jpeg', // MIME 타입
               });
@@ -155,7 +153,7 @@ export default function Register() {
             major: translateMajorToEnglish(major),
             studentId: studentId,
             phoneNumber: phoneNo,
-            prefeeredCategories: apipressedInterest,
+            preferredCategories: apipressedInterest,
         };
         formData.append('signupRequest', {"string": JSON.stringify(signupData), type: "application/json"});
       
@@ -246,7 +244,7 @@ export default function Register() {
                             </Pressable>
                         </PlusBlankWrapper>
                         : <ProfileImg
-                            source={image} />}
+                            source={{uri:image}} />}
 
                 </InputContainer>
 

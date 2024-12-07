@@ -7,10 +7,32 @@ import { WithLocalSvg } from "react-native-svg/css";
 import { useContext, useState } from "react";
 import UserTokenContext from "../../../../hooks/UserTokenContext";
 import { Image } from "react-native-svg";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { PAGES } from "../../../../navigation/constant";
 export default function MemberComponent({ id, memberData, re, setRe}) {
     const myContext = useContext(UserContext);
     const { userToken, setUserToken } = useContext(UserTokenContext);
-    
+    const [role, setRole] = useState(null);
+    const nav = useNavigation();
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`} });
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const json = await response.json();
+            const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`}});
+            const memberJson = await memberRes.json()
+            setData(json.data.info);
+          } catch (error) {
+            setError(error.message);
+          } finally {
+          }
+        };
+        fetchData();
+      }, []);
     const onPressOut = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/leave`, {
@@ -26,7 +48,6 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
         } catch (error) { console.error("Error 모임원 내보내기", error); }
     };
     const onPressUpgrade = async () => {
-        console.log("dasdsds")
         try {
             const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/upgrade`, {
                 method: "PUT",
@@ -40,6 +61,28 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
             else{Alert.alert('성공','부모임장 승급이 완료되었습니다.'); setRe(!re)}
         } catch (error) { console.error("Error 부모임장 승급", error); }
     };
+    const onPressProfile= async()=>{
+        try {
+            const response = await fetch(`http://localhost:8080/api/users`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                },
+            });
+            if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }
+            else{
+                const json = await response.json();
+                const myUserId = json.data.id;
+                if(myUserId === memberData.id){
+                    nav.navigate(PAGES.PROFILE);
+                }
+                else {
+                    nav.navigate(PAGES.EXTERNAL_PROFILE,{id:memberData.id});
+                }
+            }
+        } catch (error) { console.error("Error go profile", error); }
+    }
+
     return (
         <Container>
             <BaseInfoContainer>
@@ -49,12 +92,14 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
             />
                 <View>
                     <BaseInfoHeader>
-                        <Name>{memberData.name}</Name>
+                    <Pressable onPress={onPressProfile}><Name>{memberData.name}</Name></Pressable>
                         {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
+                        (memberData.role !== "CO_LEADER" && memberData.role !== "LEADER")&&
                             <OutPressable onPress={onPressUpgrade}>
                                 <OutText> 부모임장 승급 </OutText>
                             </OutPressable>}
                         {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
+                        (memberData.role !== "LEADER")&&
                             <OutPressable onPress={onPressOut}>
                                 <OutText>내보내기</OutText>
                             </OutPressable>}

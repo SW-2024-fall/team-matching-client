@@ -54,12 +54,11 @@ export default function MeetingHistoryCreate() {
     images.forEach((image, index) => {
       formData.append('files', {
         uri: image.uri,
-        name: 'image_${index}.jpg',
-        type: 'image/jpeg'
+        name: image.name,
+        type: image.type,
       })
     })
 
-    console.log(formData);
 
     try {
       const response = await fetch('http://localhost:8080/api/histories', {
@@ -85,7 +84,7 @@ export default function MeetingHistoryCreate() {
 
 
   const removeImage = (uri) => {
-    setImages((prevImages) => prevImages.filter(image => image !== uri));
+    setImages((prevImages) => prevImages.filter(image => image.uri !== uri));
   };
 
   const onDayPress = (day) => {
@@ -118,7 +117,11 @@ export default function MeetingHistoryCreate() {
     });
 
     if (!result.cancelled) {
-      const newImages = result.assets.map(asset => asset.uri);
+      const newImages = result.assets.map((asset, index) => ({
+        uri: asset.uri,
+        name: asset.fileName || `image_${Date.now()}_${index}.jpg`,
+        type: asset.type || 'image/jpeg',
+      }));
       setImages((prevImages) => {
         const updatedImages = [...prevImages, ...newImages];
         return updatedImages.slice(0, 5); // 최대 5장 유지
@@ -135,7 +138,6 @@ export default function MeetingHistoryCreate() {
           value={title}
           onChangeText={setTitle}
         />
-
         <Text style={styles.label}>활동 날짜를 선택해 주세요</Text>
         <Calendar
           // 현재 날짜 강조
@@ -164,10 +166,10 @@ export default function MeetingHistoryCreate() {
         <Text style={styles.label}>선택 활동 사진 (최대 5장)</Text>
 
         <View style={styles.imageGroup}>
-          {images.map((uri, index) => (
-            <TouchableOpacity key={index} onPress={() => removeImage(uri)}>
+          {images.map((image, index) => (
+            <TouchableOpacity key={index} onPress={() => removeImage(image.uri)}>
               <Image
-                source={{ uri }}
+                source={{ uri:image.uri }}
                 style={styles.image}
               />
             </TouchableOpacity>

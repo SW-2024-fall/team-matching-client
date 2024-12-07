@@ -5,14 +5,17 @@ import { WithLocalSvg } from "react-native-svg/css";
 import menu from '../../../../assets/menu.svg';
 import runningPhoto from '../../../../assets/runningPhoto.svg';
 import useModal from "../../../../hooks/useModal";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { PAGES } from '@navigation/constant';
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native-svg";
+import UserContext from "../../hooks/UserContext";
 
 export default function MeetingRecord({ name, group, content, historyId , uri, thumbnailUrl}) {
     const previewText = content.length > 100 ? `${content.substring(0, 100)}...` : content;
     const { Modal, open, close } = useModal();
+    const myContext = useContext(UserContext);
+    console.log(myContext.userData.userRole)
     const nav = useNavigation();
     const onPressDelete = async () => {
         try {
@@ -56,7 +59,7 @@ export default function MeetingRecord({ name, group, content, historyId , uri, t
 
                         </HeaderLeft>
                     </Pressable>
-                    {!menuVisible && <Pressable onPress={handlePress}>
+                    {!menuVisible && myContext.userData.userRole === "LEADER" &&<Pressable onPress={handlePress}>
                         <WithLocalSvg asset={menu} />
                     </Pressable>}
 

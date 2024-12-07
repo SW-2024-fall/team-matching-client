@@ -45,7 +45,7 @@ const MyProfile = ({ navigation }) => {
             setPhoneNumber(json.data.phoneNumber);
             setPreferredCategories(json.data.preferredCategories);
             setFeatures(json.data.features);
-            setAttendanceScore(json.data.AttendanceScore);
+            setAttendanceScore(json.data.attendanceScore);
             setLoading(false);
           } catch (error) {
             setError(error.message);
@@ -66,6 +66,7 @@ const MyProfile = ({ navigation }) => {
     //     profileURL: profileImage
     // };
 
+    
     const handleEditProfile = () => {
         console.log("프로필 수정 버튼 클릭됨");
         // 원하는 동작 추가 할 것. (프로필 수정 화면으로 이동)

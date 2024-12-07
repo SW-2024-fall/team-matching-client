@@ -8,13 +8,16 @@ export const PAGES = {
   MEETING_BOARD: 'MeetingBoard',
   MEETING: 'Meeting',
   MEETING_CREATE: 'MeetingCreate',
+  MEETING_EDIT:'MeetingEdit',
   MEETING_HISTORY: 'MeetingHistory',
   MEETING_HISTORY_CREATE: 'MeetingHistoryCreate',
   MEETING_FEED: 'MeetingFeed',
   PROFILE_STACK: 'ProfileStack',
   PROFILE: 'Profile',
+  EXTERNAL_PROFILE:'ExternalProfile',
   PROFILE_EDIT: 'ProfileEdit',
   PROFILE_LIKE_HISTORY: 'ProfileLikeHistory',
   PROFILE_SCRAP_HISTORY: 'ProfileScrapHistory',
   PROFILE_COMMENT_HISTORY: 'ProfileCommentHistory',
+  RECOMMEND: 'Recommend'
 };
