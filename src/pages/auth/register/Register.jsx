@@ -24,60 +24,9 @@ import Profile from '../../profile/Profile';
 import { useNavigation } from '@react-navigation/native';
 import { PAGES } from '../../../navigation/constant';
 import logo from '../../../assets/logo.svg';
-const interests = [
-    "인문학/사회/글", "사진/영상","운동","외국/언어","음악/악기","댄스/무용","공연/축제","캠핑/여행","봉사활동","학술/연구","면접/취준","게임"
-]
-export const Major = {
-    PUBLIC_ADMINISTRATION: "행정학과",
-    INTERNATIONAL_RELATIONS: "국제관계학과",
-    ECONOMICS: "경제학부",
-    SOCIAL_WELFARE: "사회복지학과",
-    TAXATION: "세무학과",
-    BUSINESS_ADMINISTRATION: "경영학부",
-    ELECTRICAL_AND_COMPUTER_ENGINEERING: "전자전기컴퓨터공학부",
-    COMPUTER_SCIENCE: "컴퓨터과학부",
-    CHEMICAL_ENGINEERING: "화학공학과",
-    MECHANICAL_AND_INFORMATION_ENGINEERING: "기계정보공학과",
-    MATERIALS_SCIENCE_AND_ENGINEERING: "신소재공학과",
-    CIVIL_ENGINEERING: "토목공학과",
-    ARTIFICIAL_INTELLIGENCE: "인공지능학과",
-    ENGLISH_LANGUAGE_AND_LITERATURE: "영어영문학과",
-    KOREAN_LANGUAGE_AND_LITERATURE: "국어국문학과",
-    KOREAN_HISTORY: "국사학과",
-    PHILOSOPHY: "철학과",
-    CHINESE_LANGUAGE_AND_CULTURE: "중국어문화학과",
-    MATHEMATICS: "수학과",
-    STATISTICS: "통계학과",
-    PHYSICS: "물리학과",
-    LIFE_SCIENCE: "생명과학과",
-    ENVIRONMENTAL_HORTICULTURE: "환경원예학과",
-    APPLIED_CHEMISTRY: "융합응용화학과",
-    ARCHITECTURAL_ENGINEERING: "건축학부(건축공학)",
-    ARCHITECTURE: "건축학부(건축학)",
-    URBAN_ENGINEERING: "도시공학과",
-    TRANSPORTATION_ENGINEERING: "교통공학과",
-    LANDSCAPE_ARCHITECTURE: "조경학과",
-    URBAN_ADMINISTRATION: "도시행정학과",
-    URBAN_SOCIOLOGY: "도시사회학과",
-    GEOINFORMATICS: "공간정보공학과",
-    ENVIRONMENTAL_ENGINEERING: "환경공학부",
-    MUSIC: "음악학과",
-    DESIGN: "디자인학과",
-    SCULPTURE: "조각학과",
-    SPORTS_SCIENCE: "스포츠과학과",
-    LIBERAL_STUDIES: "자유전공학부",
-    CONVERGENCE_STUDIES: "융합전공학부"
-};
-
-function translateMajorToEnglish(koreanName) {
-    const entries = Object.entries(Major);
-    for (const [englishName, name] of entries) {
-        if (name === koreanName) {
-            return englishName;
-        }
-    }
-    return null; // 이름이 없을 경우 null 반환
-}
+import { Major } from '../../const/Major';
+import { Interests } from '../../const/Interests';
+import { translateMajorToEnglish } from '../../../utils/translateMajorToEnglish';
 
 export default function Register() {
     const [image, setImage] = useState(null);
@@ -127,25 +76,25 @@ export default function Register() {
             '봉사활동': 'VOLUNTEER',
             '게임/오락': 'ENTERTAINMENT',
             '기타': 'ETC',
-          };
+        };
         
-          const apipressedInterest = MEETING_CATEGORY[pressedInterest];
+        const apipressedInterest = MEETING_CATEGORY[pressedInterest];
 
         if (!email) {
             Alert.alert('필수 입력 항목을 모두 채워주세요');
             return;
-          }
+        }
       
-          const formData = new FormData();
+        const formData = new FormData();
       
-            if (image) {
-              formData.append('profile', {
+        if (image) {
+            formData.append('profile', {
                 uri: image,
                 name: 'profile_image.jpg', // 파일 이름
                 type: 'image/jpeg', // MIME 타입
-              });
-            }
-      
+            });
+        }
+
         const signupData = {
             username: name,
             email: email,
@@ -156,23 +105,23 @@ export default function Register() {
             preferredCategories: apipressedInterest,
         };
         formData.append('signupRequest', {"string": JSON.stringify(signupData), type: "application/json"});
-      
+
         try {
-          const response = await fetch('http://localhost:8080/api/auth/signup', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            body: formData
-          });
+            const response = await fetch('http://localhost:8080/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                },
+                body: formData
+            });
       
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
       
-          Alert.alert(
-            '성공',
-            '회원가입에 성공했습니다.',
+            Alert.alert(
+                '성공',
+                '회원가입에 성공했습니다.',
             [
               {
                 text: '확인',
