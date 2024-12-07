@@ -10,36 +10,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserTokenContext from '../../hooks/UserTokenContext';
 import { useContext } from 'react';
 import MyProfile from '../profile/MyProfile';
+import useFetch from '../../hooks/useFetch';
+import { getHistories } from '../../utils/history';
 
 export default function Main({ navigation }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { userToken, setUserToken } = useContext(UserTokenContext);
-  
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/histories`, { 
-          method: 'GET' ,
-          headers: {
-            'Authorization': `Bearer ${userToken}`, // JWT 포함
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const json = await response.json();
-        setData(json);
-        console.log("main data ="+JSON.stringify(data));
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    useFetch(setData, setLoading, setError, getHistories(userToken));
   }, []);
 
   if (loading) {
