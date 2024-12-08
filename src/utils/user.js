@@ -15,4 +15,14 @@ const getUser = async () => {
     }
 }
 
+export const getUserById = async (id) => {
+    try {
+        const response = await fetch(`${USER}/${id}`);
+        return response.json();
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 export default getUser;

@@ -10,43 +10,30 @@ import ActivityDatailInfo from './component/ActivityDetailInfo';
 import ActivityMemberList from './component/ActivityMemberList';
 import ActivityRecord from './component/ActivityRecord';
 import UserTokenContext from '../../hooks/UserTokenContext';
-import { useContext } from 'react';
+import useFetch from '../../hooks/useFetch';
+import { getHistoryDetail } from '../../utils/history';
+
 const screenWidth = Dimensions.get('window').width;
 
 export default function MeetingHistory() {
   const route = useRoute();
   const { historyId, title } = route.params;
-  console.log(route.params);
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { accessToken, setUserToken } = useContext(UserTokenContext);
+
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        ; const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "GET",headers: {
-          'Authorization': `Bearer ${accessToken}`, // JWT 포함
-        }, });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const json = await response.json();
-        setData(json.data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    useFetch(setData, setLoading, setError, async () => await getHistoryDetail(historyId));
+    console.log("isLoading = "+loading);
   }, []);
+
   if (loading) {
-    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+    return <ActivityIndicator size="large" color="#444444" />; // 로딩 중일 때 인디케이터 표시
   }
 
   if (error) {
@@ -57,14 +44,10 @@ export default function MeetingHistory() {
     <Layout screen={PAGES.MEETING_HISTORY}>
       {data  &&
         <Container>
-          
           <Header>
-            {/* <WithLocalSvg
-                asset={runningPhoto}
-              /> */}
-            {data.files.length > 0 && data.files[0].url ? (
+            {data.data.files.length > 0 && data.data.files[0].url ? (
              <ImageContainer>
-                <StyledImage source={{ uri: data.files[0].url }} />
+                <StyledImage source={{ uri: data.data.files[0].url }} />
               </ImageContainer>
             ) : (
               <Text></Text>
@@ -87,9 +70,9 @@ export default function MeetingHistory() {
               <Tab isActive={activeTab === 2}>세부 정보</Tab>
             </TabWrapper>
           </TabContainer>
-          {activeTab === 0 && <ActivityRecord data={data} historyId={historyId} ></ActivityRecord>}
-          {activeTab === 1 && <ActivityMemberList data={data}></ActivityMemberList>}
-          {activeTab === 2 && <ActivityDatailInfo data={data}></ActivityDatailInfo>}
+          {activeTab === 0 && <ActivityRecord data={data.data} historyId={historyId} ></ActivityRecord>}
+          {activeTab === 1 && <ActivityMemberList data={data.data}></ActivityMemberList>}
+          {activeTab === 2 && <ActivityDatailInfo data={data.data}></ActivityDatailInfo>}
           <Pressable onPress={() => navigation.navigate(PAGES.MAIN)}></Pressable>
         </Container>
       }

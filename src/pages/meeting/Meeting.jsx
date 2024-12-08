@@ -16,15 +16,11 @@ import { greyBlueColors } from '../../styles/ThemeStyles';
 import uploadBtn from '../../assets/uploadBtn.svg';
 import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
-import MeetingHistory from '../meetingHistory/MeetingHistory';
 import { Animated } from 'react-native';
-import UserContext from './hooks/UserContext';
-import useFetch from './hooks/useFetch';
 import useModal from '../../hooks/useModal';
 import MeetingCreate from './create/MeetingCreate';
 import MeetingHistoryCreate from '../meetingHistory/create/MeetingHistoryCreate';
-import UserTokenContext from '../../hooks/UserTokenContext';
-import { useContext } from 'react';
+
 export default function Meeting() {
   const route = useRoute();
   const { id, title } = route.params;
@@ -37,9 +33,7 @@ export default function Meeting() {
   const [isLike, setIsLike] = useState(false);
   const [isScrap, setIsScrap] = useState(false);
   const nav = useNavigation();
-  const { accessToken, setUserToken } = useContext(UserTokenContext);
   const { Modal, open, close } = useModal();
-  const myContext = useContext(UserContext);
   const [re, setRe] = useState(false);
   const userContextValues = {
     userData: userData,

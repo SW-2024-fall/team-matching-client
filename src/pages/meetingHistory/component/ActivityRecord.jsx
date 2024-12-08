@@ -5,14 +5,12 @@ import ActivityRecorder from "./ActivityRecorder"
 import menu from '../../../assets/menu.svg';
 import { WithLocalSvg } from "react-native-svg/css";
 import { useState } from "react";
-import { useContext } from "react";
-import UserTokenContext from "../../../hooks/UserTokenContext";
+import { deleteHistory } from "../../../utils/history";
+
 export default function ActivityRecord({ data, historyId}) {
-    console.log(data.writer);
-    console.log("history id = "+historyId);
     const [menuVisible, setMenuVisible] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-    const { accessToken, setUserToken } = useContext(UserTokenContext);
+
     const handlePress = (event) => {
         const { pageX, pageY } = event.nativeEvent;
         setMenuPosition({ x: pageX, y: pageY });
@@ -26,14 +24,9 @@ export default function ActivityRecord({ data, historyId}) {
     const onPressEdit = () => {
         //활동내역 수정 페이지 이동
     }
+
     const onPressDelete = async() => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "DELETE",headers: {
-                'Authorization': `Bearer ${accessToken}`, // JWT 포함
-              } 
-            });
-            if (!response.ok) { throw new Error("Failed to 히스토리 삭제"); }
-        } catch (error) { console.error("Error 히스토리 삭제:", error); }
+        await deleteHistory(historyId);
     }
     return (
         <TouchableWithoutFeedback onPress={closeMenu}>

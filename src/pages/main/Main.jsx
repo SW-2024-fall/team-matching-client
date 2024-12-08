@@ -16,7 +16,7 @@ export default function Main({ navigation }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    useFetch(setData, setLoading, setError, getHistories);
+    useFetch(setData, setLoading, setError, async () => await getHistories());
   }, []);
 
   if (loading) {

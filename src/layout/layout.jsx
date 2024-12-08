@@ -26,7 +26,7 @@ export default function Layout({ screen, title = '', children, navigation, Right
     Header = <ProfileHeader />;
   }
 
-  const Wrapper = styled.SafeAreaView`
+  const Wrapper = styled.View`
     flex: 1;
     background-color: ${(props) => props.theme.colors.background.primary};
     justify-content: space-between;
@@ -35,17 +35,23 @@ export default function Layout({ screen, title = '', children, navigation, Right
     color: ${(props) => props.theme.font.color.primary};
   `;
 
+  const SafeArea = styled.SafeAreaView`
+    flex: 1;
+  `;
+
   const Body = styled.View`
     flex: 1;
   `;
 
   return (
     <Wrapper>
-      {Header}
-      <Body>
-        {/* <View>{children}</View> */}
-        <ScrollView>{children}</ScrollView>
-      </Body>
+      <SafeArea>
+        {Header}
+        <Body>
+          {/* <View>{children}</View> */}
+          <ScrollView>{children}</ScrollView>
+        </Body>
+      </SafeArea>
       {useAppbar && <Appbar navigation={navigation} />}
     </Wrapper>
   );

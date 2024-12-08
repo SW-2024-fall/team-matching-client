@@ -5,7 +5,7 @@ const useFetch = (setData, setLoading, setError, fetchFunction) => {
         setLoading(true);
         try {
             const response = await fetchFunction();
-            console.log("response = "+response.data);
+            console.log("useFetch response = "+response.data.id);
             setData(response);
         } catch (error) {
             console.log("error = "+error);
