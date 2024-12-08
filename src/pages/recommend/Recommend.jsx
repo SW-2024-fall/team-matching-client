@@ -271,71 +271,68 @@ export default function Recommend({ navigation }) {
 // 	};	
 //   setTimeout(reRender, 3000);
 	//   }
-	if (loading) {
-		console.log("loading");
-		return <ActivityIndicator style={{marginTop: 0, marginBottom: 0}} size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
-	}
   if (error) {
     return <Text style={{ fontSize: 20 }}>Error: {error}</Text>; // 에러 메시지 표시
   }
-  if(userData && meetingData && data){
   return (
     <Layout screen={PAGES.RECOMMEND}>
-      <Body>
-        <RecommendTitleWrapper>
-          <RecommendTitle>시대AI가 분석한 {userData.name}님의 추천 목록</RecommendTitle>
-          <UserFeatureWrapper>
-            {userData.features.map((feature, index) => (
-              <UserFeature key={index}>
-                <UserFeatureText># {feature}</UserFeatureText>
-              </UserFeature>
-            ))}
-          </UserFeatureWrapper>
-          <RecommendTitle>에 맞게 추천드려요!</RecommendTitle>
-        </RecommendTitleWrapper>
-        <RecommendCard onPress={goToMeetingDetail}>
-			<RecommendReasonContainer>
-				<RecommendReason>{data[page].reason}</RecommendReason>
-			</RecommendReasonContainer>
-			{meetingData.thumbnailUrls[0] ? <MeetingThumbnail source={{ uri: meetingData.thumbnailUrls[0] }} /> : <View/>}
-          {/* <MeetingThumbnail source={{ uri: meetingData.thumbnailUrls[0] }} /> */}
-          <MeetingTitleWrapper>
-            <MeetingTitle>{meetingData.name}</MeetingTitle>
-            <MeetingFeatureWrapper>
-              {meetingData.features.map((feature, index) => (
-                <MeetingFeature key={index}>#{feature}</MeetingFeature>
-              ))}
-            </MeetingFeatureWrapper>
-          </MeetingTitleWrapper>
-          <MeetingCategoryWrapper>
-            {meetingData.categories.map((category, index) => (
-              <MeetingCategoryContainer key={index}>
-                <MeetingCategory>{category}</MeetingCategory>
-              </MeetingCategoryContainer>
-            ))}
+		  <Body>
+			{userData && (
+					<RecommendTitleWrapper>
+						<RecommendTitle>시대AI가 분석한 {userData.name}님의 추천 목록</RecommendTitle>
+						<UserFeatureWrapper>
+							{userData.features.map((feature, index) => (
+								<UserFeature key={index}>
+									<UserFeatureText># {feature}</UserFeatureText>
+								</UserFeature>
+							))}
+						</UserFeatureWrapper>
+						<RecommendTitle>에 맞게 추천드려요!</RecommendTitle>
+					  </RecommendTitleWrapper>
+					  )
+			  }
+			{!meetingData && (
+				<ActivityIndicator style={{marginTop: 0, marginBottom: 0}} size="large" color="#444444" />
+			)}
+			{meetingData && (
+				<>
+					<RecommendCard onPress={goToMeetingDetail}>
+						<RecommendReasonContainer>
+							<RecommendReason>{data[page].reason}</RecommendReason>
+						</RecommendReasonContainer>
+						{meetingData.thumbnailUrls[0] ? <MeetingThumbnail source={{ uri: meetingData.thumbnailUrls[0] }} /> : <View/>}
+						<MeetingTitleWrapper>
+							<MeetingTitle>{meetingData.name}</MeetingTitle>
+							<MeetingFeatureWrapper>
+								{meetingData.features.map((feature, index) => (
+									<MeetingFeature key={index}>#{feature}</MeetingFeature>
+								))}
+							</MeetingFeatureWrapper>
+						</MeetingTitleWrapper>
+						<MeetingCategoryWrapper>
+					{meetingData.categories.map((category, index) => (
+					<MeetingCategoryContainer key={index}>
+						<MeetingCategory>{category}</MeetingCategory>
+					</MeetingCategoryContainer>
+					))}
 
-          </MeetingCategoryWrapper>
-          <MeetingContent content={meetingData.content} />
-        </RecommendCard>
-        <RecommendActionsWrapper>
-          <RecommendActionButton onPress={onPressScrap}>
-			{/* <WithLocalSvg asset={scrap}/> */}
-			{isScrap ? 
-				<WithLocalSvg asset={scrap}/>  : 
-				<WithLocalSvg asset={notScrap}/>}
-            	<RecommendActionButtonText>스크랩하기</RecommendActionButtonText>
-          </RecommendActionButton>
-          <RecommendActionButton onPress={recommendAnotherMeeting}>
-            <RecommendActionButtonText>다른 모임 추천받기</RecommendActionButtonText>
-          </RecommendActionButton>
-        </RecommendActionsWrapper>
+				</MeetingCategoryWrapper>
+				<MeetingContent content={meetingData.content} />
+				</RecommendCard>
+				<RecommendActionsWrapper>
+				<RecommendActionButton onPress={onPressScrap}>
+					{/* <WithLocalSvg asset={scrap}/> */}
+					{isScrap ? 
+						<WithLocalSvg asset={scrap}/>  : 
+						<WithLocalSvg asset={notScrap}/>}
+						<RecommendActionButtonText>스크랩하기</RecommendActionButtonText>
+				</RecommendActionButton>
+				<RecommendActionButton onPress={recommendAnotherMeeting}>
+					<RecommendActionButtonText>다른 모임 추천받기</RecommendActionButtonText>
+				</RecommendActionButton>
+				</RecommendActionsWrapper>
+			</>)}
       </Body>
     </Layout>
   );
-}
-else{
-	console.log("userData = "+userData);
-	console.log("data = "+data);
-	console.log("meetingData = "+meetingData);
-}
 }

@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthProvider';
 
-export default function ProfileHeader({ isMe = false }) {
+export default function ProfileHeader() {
   const route = useRoute();
   const { id } = route.params;
   const { user } = useAuth();
@@ -13,5 +13,5 @@ export default function ProfileHeader({ isMe = false }) {
     isMe = true;
   }
 
-  return <BaseHeader left={ isMe ? <View /> : <GoBackBtn />} right={<LogoBtn />} />;
+  return <BaseHeader left={ <GoBackBtn />} right={<LogoBtn />} />;
 }

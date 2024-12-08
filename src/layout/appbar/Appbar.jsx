@@ -6,9 +6,11 @@ import profileIcon from '@assets/profileIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
 import { PAGES } from '@navigation/constant';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../context/AuthProvider';
 
 export default function Appbar() {
   const navigation = useNavigation();
+  const {user} = useAuth();
 
   const Wrapper = styled.View`
     width: 100%;
@@ -49,7 +51,7 @@ export default function Appbar() {
 
   const goProfile = () => {
     console.log('goProfile');
-    navigation.navigate(PAGES.MYPROFILE);
+    navigation.navigate(PAGES.MYPROFILE, {id: user.id});
   };
 
   return (
