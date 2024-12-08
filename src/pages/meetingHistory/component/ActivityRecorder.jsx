@@ -12,13 +12,13 @@ import { PAGES } from "../../../navigation/constant";
 export default function ActivityRecorder({ name, meetingName, profileUrl ,id}) {
     console.log(profileUrl);
     const nav = useNavigation();
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
     const onPressProfile= async()=>{
         try {
             const response = await fetch(`http://localhost:8080/api/users`, {
                 method: "GET",
                 headers: {
-                    'Authorization': `Bearer ${userToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
             });
             if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }

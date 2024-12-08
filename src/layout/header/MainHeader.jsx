@@ -12,11 +12,7 @@ export default function MainHeader() {
     });
   };
 
-  const goProfile = () => {
-    navigation.navigate(PAGES.MYPROFILE);
-  };
-
   return (
-    <BaseHeader left={<LogoBtn goHome={goHome} />} right={<Profile goProfile={goProfile} />} />
+    <BaseHeader left={<LogoBtn goHome={goHome} />} right={<Profile />} />
   );
 }

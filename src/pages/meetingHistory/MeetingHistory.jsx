@@ -21,7 +21,7 @@ export default function MeetingHistory() {
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userToken, setUserToken } = useContext(UserTokenContext);
+  const { accessToken, setUserToken } = useContext(UserTokenContext);
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
@@ -29,7 +29,7 @@ export default function MeetingHistory() {
     const fetchData = async () => {
       try {
         ; const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "GET",headers: {
-          'Authorization': `Bearer ${userToken}`, // JWT 포함
+          'Authorization': `Bearer ${accessToken}`, // JWT 포함
         }, });
         if (!response.ok) {
           throw new Error('Network response was not ok');

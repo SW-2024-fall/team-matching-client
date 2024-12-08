@@ -30,18 +30,18 @@ const daysToKoreanText = (days) => {
 
 export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe }) {
     const myContext = useContext(UserContext);
-    const {userToken, setUserToken} = useContext(UserTokenContext);
+    const {accessToken, setUserToken} = useContext(UserTokenContext);
     const onPressLike = async () => {
         if (isLike) {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
                 if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
                 else{setRe(!re)}
             } catch (error) { console.error("Error 좋아요 취소:", error); }
         }
         else {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "POST",headers: {'Authorization': `Bearer ${userToken}`} });
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "POST",headers: {'Authorization': `Bearer ${accessToken}`} });
                 if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
                 else{setRe(!re)}
             } catch (error) { console.error("Error 좋아요 추가:", error); }
@@ -51,14 +51,14 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
     const onPressScrap = async () => {
         if (isScrap) {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
                 if (!response.ok) { throw new Error("Failed to 스크랩 취소"); }
                 else{setRe(!re)}
             } catch (error) { console.error("Error 스크랩 취소:", error); }
         }
         else {
             try {
-                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "POST" ,headers: {'Authorization': `Bearer ${userToken}`}});
+                const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "POST" ,headers: {'Authorization': `Bearer ${accessToken}`}});
                 if (!response.ok) { throw new Error("Failed to 스크랩 추가"); }
                 else{setRe(!re)}
             } catch (error) { console.error("Error 스크랩 추가:", error); }

@@ -16,7 +16,7 @@ import UserTokenContext from '../../../hooks/UserTokenContext';
 import { useContext } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 export default function MeetingEdit() {
-  const {userToken, setUserToken} = useContext(UserTokenContext);
+  const {accessToken, setUserToken} = useContext(UserTokenContext);
   const nav = useNavigation();
   const route = useRoute();
   const { id } = route.params;
@@ -57,7 +57,7 @@ export default function MeetingEdit() {
       try {
         const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { 
           method: "GET",
-          headers: {'Authorization': `Bearer ${userToken}`} 
+          headers: {'Authorization': `Bearer ${accessToken}`} 
         });
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -184,7 +184,7 @@ export default function MeetingEdit() {
       method: 'PUT',
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${userToken}`
+        'Authorization': `Bearer ${accessToken}`
       },
       body: formData
     });
@@ -215,7 +215,7 @@ export default function MeetingEdit() {
   //     const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}`, { 
   //     method: 'POST',
   //     headers: {
-  //       'Authorization': `Bearer ${userToken}`
+  //       'Authorization': `Bearer ${accessToken}`
   //     },
       
   //   });

@@ -23,7 +23,7 @@ export default function MeetingHistoryCreate() {
   const [isPublic, setIsPublic] = useState(true);
   const [participants, setParticipants] = useState([]);
   const [images, setImages] = useState([]);
-  const {userToken, setUserToken} = useContext(UserTokenContext);
+  const {accessToken, setUserToken} = useContext(UserTokenContext);
 
   const [statuses, setStatuses] = useState([]);
   const [attendanceState, setAttendanceState] = useState([]);
@@ -65,7 +65,7 @@ export default function MeetingHistoryCreate() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`
+          'Authorization': `Bearer ${accessToken}`
         },
         body: formData
       });

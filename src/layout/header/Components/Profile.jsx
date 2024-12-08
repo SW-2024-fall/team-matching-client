@@ -1,6 +1,9 @@
 import { Pressable } from 'react-native';
 import styled from 'styled-components';
 import { theme } from '@styles/ThemeStyles';
+import { useAuth } from '../../../context/AuthProvider';
+import { useNavigation } from '@react-navigation/native';
+import { PAGES } from '@navigation/constant';
 
 const ProfileInfo = styled.Text`
   color: ${theme.colors.grey.primary};
@@ -8,11 +11,23 @@ const ProfileInfo = styled.Text`
   font-weight: ${(props) => props.theme.font.weight.semiBold};
 `;
 
-export default function Profile({ goProfile }) {
-  // user name, user profile image 가져와야함
+export default function Profile() {
+  const navigation = useNavigation();
+  const { user } = useAuth();
+  const name = user ? user.name : '로그인';
+
+
+  const goProfile = () => {
+    if (user) {
+      navigation.navigate(PAGES.MYPROFILE);
+    } else {
+      navigation.navigate(PAGES.LOGIN);
+    }
+  };
+
   return (
     <Pressable onPress={goProfile}>
-      <ProfileInfo>user name</ProfileInfo>
+      <ProfileInfo>{name}</ProfileInfo>
     </Pressable>
   );
 }

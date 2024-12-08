@@ -4,23 +4,23 @@ import { useNavigation } from '@react-navigation/native';
 import { PAGES } from '../../../navigation/constant';
 import logo from '../../../assets/logo.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
-import { login } from '../../../utils/auth';
-import UserTokenContext from '../../../hooks/UserTokenContext';
-import { useContext } from 'react';
+import { useAuth } from '../../../context/AuthProvider';
 
 const LoginScreen = () => {
-  const { setUserToken } = useContext(UserTokenContext);
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const nav = useNavigation();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setEmailError('이메일 또는 비밀번호를 확인해주세요.');
       return;
     }
-    login(email, password, nav, setUserToken);
+    if (await login(email, password)) {
+      nav.navigate(PAGES.MAIN);
+    }
   };
 
   return (

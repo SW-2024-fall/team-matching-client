@@ -12,7 +12,7 @@ export default function ActivityRecord({ data, historyId}) {
     console.log("history id = "+historyId);
     const [menuVisible, setMenuVisible] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
     const handlePress = (event) => {
         const { pageX, pageY } = event.nativeEvent;
         setMenuPosition({ x: pageX, y: pageY });
@@ -29,7 +29,7 @@ export default function ActivityRecord({ data, historyId}) {
     const onPressDelete = async() => {
         try {
             const response = await fetch(`http://localhost:8080/api/histories/${historyId}`, { method: "DELETE",headers: {
-                'Authorization': `Bearer ${userToken}`, // JWT 포함
+                'Authorization': `Bearer ${accessToken}`, // JWT 포함
               } 
             });
             if (!response.ok) { throw new Error("Failed to 히스토리 삭제"); }

@@ -21,7 +21,7 @@ export default function ProfileEdit() {
   const [Major, setMajor] = useState('');
   const [profileImg, setProfileImg] = useState('');
   const [selectedMeetingTypes, setSelectedMeetingTypes] = useState([]);
-  const {userToken, setUserToken} = useContext(UserTokenContext);
+  const {accessToken, setUserToken} = useContext(UserTokenContext);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
 
@@ -47,7 +47,7 @@ export default function ProfileEdit() {
       try {
         const response = await fetch(`http://localhost:8080/api/users`, { 
             method: "GET",
-            headers: {'Authorization': `Bearer ${userToken}`} 
+            headers: {'Authorization': `Bearer ${accessToken}`} 
         });
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -112,7 +112,7 @@ export default function ProfileEdit() {
       const response = await fetch('http://localhost:8080/api/users', {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${userToken}`
+          'Authorization': `Bearer ${accessToken}`
         },
         body: formData
       });
@@ -169,7 +169,7 @@ export default function ProfileEdit() {
       const response = await fetch('http://localhost:8080/api/users', {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${userToken}`
+          'Authorization': `Bearer ${accessToken}`
         },
       });
 

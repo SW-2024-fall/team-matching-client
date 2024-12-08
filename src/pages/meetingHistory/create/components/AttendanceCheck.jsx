@@ -6,7 +6,7 @@ import { useContext } from 'react'
 const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {userToken, setUserToken} = useContext(UserTokenContext);
+  const {accessToken, setUserToken} = useContext(UserTokenContext);
   const [attendee, setattendee] = useState([]);
   const Attend = {
     "지각":"LATE",
@@ -63,7 +63,7 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
       try {
         const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { 
           method: "GET",
-          headers: {'Authorization': `Bearer ${userToken}`} 
+          headers: {'Authorization': `Bearer ${accessToken}`} 
         });
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -79,7 +79,7 @@ const AttendanceCheck = ({ id , attendanceState, setAttendanceState}) => {
     };
     
     fetchData();
-  }, [id, userToken]);
+  }, [id, accessToken]);
   
   const ids = attendee.map((attendee) => ({
     userId: attendee.id,

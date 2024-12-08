@@ -1,13 +1,12 @@
-import { useState } from "react";
-
 const useFetch = (setData, setLoading, setError, fetchFunction) => {
 
     const fetchData = async () => {
         console.log("fetchData");
         setLoading(true);
         try {
-            const response = await (async () => fetchFunction)();
-            setData(await response.json());
+            const response = await fetchFunction();
+            console.log("response = "+response.data);
+            setData(response);
         } catch (error) {
             console.log("error = "+error);
             setError(error);

@@ -6,9 +6,6 @@ import { theme } from '../../styles/ThemeStyles';
 import StoryCircle from '@pages/main/components/StoryCircle';
 import FeedPost from '@pages/main/components/FeedPost';
 import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserTokenContext from '../../hooks/UserTokenContext';
-import { useContext } from 'react';
 import MyProfile from '../profile/MyProfile';
 import useFetch from '../../hooks/useFetch';
 import { getHistories } from '../../utils/history';
@@ -17,14 +14,13 @@ export default function Main({ navigation }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userToken, setUserToken } = useContext(UserTokenContext);
 
   useEffect(() => {
-    useFetch(setData, setLoading, setError, getHistories(userToken));
+    useFetch(setData, setLoading, setError, getHistories);
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+    return <ActivityIndicator size="large" color="#333333" />; // 로딩 중일 때 인디케이터 표시
   }
 
   return (

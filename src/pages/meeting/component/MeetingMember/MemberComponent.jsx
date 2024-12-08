@@ -12,18 +12,18 @@ import { useNavigation } from "@react-navigation/native";
 import { PAGES } from "../../../../navigation/constant";
 export default function MemberComponent({ id, memberData, re, setRe}) {
     const myContext = useContext(UserContext);
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
     const [role, setRole] = useState(null);
     const nav = useNavigation();
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`} });
+            const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`} });
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
             const json = await response.json();
-            const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`}});
+            const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`}});
             const memberJson = await memberRes.json()
             setData(json.data.info);
           } catch (error) {
@@ -39,7 +39,7 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${userToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify({ targetUserId: memberData.id }), // JSON 형식으로 데이터 설정
             });
@@ -53,7 +53,7 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    'Authorization': `Bearer ${userToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify({ targetUserId: memberData.id }), // JSON 형식으로 데이터 설정
             });
@@ -66,7 +66,7 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
             const response = await fetch(`http://localhost:8080/api/users`, {
                 method: "GET",
                 headers: {
-                    'Authorization': `Bearer ${userToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
             });
             if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }

@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import UserTokenContext from './UserTokenContext';
 
 const UserTokenProvider = ({ children }) => {
-  const [userToken, setUserToken] = useState('초기 토큰'); // 초기값 설정
+  const [accessToken, setUserToken] = useState('초기 토큰'); // 초기값 설정
 
   return (
-    <UserTokenContext.Provider value={{ userToken, setUserToken }}>
+    <UserTokenContext.Provider value={{ accessToken, setUserToken }}>
       {children}
     </UserTokenContext.Provider>
   );

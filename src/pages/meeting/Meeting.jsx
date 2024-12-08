@@ -37,7 +37,7 @@ export default function Meeting() {
   const [isLike, setIsLike] = useState(false);
   const [isScrap, setIsScrap] = useState(false);
   const nav = useNavigation();
-  const { userToken, setUserToken } = useContext(UserTokenContext);
+  const { accessToken, setUserToken } = useContext(UserTokenContext);
   const { Modal, open, close } = useModal();
   const myContext = useContext(UserContext);
   const [re, setRe] = useState(false);
@@ -48,12 +48,12 @@ export default function Meeting() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`} });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`} });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const json = await response.json();
-        const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`}});
+        const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`}});
         const memberJson = await memberRes.json()
         setData(json.data.info);
         setMemberData(json.data.members);
@@ -86,7 +86,7 @@ export default function Meeting() {
   };
   const onPressDeleteMeeting = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
+      const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
       if (!response.ok) { throw new Error("Failed to delete the meeting"); }
       nav.navigate(PAGES.MAIN);
     } catch (error) { console.error("Error deleting the meeting:", error); }
@@ -94,20 +94,20 @@ export default function Meeting() {
   const onPressFooterBtn = async () => {
     if (userData.userRole === "EXTERNAL") {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" ,headers: {'Authorization': `Bearer ${userToken}`}});
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" ,headers: {'Authorization': `Bearer ${accessToken}`}});
         if (!response.ok) { throw new Error("Failed to 모임신청"); }
         else{Alert.alert('성공','모임 신청되었습니다'); setRe(!re)}
       } catch (error) { console.error("Error 모임신청", error); }
     }
     else if (userData.userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { method: "DELETE",headers: {'Authorization': `Bearer ${userToken}`} });
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { method: "DELETE",headers: {'Authorization': `Bearer ${accessToken}`} });
         if (!response.ok) { throw new Error("Failed to 모임탈퇴"); }
       } catch (error) { console.error("Error 모임탈퇴:", error); }
     }
     else if (userData.userRole === "REQUESTED") {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
+        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
         if (!response.ok) {
           throw new Error("Failed to 모인 신청 해제");
         }

@@ -24,7 +24,7 @@ const BottomTabOthers = (id) => {
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
     const [likedMeeting, setLikedMeeting] = useState([]); // Default tab
     const [scrappedMeeting, setScrappedMeeting] = useState(''); // Default tab
-    const {userToken, setUserToken} = useContext(UserTokenContext);
+    const {accessToken, setUserToken} = useContext(UserTokenContext);
     const [Data, setData] = useState({
         모임: [],
       });
@@ -35,7 +35,7 @@ const BottomTabOthers = (id) => {
                   const response = await fetch(`http://localhost:8080/api/meetings/user/${id.id}`, { 
                       method: "GET",
                       headers: {
-                          'Authorization': `Bearer ${userToken}`
+                          'Authorization': `Bearer ${accessToken}`
                         }
                     });
                     if (!response.ok) {

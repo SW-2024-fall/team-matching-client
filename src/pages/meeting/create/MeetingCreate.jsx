@@ -16,7 +16,7 @@ import UserTokenContext from '../../../hooks/UserTokenContext';
 import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 export default function MeetingCreate() {
-  const {userToken, setUserToken} = useContext(UserTokenContext);
+  const {accessToken, setUserToken} = useContext(UserTokenContext);
   const nav = useNavigation();
 
   const [meetingId, setMeetingId] = useState('');
@@ -143,7 +143,7 @@ export default function MeetingCreate() {
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${userToken}`
+        'Authorization': `Bearer ${accessToken}`
       },
       body: formData
     });
@@ -177,7 +177,7 @@ export default function MeetingCreate() {
   //     const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}`, { 
   //     method: 'POST',
   //     headers: {
-  //       'Authorization': `Bearer ${userToken}`
+  //       'Authorization': `Bearer ${accessToken}`
   //     },
       
   //   });

@@ -9,7 +9,7 @@ export default function MeetingRecordList({id}) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const {userToken, setUserToken} = useContext(UserTokenContext);
+    const {accessToken, setUserToken} = useContext(UserTokenContext);
 
     console.log(id);
     useEffect(() => {
@@ -18,7 +18,7 @@ export default function MeetingRecordList({id}) {
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/histories?page=0&size=1&sort=asc`, { 
                     method: "GET",
                     headers: {
-                        'Authorization': `Bearer ${userToken}`
+                        'Authorization': `Bearer ${accessToken}`
                     }
                 });
                 if (!response.ok) {

@@ -8,7 +8,7 @@ import { WithLocalSvg } from "react-native-svg/css";
 import { useNavigation } from "@react-navigation/native";
 import { PAGES } from "../../../../navigation/constant";
 export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
     const nav = useNavigation();
     const onPressIn = async () => {
         try {
@@ -16,7 +16,7 @@ export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
                 { 
                     method: "PUT" ,
                 headers: {
-                    'Authorization': `Bearer ${userToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
             },
             body: JSON.stringify({ targetUserId: memberData.id }) 
@@ -28,9 +28,9 @@ export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
     const onPressOut = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application/reject`, 
-                { method: "PUT",headers: {'Authorization': `Bearer ${userToken}`},
+                { method: "PUT",headers: {'Authorization': `Bearer ${accessToken}`},
                 headers: {
-                    'Authorization': `Bearer ${userToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
             },
             body: JSON.stringify({ targetUserId: memberData.id }) });
@@ -43,7 +43,7 @@ export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
             const response = await fetch(`http://localhost:8080/api/users`, {
                 method: "GET",
                 headers: {
-                    'Authorization': `Bearer ${userToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
             });
             if (!response.ok) { throw new Error("Failed to 부모임장 승급"); }

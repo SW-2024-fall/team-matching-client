@@ -29,14 +29,14 @@ export default function Profile({ navigation }) {
     const [features, setFeatures] = useState([]);
     const [attendanceScore, setAttendanceScore] = useState('');
     const [error, setError] = useState(null);
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
 
     useEffect(() => {
         const fetchData = async () => {
           try {
             const response = await fetch(`http://localhost:8080/api/users/${id}`, { 
                 method: "GET",
-                headers: {'Authorization': `Bearer ${userToken}`} 
+                headers: {'Authorization': `Bearer ${accessToken}`} 
             });
             if (!response.ok) {
                 console.log("error!");

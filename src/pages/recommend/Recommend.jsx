@@ -142,7 +142,7 @@ const user = {
 const UserFeatureList = ['승부욕', '열정', '행복', '고양이'];
 
 export default function Recommend({ navigation }) {
-	const { userToken, setUserToken } = useContext(UserTokenContext);
+	const { accessToken, setUserToken } = useContext(UserTokenContext);
 	const [meeting, setMeeting] = useState(meeting1);
 	const [data,setData] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -156,7 +156,7 @@ export default function Recommend({ navigation }) {
 	// useEffect(()=>{
 	// 	const fetchData = async () =>{
 	// 		try{
-	// 			const response = await fetch(`http://localhost:8080/api/users`, { method: "GET",headers: {'Authorization': `Bearer ${userToken}`} });
+	// 			const response = await fetch(`http://localhost:8080/api/users`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`} });
 	// 			const json = await response.json();
 	// 			setFeatures(json.data.features);
 	// 			console.log("rec user data = "+JSON.stringify(features));
@@ -174,7 +174,7 @@ export default function Recommend({ navigation }) {
 				console.log("meetingId"+meetingId);
 				const responseMeeting = await fetch(`http://localhost:8080/api/meetings/${meetingId}`, { 
 					method: "GET",
-					headers: {'Authorization': `Bearer ${userToken}`}
+					headers: {'Authorization': `Bearer ${accessToken}`}
 				})
 				// .then(async (res)=>{
 				// 	const jsonMeeting = await responseMeeting.json();
@@ -213,7 +213,7 @@ export default function Recommend({ navigation }) {
 		try{
 			const response = await fetch(`http://localhost:8080/api/users`, { 
 				method: "GET",
-				headers: {'Authorization': `Bearer ${userToken}`}
+				headers: {'Authorization': `Bearer ${accessToken}`}
 			 });
 			const json = await response.json();
 			setUserData(json.data);
@@ -221,7 +221,7 @@ export default function Recommend({ navigation }) {
 			// console.log(features);
 			const response2 = await fetch(`http://localhost:8080/api/meetings/recommend`, { 
 				method: "GET",
-				headers: {'Authorization': `Bearer ${userToken}`} 
+				headers: {'Authorization': `Bearer ${accessToken}`} 
 			})
 			// .then(async(res)=>{
 			// 	const json2 = await res.json();
@@ -254,14 +254,14 @@ export default function Recommend({ navigation }) {
   const onPressScrap = async() =>{
 	if (isScrap){
 		try {
-			const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${userToken}`}});
+			const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
 			if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
 			else{setRe(!re); setIsScrap(false);}
 		} catch (error) { console.error("Error 좋아요 취소:", error); }
 	}
 	else{
 		try {
-			const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}/scraps`, { method: "POST",headers: {'Authorization': `Bearer ${userToken}`} });
+			const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}/scraps`, { method: "POST",headers: {'Authorization': `Bearer ${accessToken}`} });
 			if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
 			else{setRe(!re); setIsScrap(true);}
 		} catch (error) { console.error("Error 좋아요 추가:", error); }

@@ -3,18 +3,14 @@ import { ThemeProvider } from 'styled-components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Navigation from '@navigation/navigation';
-import { AuthProvider } from './pages/auth/AuthProvider';
-import UserTokenProvider from './hooks/UserTokenProvider';
+import { AuthProvider } from './context/AuthProvider';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <UserTokenProvider>
-
-          <Navigation />
-        </UserTokenProvider>
+        <Navigation />
       </AuthProvider>
     </ThemeProvider>
   );

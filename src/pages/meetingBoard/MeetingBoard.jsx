@@ -29,7 +29,7 @@ export default function MeetingBoard({ navigation }) {
     const [error, setError] = useState(null);
     const [filterVisible, setFilterVisible] = useState(false);
     const [filteredData, setFilteredData] = useState([]);  // 초기 값은 빈 배열
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
     const [page, setPage] = useState(0);
     const [maxPage, setMaxPage] = useState(0);
     const [pagedData, setPagedData] = useState(null);
@@ -44,7 +44,7 @@ export default function MeetingBoard({ navigation }) {
                 const response = await fetch(API_URL, { 
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${userToken}`, // JWT 포함
+                        'Authorization': `Bearer ${accessToken}`, // JWT 포함
                       },
                  });
                 if (!response.ok) {
@@ -58,7 +58,7 @@ export default function MeetingBoard({ navigation }) {
                         const meetingResponse = await fetch(`${API_URL}/${item.id}`,{
                             method: 'GET',
                             headers: {
-                              'Authorization': `Bearer ${userToken}`, // JWT 포함
+                              'Authorization': `Bearer ${accessToken}`, // JWT 포함
                             },
                         });
                         const meetingDetailsText = await meetingResponse.text();

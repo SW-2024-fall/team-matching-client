@@ -7,8 +7,7 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
   const LeftWrapper = styled(View)`
     position: absolute;
     left: 15px;
-    top: ${Constants.statusBarHeight}px;
-    bottom: 0;
+    bottom: 15px;
     justify-content: center;
     align-items: center;
   `;
@@ -17,8 +16,7 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
     position: absolute;
     left: 0;
     right: 0;
-    top: ${Constants.statusBarHeight}px;
-    bottom: 0;
+    bottom: 15px;
     align-items: center;
     justify-content: center;
   `;
@@ -26,17 +24,16 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
   const RightWrapper = styled(View)`
     position: absolute;
     right: 15px;
-    top: ${Constants.statusBarHeight}px;
-    bottom: 0;
+    bottom: 15px;
     justify-content: center;
     align-items: center;
   `;
 
   const HeaderWrapper = styled(View)`
     width: 100%;
-    height: 60px;
+    height: 48px;
     background-color: ${backgroundColor};
-    padding-top: ${Constants.statusBarHeight + 30}px;
+    padding-top: 30px;
     padding-bottom: 15px;
     padding-left: 15px;
     padding-right: 15px;

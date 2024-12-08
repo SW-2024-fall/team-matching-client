@@ -30,7 +30,7 @@ const MyProfile = ({ navigation }) => {
           try {
             const response = await fetch(`http://localhost:8080/api/users`, { 
                 method: "GET",
-                headers: {'Authorization': `Bearer ${userToken}`} 
+                headers: {'Authorization': `Bearer ${accessToken}`} 
             });
             if (!response.ok) {
               throw new Error('Network response was not ok');
@@ -72,7 +72,7 @@ const MyProfile = ({ navigation }) => {
         // 원하는 동작 추가 할 것. (프로필 수정 화면으로 이동)
     };
 
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const { accessToken, setUserToken } = useContext(UserTokenContext);
 
     return (
         <Layout screen={PAGES.PROFILE} navigation={navigation}>
