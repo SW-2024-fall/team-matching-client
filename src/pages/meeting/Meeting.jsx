@@ -10,8 +10,6 @@ import TeamMemberList from './component/MeetingMember/TeamMemberList';
 import WatingMemberList from './component/MeetingMember/WatingMembetList';
 import CommentView from './component/MeetingInfo/CommentView';
 import VerifyEmail from '../auth/register/VerifyEmail';
-import { WithLocalSvg } from 'react-native-svg/css';
-import runningPhoto from '../../assets/runningPhoto.svg';
 import { greyBlueColors } from '../../styles/ThemeStyles';
 import uploadBtn from '../../assets/uploadBtn.svg';
 import Register from '../auth/register/Register';
@@ -42,21 +40,15 @@ export default function Meeting() {
     const fetchData = async () => {
       try {
         const response = await getMeetingById(id);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const json = await response.json();
-        const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`}});
-        const memberJson = await memberRes.json()
-        setData(json.data.info);
-        setMemberData(json.data.members);
-        setIsLike(json.data.liked);
-        setIsScrap(json.data.scraped);
+        const memberRes = await getMeetingMemberRole(id);
+        setData(response.data.info);
+        setMemberData(response.data.members);
+        setIsLike(response.data.liked);
+        setIsScrap(response.data.scraped);
         setUserData({
-          userRole: memberJson.data
+          userRole: memberRes.data
         }) 
         setLoading(false);
-
       } catch (error) {
         setError(error.message);
       } finally {
@@ -77,35 +69,21 @@ export default function Meeting() {
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
   };
+
   const onPressDeleteMeeting = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
-      if (!response.ok) { throw new Error("Failed to delete the meeting"); }
-      nav.navigate(PAGES.MAIN);
-    } catch (error) { console.error("Error deleting the meeting:", error); }
+    deleteMeeting(id);
+    nav.navigate(PAGES.MAIN);
   }
+
   const onPressFooterBtn = async () => {
     if (userData.userRole === "EXTERNAL") {
-      try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "POST" ,headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (!response.ok) { throw new Error("Failed to 모임신청"); }
-        else{Alert.alert('성공','모임 신청되었습니다'); setRe(!re)}
-      } catch (error) { console.error("Error 모임신청", error); }
+      postMeetingApplication(id);
     }
     else if (userData.userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
-      try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members`, { method: "DELETE",headers: {'Authorization': `Bearer ${accessToken}`} });
-        if (!response.ok) { throw new Error("Failed to 모임탈퇴"); }
-      } catch (error) { console.error("Error 모임탈퇴:", error); }
+      leaveMeeting(id);
     }
     else if (userData.userRole === "REQUESTED") {
-      try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}/members/application`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (!response.ok) {
-          throw new Error("Failed to 모인 신청 해제");
-        }
-        else{Alert.alert('성공','모임신청이 취소되었습니다'); setRe(!re)}
-      } catch (error) { console.error("Error 모임신청 해제:", error); }
+      deleteMeetingApplication(id);
     }
   }
   if (data !== null) {
