@@ -3,7 +3,7 @@ import { MEETING } from './endPoint';
 
 export const getMeetingById = async (id) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log("accessToken: ", accessToken);
+    console.log("getMeetingById id: ", id);
     try {
         const response = await fetch(`${MEETING}/${id}`,
             {
@@ -11,7 +11,7 @@ export const getMeetingById = async (id) => {
                 headers: {'Authorization': `Bearer ${accessToken}`}
             }
         );
-        return response.json();
+        return await response.json();
     } catch (error) {
         console.log(error);
         throw error;
@@ -20,9 +20,10 @@ export const getMeetingById = async (id) => {
 
 export const getMeetingMemberRole = async (id) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log("getMeetingMemberRole id: ", id);
     try {
         const response = await fetch(`${MEETING}/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`}});
-        return response.json();
+        return await response.json();
     } catch (error) {
         console.log(error);
         throw error;
@@ -31,6 +32,7 @@ export const getMeetingMemberRole = async (id) => {
 
 export const deleteMeeting = async (id) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log("deleteMeeting id: ", id);
     try {
         const response = await fetch(`${MEETING}/${id}`,
             {
@@ -38,6 +40,7 @@ export const deleteMeeting = async (id) => {
                 headers: { 'Authorization': `Bearer ${accessToken}` }
             });
         if (!response.ok) { throw new Error("Failed to delete the meeting"); }
+        return await response.json();
     } catch (error) {
         console.log("Error deleting the meeting:", error);
         throw error;

@@ -16,7 +16,7 @@ import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import { Animated } from 'react-native';
 import useModal from '../../hooks/useModal';
-import { getMeetingById } from '../../utils/meeting';
+import { getMeetingById, getMeetingMemberRole } from '../../utils/meeting';
 
 export default function Meeting() {
   const route = useRoute();
@@ -26,7 +26,6 @@ export default function Meeting() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(0); // 0: 모임 정보, 1: 구성원, 2: 활동 내역
-  const [userData, setUserData] = useState(null);
   const [isLike, setIsLike] = useState(false);
   const [isScrap, setIsScrap] = useState(false);
   const nav = useNavigation();
@@ -56,7 +55,7 @@ export default function Meeting() {
   }, [re]);
 
   if (!data || loading) {
-    return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+    return <ActivityIndicator size="large" color="#444444" />; // 로딩 중일 때 인디케이터 표시
   }
 
   if (error) {
@@ -76,7 +75,7 @@ export default function Meeting() {
     if (userRole === "EXTERNAL") {
       postMeetingApplication(id);
     }
-    else if (userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
+    else if (userRole === "MEMBER" || usreRole === "CO_LEADER") {
       leaveMeeting(id);
     }
     else if (userRole === "REQUESTED") {
@@ -90,7 +89,7 @@ export default function Meeting() {
       // <Register></Register>
       // <MeetingHistoryCreate></MeetingHistoryCreate>
       // <MeetingBoard></MeetingBoard>
-      <Layout screen={PAGES.MEETING} title={data.name}>
+      <Layout screen={PAGES.MEETING} title={title ? title : data.name}>
           <Container>
             <Header>
               {data.thumbnailUrls ? (
@@ -110,7 +109,7 @@ export default function Meeting() {
               <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
                 <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
             </TabContainer>
-            {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} re={re} setRe={setRe}/>}
+            {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} re={re} setRe={setRe} userRole={userRole}/>}
             {activeTab === 0 && <Line></Line>}
             {activeTab === 0 && userRole === "LEADER" &&
               <View>

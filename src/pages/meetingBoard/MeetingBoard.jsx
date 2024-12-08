@@ -113,7 +113,10 @@ export default function MeetingBoard({ navigation }) {
     const renderItem = ({ item }) => (
         <MeetingItem 
             item={item} 
-            onPress={() => navigation.navigate(PAGES.MEETING_DETAIL, { itemId: item.id })} 
+            onPress={() => {
+                console.log("meetingBoard item.id: ", item.id, "item.name: ", item.name);
+                navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })
+            }} 
         />
     );
 
@@ -155,7 +158,10 @@ export default function MeetingBoard({ navigation }) {
                         <MeetingItem 
                             key={item.id} 
                             item={item} 
-                            onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title:item.name })} 
+                            onPress={() => {
+                                console.log("meetingBoard item.id: ", item.id, "item.name: ", item.name);
+                                navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })
+                            }} 
                         />
                     ))}
                 </ScrollView>

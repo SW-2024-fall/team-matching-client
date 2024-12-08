@@ -28,10 +28,10 @@ const daysToKoreanText = (days) => {
     return `매주 ${koreanDays}`;
   };
 
-export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe }) {
-    const myContext = useContext(UserContext);
-    const {accessToken, setUserToken} = useContext(UserTokenContext);
+export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe, userRole }) {
     const onPressLike = async () => {
+        const accessToken = await AsyncStorage.getItem('accessToken');
+
         if (isLike) {
             try {
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/likes`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
@@ -49,6 +49,7 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
 
     }
     const onPressScrap = async () => {
+        const accessToken = await AsyncStorage.getItem('accessToken');
         if (isScrap) {
             try {
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
@@ -82,7 +83,7 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
                         </Pressable>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
-                        {myContext.userRole === "EXTERNAL" || myContext.userRole === "REQUESTED" ? 
+                        {userRole === "EXTERNAL" || userRole === "REQUESTED" ? 
                         <WithLocalSvg asset={hand}/> : <WithLocalSvg asset={blueHand}/>}
                         
                         <HeaderFootText>  {meetingData.currentParticipants}/{meetingData.maxParticipant}</HeaderFootText>
