@@ -41,7 +41,7 @@ export default function MeetingHistory() {
   }
 
   return (
-    <Layout screen={PAGES.MEETING_HISTORY}>
+    <Layout screen={PAGES.MEETING_HISTORY} title={title}>
       {data  &&
         <Container>
           <Header>
@@ -87,9 +87,9 @@ const ImageContainer = styled.View`
   width:100%;  
 `;
 const StyledImage = styled.Image`
-  height:auto;
+  height:300px;
   width:100%;
-  aspect-ratio: 20 / 9;
+  resizeMode: cover;
 `;
 
 const Container = styled.ScrollView`

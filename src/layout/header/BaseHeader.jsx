@@ -1,7 +1,8 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import styled from 'styled-components/native';
 import Constants from 'expo-constants';
+import { useNavigation } from '@react-navigation/native';
 
 export default function BaseHeader({ left, center, right, backgroundColor = null }) {
   const LeftWrapper = styled(View)`
@@ -13,7 +14,7 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
     align-items: center;
   `;
 
-  const CenterWrapper = styled(View)`
+  const CenterWrapper = styled(Pressable)`
     position: absolute;
     top: ${Constants.statusBarHeight}px;
     left: 0;
@@ -46,10 +47,16 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
     color: ${(props) => (backgroundColor ? 'white' : props.theme.colors.grey.dark)};
   `;
 
+  const navigation = useNavigation();
+
+  const goBack = () => {
+    navigation.goBack();
+  }
+
   return (
     <HeaderWrapper>
       <LeftWrapper>{left}</LeftWrapper>
-      <CenterWrapper>{center}</CenterWrapper>
+      <CenterWrapper onPress={goBack}>{center ? center : <View style={{width: 10, height: 10}}/>}</CenterWrapper>
       <RightWrapper>{right}</RightWrapper>
     </HeaderWrapper>
   );

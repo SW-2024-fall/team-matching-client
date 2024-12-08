@@ -14,7 +14,7 @@ export default function Layout({ screen, title = '', children, navigation, Right
 
   if (screen == PAGES.MEETING_BOARD) {
     Header = <BoardHeader FilterComponent={RightComponent} />;
-  } else if (screen == PAGES.MEETING) {
+  } else if (screen == PAGES.MEETING || screen == PAGES.MEETING_HISTORY) {
     Header = <DetailHeader title={title} />;
   } else if (screen == PAGES.MEETING_CREATE || screen == PAGES.MEETING_HISTORY_CREATE) {
     Header = <CreateHeader />;
