@@ -7,7 +7,7 @@ import { WithLocalSvg } from 'react-native-svg/css';
 import { PAGES } from '@navigation/constant';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Appbar(isMe = true) {
+export default function Appbar() {
   const navigation = useNavigation();
 
   const Wrapper = styled.View`
@@ -33,19 +33,23 @@ export default function Appbar(isMe = true) {
   `;
 
   const goHome = () => {
+    console.log('goHome');
     navigation.navigate(PAGES.MAIN);
   };
 
   const goBoard = () => {
+    console.log('goBoard');
     navigation.navigate(PAGES.MEETING_BOARD);
   };
 
   const goRecommend = () =>{
-    nav.navigate(PAGES.RECOMMEND);
+    console.log('goRecommend');
+    navigation.navigate(PAGES.RECOMMEND);
   }
 
   const goProfile = () => {
-    navigation.navigate(PAGES.PROFILE, {access: isMe ? "me" : "other"});
+    console.log('goProfile');
+    navigation.navigate(PAGES.MYPROFILE);
   };
 
   return (

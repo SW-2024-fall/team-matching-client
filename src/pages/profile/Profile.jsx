@@ -1,12 +1,9 @@
 import { React, useState, useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import Layout from '@layout/layout';
 import ProfileInfo from '@pages/profile/components/ProfileInfo';
-import MeetingItem from '@pages/profile/components/MeetingItem';
 import { theme } from '../../styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
-import MyProfile from './MyProfile';
-import BottomTab from './components/BottomTab';
 import BottomTabOthers from './components/BottomTabOthers'
 import { useRoute } from '@react-navigation/native';
 import { getUserById } from '../../utils/user';
@@ -49,7 +46,7 @@ export default function Profile({ navigation }) {
     console.log("name"+name);
     return (
         <Layout screen={PAGES.PROFILE} navigation={navigation}>
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 {/* 프로필 정보 */}
                 <ProfileInfo
                     id="user-id"
@@ -62,7 +59,7 @@ export default function Profile({ navigation }) {
                 />
                 <BottomTabOthers id={id}></BottomTabOthers>
 
-            </View>
+            </ScrollView>
         </Layout>
     );
 }
@@ -71,11 +68,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: theme.colors.background.primary,
         padding: 10,
-    },
-    title: {
-        fontSize: theme.font.size.large,
-        fontWeight: theme.font.weight.bold,
-        marginVertical: 10,
-        textAlign: 'left',
+        gap: 10,
     },
 });

@@ -3,12 +3,13 @@ import Layout from '@layout/layout';
 import styled from 'styled-components/native';
 import { theme } from '../../styles/ThemeStyles';
 import { useEffect, useState } from 'react';
-import UserTokenContext from '../../hooks/UserTokenContext';
-import { useContext } from 'react';
 import { ActivityIndicator, View ,Text, Pressable} from 'react-native';
 import { WithLocalSvg } from 'react-native-svg/css';
 import notScrap from '../../assets/notScrap.svg';
 import scrap from '../../assets/scrap.svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../context/AuthProvider';
+
 const Body = styled.View`
   padding: 30px 20px;
   gap: 20px;
@@ -46,7 +47,7 @@ const UserFeatureText = styled.Text`
 
 const RecommendCard = styled.TouchableOpacity`
   width: 100%;
-  padding: 30px;
+  padding: 24px;
   gap: 10px;
   borderRadius: ${theme.border.radius.large};
   background-color: ${theme.colors.blue.primary};
@@ -113,42 +114,36 @@ const RecommendActionsWrapper = styled.View`
   justify-content: space-between;
 `;
 
-const RecommendActionButton = styled.TouchableOpacity``;
+const RecommendActionButton = styled.Pressable`
+	flex-direction: row;
+	align-items: center;
+	gap: 4px;
+`;
 
 const RecommendActionButtonText = styled.Text`
   font-weight: ${theme.font.weight.medium};
   color: ${theme.font.color.primary};
 `;
 
-const meeting1 = {
-  title: '시대짱',
-  features: ['컴과', '나를_이겨봐'],
-  categories: ['운동/스포츠'],
-  content:
-    '시대짱인 나를 이길 수 있는 자들이 모인 모임! 근데 나를 이긴 사람은 아무도 없지 우하하하하!시대짱인 나를 이길 수 있는 자들이 모인 모임! 근데 나를 이긴 사람은 아무도 없지 우하하하하!시대짱인 나를 이길 수 있는 자들이 모인 모임! 근데 나를 이긴 사람은 아무도 없지 우하하하하!',
-  thumbnailUrl:
-    'http://images.munto.kr/production-feed/1684212255476-photo-dj0pc-443076-0?s=1920x1920',
-};
+const RecommendReasonContainer = styled.View`
+	padding: 10px;
+	border: solid 1px white;
+	border-radius: ${theme.border.radius.primary};
+`;
 
-const meeting2 = {
-  ...meeting1,
-  title: '시대짱2',
-};
-
-const user = {
-  name: '홍길동',
-};
-
-const UserFeatureList = ['승부욕', '열정', '행복', '고양이'];
+const RecommendReason = styled.Text`
+	font-size: ${theme.font.size.primary};
+	font-weight: ${theme.font.weight.semiBold};
+	color: white;
+`;
 
 export default function Recommend({ navigation }) {
-	const {accessToken} = useAuth();
-	const [meeting, setMeeting] = useState(meeting1);
 	const [data,setData] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const[error, setError] = useState(null);
 	const [page, setPage] = useState(0);
-	const [userData, setUserData] = useState(null);
+	const {user} = useAuth();
+	const userData = user;
 	const [meetingData, setMeetingData] = useState(null);
 	const [meetingId , setMeetingId] = useState(0);
 	const [re, setRe] = useState(false);
@@ -170,7 +165,8 @@ export default function Recommend({ navigation }) {
 	//   },[])
 	useEffect(()=>{
 		const fetchData = async()=>{
-			try{
+			try {
+				const accessToken = await AsyncStorage.getItem('accessToken');
 				console.log("meetingId"+meetingId);
 				const responseMeeting = await fetch(`http://localhost:8080/api/meetings/${meetingId}`, { 
 					method: "GET",
@@ -198,7 +194,7 @@ export default function Recommend({ navigation }) {
 	},[meetingId])
 	useEffect(()=>{
 		if(meetingData){
-			console.log("meeetingData = "+meetingData);
+			console.log("meeetingData = "+ meetingData);
 			setLoading(false);
 		}
 	},[meetingData])
@@ -211,14 +207,7 @@ export default function Recommend({ navigation }) {
 	useEffect(()=>{
 	const fetchData = async () =>{
 		try{
-			const response = await fetch(`http://localhost:8080/api/users`, { 
-				method: "GET",
-				headers: {'Authorization': `Bearer ${accessToken}`}
-			 });
-			const json = await response.json();
-			setUserData(json.data);
-
-			// console.log(features);
+			const accessToken = await AsyncStorage.getItem('accessToken');
 			const response2 = await fetch(`http://localhost:8080/api/meetings/recommend`, { 
 				method: "GET",
 				headers: {'Authorization': `Bearer ${accessToken}`} 
@@ -254,6 +243,7 @@ export default function Recommend({ navigation }) {
   const onPressScrap = async() =>{
 	if (isScrap){
 		try {
+			const accessToken = await AsyncStorage.getItem('accessToken');
 			const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}/scraps`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
 			if (!response.ok) { throw new Error("Failed to 좋아요 취소"); }
 			else{setRe(!re); setIsScrap(false);}
@@ -261,6 +251,7 @@ export default function Recommend({ navigation }) {
 	}
 	else{
 		try {
+			const accessToken = await AsyncStorage.getItem('accessToken');
 			const response = await fetch(`http://localhost:8080/api/meetings/${meetingId}/scraps`, { method: "POST",headers: {'Authorization': `Bearer ${accessToken}`} });
 			if (!response.ok) { throw new Error("Failed to 좋아요 추가"); }
 			else{setRe(!re); setIsScrap(true);}
@@ -279,10 +270,11 @@ export default function Recommend({ navigation }) {
 // 	  setTimeout(reRender, 3000);
 // 	};	
 //   setTimeout(reRender, 3000);
-//   }
-if (loading) {
-	return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
-}
+	//   }
+	if (loading) {
+		console.log("loading");
+		return <ActivityIndicator style={{marginTop: 0, marginBottom: 0}} size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+	}
   if (error) {
     return <Text style={{ fontSize: 20 }}>Error: {error}</Text>; // 에러 메시지 표시
   }
@@ -302,7 +294,9 @@ if (loading) {
           <RecommendTitle>에 맞게 추천드려요!</RecommendTitle>
         </RecommendTitleWrapper>
         <RecommendCard onPress={goToMeetingDetail}>
-			<View><Text>{data[page].reason}</Text></View>
+			<RecommendReasonContainer>
+				<RecommendReason>{data[page].reason}</RecommendReason>
+			</RecommendReasonContainer>
 			{meetingData.thumbnailUrls[0] ? <MeetingThumbnail source={{ uri: meetingData.thumbnailUrls[0] }} /> : <View/>}
           {/* <MeetingThumbnail source={{ uri: meetingData.thumbnailUrls[0] }} /> */}
           <MeetingTitleWrapper>
@@ -324,15 +318,12 @@ if (loading) {
           <MeetingContent content={meetingData.content} />
         </RecommendCard>
         <RecommendActionsWrapper>
-          <RecommendActionButton>
+          <RecommendActionButton onPress={onPressScrap}>
 			{/* <WithLocalSvg asset={scrap}/> */}
-			<Pressable onPress={onPressScrap}>
 			{isScrap ? 
 				<WithLocalSvg asset={scrap}/>  : 
 				<WithLocalSvg asset={notScrap}/>}
-			</Pressable>
-				
-            {/* <RecommendActionButtonText>스크랩하기</RecommendActionButtonText> */}
+            	<RecommendActionButtonText>스크랩하기</RecommendActionButtonText>
           </RecommendActionButton>
           <RecommendActionButton onPress={recommendAnotherMeeting}>
             <RecommendActionButtonText>다른 모임 추천받기</RecommendActionButtonText>

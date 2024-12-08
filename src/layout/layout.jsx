@@ -29,7 +29,6 @@ export default function Layout({ screen, title = '', children, navigation, Right
   const Wrapper = styled.View`
     flex: 1;
     background-color: ${(props) => props.theme.colors.background.primary};
-    justify-content: space-between;
     font-size: ${(props) => props.theme.font.size.primary};
     font-weight: ${(props) => props.theme.font.weight.primary};
     color: ${(props) => props.theme.font.color.primary};
@@ -45,7 +44,7 @@ export default function Layout({ screen, title = '', children, navigation, Right
         <Body>
           {children}
         </Body>
-      {useAppbar && <Appbar navigation={navigation} />}
+      {useAppbar && <Appbar />}
     </Wrapper>
   );
 }

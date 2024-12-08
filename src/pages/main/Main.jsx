@@ -8,15 +8,17 @@ import FeedPost from '@pages/main/components/FeedPost';
 import { useEffect, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import { getHistories } from '../../utils/history';
+import { useAuth } from '../../context/AuthProvider';
 
 export default function Main({ navigation }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {user} = useAuth();
 
   useEffect(() => {
     useFetch(setData, setLoading, setError, async () => await getHistories());
-  }, []);
+  }, [user]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#333333" />; // 로딩 중일 때 인디케이터 표시

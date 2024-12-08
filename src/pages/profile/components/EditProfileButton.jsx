@@ -18,8 +18,7 @@ const EditProfileButton = () => {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: theme.colors.blue.primary, // 버튼 배경색
-        paddingVertical: 12,
-        paddingHorizontal: 10,
+        paddingVertical: 10,
         borderRadius: theme.border.radius.primary,
         alignItems: 'center',
         marginTop: 20,
@@ -28,8 +27,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: theme.colors.background.primary,
-        fontSize: theme.font.size.small,
-        fontWeight: theme.font.weight.bold,
+        fontSize: theme.font.size.primary,
+        fontWeight: `${theme.font.weight.bold}`,
     },
 });
 

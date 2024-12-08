@@ -55,15 +55,6 @@ const MyProfile = ({ navigation }) => {
         fetchData();
       }, []);
 
-    // const userData = {
-    //     id: '1',
-    //     name: '홍길동',
-    //     major: '컴퓨터공학',
-    //     studentID: '20230001',
-    //     attendanceScore: '95%',
-    //     features: '#성실함, #협업 능력',
-    //     profileURL: profileImage
-    // };
 
     
     const handleEditProfile = () => {
@@ -72,8 +63,9 @@ const MyProfile = ({ navigation }) => {
     };
 
     return (
-        <Layout screen={PAGES.PROFILE} navigation={navigation}>
-            <ScrollView style={styles.profileContainer}>
+      <Layout screen={PAGES.PROFILE} navigation={navigation}>
+        <ScrollView>
+            <View style={styles.profileContainer}>
                 <ProfileInfo 
                     id={id}
                     name={name}
@@ -84,10 +76,9 @@ const MyProfile = ({ navigation }) => {
                     profileURL={profileUrl}
                 />
                 <EditProfileButton onPress={handleEditProfile} />
-            </ScrollView>
-
-            {/* Bottom Tab 추가 */}
-            <BottomTab />
+          </View>
+          <BottomTab />
+          </ScrollView>
         </Layout>
     );
 };
@@ -96,9 +87,8 @@ const MyProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
     profileContainer: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        padding: 10,
+        marginTop: 10,
+        paddingHorizontal: 20,
         backgroundColor: theme.colors.background.primary,
     },
 });

@@ -81,33 +81,30 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         backgroundColor: theme.colors.background.primary,
-        padding: 10,
     },
     tabContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         paddingBottom: 20,
         borderBottomWidth: 1,
-        borderColor: theme.colors.grey.light,
+        borderColor: `${theme.colors.grey.light}`,
     },
     tab: {
         alignItems: 'center',
     },
     tabText: {
-        fontSize: theme.font.size.primary,
-        color: theme.font.color.primary,
+        fontSize: `${theme.font.size.primary}`,
+        color: `${theme.font.color.primary}`,
         marginTop: 4,
     },
     activeTabText: {
-        fontWeight: theme.font.weight.bold,
+        fontWeight: `${theme.font.weight.bold}`,
     },
     title :{
-        fontWeight : theme.font.weight.bold,
-        fontSize: theme.font.size.large,
-        color : theme.font.color.primary,
-        marginTop: 20,
-        marginBottom: 0,
-        marginLeft: 10,
+        fontWeight : `${theme.font.weight.bold}`,
+        fontSize: `${theme.font.size.large}`,
+        color: `${theme.font.color.primary}`,
+        marginBottom: 10,
     },
     listContainer: {
         marginTop: 10,

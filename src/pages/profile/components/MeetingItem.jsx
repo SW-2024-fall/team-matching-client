@@ -18,23 +18,23 @@ const MeetingItem = ({ item, onPress }) => {
                     {item.image ? (
                         <Image source={{ uri: item.image }} style={styles.imageContainer} />
                     ) : (
-                        <Text style={styles.placeholderText}>기본이미지</Text>
+                        <Text style={styles.placeholderText}>No Image</Text>
                     )}
                 </View>
                 <View style={styles.textContainer}>
                     <View style={styles.nameFeaturesContainer}>
                         <Text style={styles.itemName}>{item.name}</Text>
                         <View style={styles.featuresContainer}>
-                            {item.features.map((cat, index) => (
-                                <Text key={index} style={styles.itemHashtag}>{cat}</Text>
+                            {item.features.map((feature, index) => (
+                                <Text key={index} style={styles.itemHashtag}>#{feature}</Text>
                             ))}
                         </View>
                     </View>
                     <Text style={styles.itemPreview} numberOfLines={2}>{item.preview}</Text>
                     <View style={styles.participantsStartEndContainer}>
-                        <WithLocalSvg asset={likeIcon} />
+                        <WithLocalSvg asset={likeIcon} width={14} height={14}/>
                         <Text style={styles.itemLikeCount}>{item.likeCount}</Text>
-                        <WithLocalSvg asset={commentIcon} />
+                        <WithLocalSvg asset={commentIcon} width={14} height={14}/>
                         <Text style={styles.itemCommentCount}>{item.commentCount} </Text>
                         <Text style={styles.itemCurrentParticipants}>{item.currentParticipants}</Text>
                         <Text style={styles.itemMaxParticipants}> / {item.maxParticipants}명</Text>
@@ -49,11 +49,9 @@ const MeetingItem = ({ item, onPress }) => {
 
 const styles = StyleSheet.create({
     itemContainer: {
-        padding: 10,
-        borderBottomWidth: 0,
         borderBottomColor: theme.colors.grey.light,
         backgroundColor: theme.colors.background.primary,
-        marginBottom: 0,
+        marginBottom: 8,
         flexDirection: 'row',
     },
     itemContent: {
@@ -69,14 +67,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     placeholderText: {
-        color: theme.font.color.primary,
+        color: theme.colors.grey.border,
         fontWeight: theme.font.weight.primary,
     },
     textContainer: {
         flex: 1,
-        marginTop: 4,
-        paddingVertical: 4,
-        marginBottom: 4,
+        justifyContent: 'center',
+        gap: 4,
     },
     nameFeaturesContainer: {
         flexDirection: 'row',
@@ -86,26 +83,26 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontSize: theme.font.size.primary,
-        fontWeight: theme.font.weight.bold,
+        fontWeight: `${theme.font.weight.bold}`,
     },
     featuresContainer: {
         flexDirection: 'row',
     },
     itemHashtag: {
         fontSize: theme.font.size.small,
-        color: theme.font.color.primary,
+        color: theme.font.color.light,
         marginLeft: 5,
     },
     itemPreview: {
         fontSize: theme.font.size.small,
-        color: theme.font.color.secondary,
+        color: theme.font.color.primary,
         marginBottom: 5,
     },
     participantsStartEndContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginTop: 5,
-    },
+        alignItems: 'center',
+        },
     itemCurrentParticipants: {
         fontSize: theme.font.size.xSmall,
         color: theme.font.color.primary,

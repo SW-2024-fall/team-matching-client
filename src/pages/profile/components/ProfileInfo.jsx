@@ -22,8 +22,11 @@ const ProfileInfo = ({ id, name, major, studentID, attendanceScore, features, pr
             </View>
             <View style={styles.userScoreFeatures}>
                 <Text style={styles.attendanceScore}>{attendanceScore}점</Text>
-                <Text style={styles.features}>#{features[0]} </Text>
-                <Text style={styles.features}>#{features[1]} </Text>
+                <View style={styles.featuresContainer}>
+                    {features.map((feature, index) => (
+                        index < 2 && <Text style={styles.features} key={index}>#{feature} </Text>
+                    ))}
+                </View>
             </View>
         </View>
     );
@@ -33,30 +36,28 @@ const styles = StyleSheet.create({
     profileContainer: {
         flexDirection: 'row', // 가로로 배치
         alignItems: 'center', // 수직 중앙 정렬
-        paddingHorizontal: 16,
     },
     profileImage: {
         backgroundColor: theme.colors.grey.light,
-        //width: Dimensions.get('window').width * 0.2,
-        //height: Dimensions.get('window').width * 0.2,
-        //borderRadius: (Dimensions.get('window').width * 0.2) / 2,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
 
         marginRight: 16, // 이미지와 첫 번째 묶음 사이 간격
     },
     userDetailsContainer: {
         flex: 1, // 남은 공간을 차지하여 왼쪽 정렬
         justifyContent: 'center', 
+        gap: 4,
     },
     name: {
         fontSize: theme.font.size.xLarge,
         color: theme.font.color.primary,
-        fontWeight: theme.font.weight.extraBold,
+        fontWeight: `${theme.font.weight.extraBold}`,
         paddingBottom: 4,
     },
     userAcademicInfo: {
+        alignItems: 'center',
         flexDirection: 'row',
     },
     major: {
@@ -71,17 +72,21 @@ const styles = StyleSheet.create({
     userScoreFeatures: {
         alignItems: 'flex-end', // 오른쪽 정렬
         justifyContent: 'center',
+        gap: 4,
     },
     attendanceScore: {
         color: theme.font.color.primary,
         fontSize: theme.font.size.xLarge,
-        fontWeight: theme.font.weight.extraBold,
-        paddingBottom: 4,
+        fontWeight: `${theme.font.weight.semiBold}`,
+    },
+    featuresContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
     },
     features: {
         color: theme.colors.blue.hover,
-        fontSize: theme.font.size.small,
-        fontWeight:theme.font.weight.regular
+        fontSize: theme.font.size.primary,
+        fontWeight: `${theme.font.weight.regular}`,
     },
 });
 

@@ -16,10 +16,9 @@ export default function Profile() {
   const { user } = useAuth();
   const name = user ? user.name : '로그인';
 
-
   const goProfile = () => {
     if (user) {
-      navigation.navigate(PAGES.MYPROFILE);
+      navigation.navigate(PAGES.MYPROFILE, { id: user.id });
     } else {
       navigation.navigate(PAGES.LOGIN);
     }
