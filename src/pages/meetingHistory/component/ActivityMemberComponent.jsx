@@ -5,16 +5,16 @@ import profile2 from '../../../assets/profileExample2.svg';
 
 import { WithLocalSvg } from "react-native-svg/css";
 import { Image } from "react-native-svg";
-import { Major } from "../../auth/register/Register";
+import { Major } from "../../const/Major";
 import { useNavigation } from "@react-navigation/native";
-import UserTokenContext from "../../../hooks/UserTokenContext";
-import { useContext } from "react";
 import { PAGES } from "../../../navigation/constant";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function ActivityMemberComponent({ member }) {
     console.log("member = "+JSON.stringify(member));
     const nav = useNavigation();
-    const { accessToken, setUserToken } = useContext(UserTokenContext);
-    const onPressProfile= async()=>{
+    const onPressProfile = async () => {
+        const accessToken = await AsyncStorage.getItem('accessToken');
         try {
             const response = await fetch(`http://localhost:8080/api/users`, {
                 method: "GET",

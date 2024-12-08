@@ -45,6 +45,7 @@ export default function Meeting() {
         setIsScrap(response.data.scraped);
         setUserRole(memberRes.data) 
         setLoading(false);
+        console.log(response.data.info);
       } catch (error) {
         setError(error.message);
       } finally {

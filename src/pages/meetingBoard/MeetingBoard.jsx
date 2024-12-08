@@ -8,10 +8,8 @@ import MeetingItem from './components/MeetingItem';
 import FilterModal from './components/FilterModal';
 import FloatingButton from './components/FloatingButton';
 import styled from 'styled-components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserTokenContext from '../../hooks/UserTokenContext';
-import { useContext } from 'react';
 import { theme } from '../../styles/ThemeStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = 'http://localhost:8080/api/meetings';
 
@@ -23,13 +21,12 @@ function FilterBtn({ onOpen }) {
     );
 }
 
-export default function MeetingBoard({ navigation }) {
+export default async function MeetingBoard({ navigation }) {
     const [data, setData] = useState([]);  // 초기 값은 빈 배열
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filterVisible, setFilterVisible] = useState(false);
     const [filteredData, setFilteredData] = useState([]);  // 초기 값은 빈 배열
-    const { accessToken, setUserToken } = useContext(UserTokenContext);
     const [page, setPage] = useState(0);
     const [maxPage, setMaxPage] = useState(0);
     const [pagedData, setPagedData] = useState(null);
@@ -38,7 +35,9 @@ export default function MeetingBoard({ navigation }) {
         setPagedData(data.slice((page-1)*10 , page*10));
     },[page,data])
     useEffect(() => {
+        console.log("accessToken: ", accessToken);
         const fetchData = async () => {
+            const accessToken = await AsyncStorage.getItem('accessToken');
             try {
                 // 모든 모임 목록을 가져오기
                 const response = await fetch(API_URL, { 

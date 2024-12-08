@@ -6,10 +6,9 @@ import Button from './components/Button';
 import ImageButton from './components/ImageButton';
 import { View, Alert, Text, ScrollView, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker'
-import UserTokenContext from '../../../hooks/UserTokenContext';
-import { useContext } from 'react'
+import { useAuth } from '../../../context/AuthProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
 
 export default function ProfileEdit() {
   
@@ -21,7 +20,7 @@ export default function ProfileEdit() {
   const [Major, setMajor] = useState('');
   const [profileImg, setProfileImg] = useState('');
   const [selectedMeetingTypes, setSelectedMeetingTypes] = useState([]);
-  const {accessToken, setUserToken} = useContext(UserTokenContext);
+  const {accessToken, logout} = useAuth();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
 
@@ -44,6 +43,7 @@ export default function ProfileEdit() {
 
   useEffect(() => {
     const fetchData = async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
       try {
         const response = await fetch(`http://localhost:8080/api/users`, { 
             method: "GET",
@@ -109,6 +109,7 @@ export default function ProfileEdit() {
     formData.append('user', {"string": JSON.stringify(user), type: "application/json"});
 
     try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
       const response = await fetch('http://localhost:8080/api/users', {
         method: 'PATCH',
         headers: {
@@ -159,12 +160,12 @@ export default function ProfileEdit() {
   };
 
   const handleLogout = () => {
-    setUserToken(null);
+    logout();
     nav.navigate(PAGES.LOGIN);
   }
 
   const handleQuit = async () => {
-    setUserToken(null);
+    const accessToken = await AsyncStorage.getItem('accessToken');
     try {
       const response = await fetch('http://localhost:8080/api/users', {
         method: 'DELETE',

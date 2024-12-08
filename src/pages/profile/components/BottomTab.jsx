@@ -6,7 +6,7 @@ import MeetingItem from '@pages/profile/components/MeetingItem';
 import UserTokenContext from '../../../hooks/UserTokenContext';
 import { PAGES } from '../../../navigation/constant';
 import { useNavigation } from '@react-navigation/native';
-import { useContext } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const tabIcons = {
     모임: require('@assets/teamIcon.svg'),
@@ -38,16 +38,16 @@ const BottomTab = () => {
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
     const [likedMeeting, setLikedMeeting] = useState([]); // Default tab
     const [scrappedMeeting, setScrappedMeeting] = useState(''); // Default tab
-    const {accessToken, setUserToken} = useContext(UserTokenContext);
     const [Data, setData] = useState({
         스크랩: [],
         모임: [],
         댓글: [],
         좋아요: [],
-      });
-
-      useEffect(() => {
+    });
+    
+    useEffect(() => {
         const fetchData = async () => {
+            const accessToken = await AsyncStorage.getItem('accessToken');
             try {
                 const response = await fetch(`http://localhost:8080/api/meetings/user`, { 
                     method: "GET",
@@ -74,6 +74,7 @@ const BottomTab = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const accessToken = await AsyncStorage.getItem('accessToken');
                 const response = await fetch(`http://localhost:8080/api/users/likes`, { 
                     method: "GET",
                     headers: {
@@ -101,6 +102,7 @@ const BottomTab = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const accessToken = await AsyncStorage.getItem('accessToken');
                 const response = await fetch(`http://localhost:8080/api/users/scraped`, { 
                     method: "GET",
                     headers: {

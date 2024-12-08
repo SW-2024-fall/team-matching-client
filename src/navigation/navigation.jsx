@@ -11,7 +11,7 @@ import Meeting from '@pages/meeting/Meeting';
 import MeetingCreate from '../pages/meeting/create/MeetingCreate';
 import MeetingHistory from '@pages/meetingHistory/MeetingHistory';
 import MeetingHistoryCreate from '../pages/meetingHistory/create/MeetingHistoryCreate';
-
+import MyProfile from '../pages/profile/MyProfile';
 import ProfileEdit from '../pages/profile/edit/ProfileEdit';
 import { useAuth } from '../context/AuthProvider.jsx';
 import Recommend from '../pages/recommend/Recommend.jsx';
@@ -40,9 +40,7 @@ export default function Navigation() {
         <Stack.Screen name={PAGES.MEETING_HISTORY} component={MeetingHistory} />
         <Stack.Screen name={PAGES.MEETING_HISTORY_CREATE} component={MeetingHistoryCreate} />
         <Stack.Screen name={PAGES.MEETING_BOARD} component={MeetingBoard} />
-        <Stack.Screen name={PAGES.MYPROFILE}>
-          {(props) => <Profile {...props} isMe={true} />}
-        </Stack.Screen>
+        <Stack.Screen name={PAGES.MYPROFILE} component={MyProfile} />
         <Stack.Screen name={PAGES.PROFILE} component={Profile} />
         <Stack.Screen name={PAGES.PROFILE_EDIT} component={ProfileEdit} />
         <Stack.Screen name={PAGES.RECOMMEND} component={Recommend} />

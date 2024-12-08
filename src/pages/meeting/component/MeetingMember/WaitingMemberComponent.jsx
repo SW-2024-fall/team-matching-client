@@ -8,7 +8,7 @@ import { WithLocalSvg } from "react-native-svg/css";
 import { useNavigation } from "@react-navigation/native";
 import { PAGES } from "../../../../navigation/constant";
 export default function WaitingMemberComponent({ memberData, id ,re ,setRe}) {
-    const { accessToken, setUserToken } = useContext(UserTokenContext);
+    const {accessToken} = useAuth();
     const nav = useNavigation();
     const onPressIn = async () => {
         try {

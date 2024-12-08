@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }) => {
 
     await AsyncStorage.setItem('accessToken', data.data.accessToken);
     await AsyncStorage.setItem('refreshToken', data.data.refreshToken);
-    
+
+    console.log("AsyncStorage.getItem('accessToken'): ", await AsyncStorage.getItem('accessToken'));
     const userData = await getUser();
     if (userData) {
       setUser(userData.data);

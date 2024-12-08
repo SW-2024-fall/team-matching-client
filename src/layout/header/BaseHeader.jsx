@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 export default function BaseHeader({ left, center, right, backgroundColor = null }) {
   const LeftWrapper = styled(View)`
     position: absolute;
+    top: ${Constants.statusBarHeight}px;
     left: 15px;
     bottom: 15px;
     justify-content: center;
@@ -14,6 +15,7 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
 
   const CenterWrapper = styled(View)`
     position: absolute;
+    top: ${Constants.statusBarHeight}px;
     left: 0;
     right: 0;
     bottom: 15px;
@@ -23,6 +25,7 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
 
   const RightWrapper = styled(View)`
     position: absolute;
+    top: ${Constants.statusBarHeight}px;
     right: 15px;
     bottom: 15px;
     justify-content: center;
@@ -33,7 +36,7 @@ export default function BaseHeader({ left, center, right, backgroundColor = null
     width: 100%;
     height: 48px;
     background-color: ${backgroundColor};
-    padding-top: 30px;
+    padding-top: ${Constants.statusBarHeight + 30}px;
     padding-bottom: 15px;
     padding-left: 15px;
     padding-right: 15px;

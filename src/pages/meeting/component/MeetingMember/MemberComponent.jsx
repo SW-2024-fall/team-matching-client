@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { PAGES } from "../../../../navigation/constant";
 export default function MemberComponent({ id, memberData, re, setRe}) {
     const myContext = useContext(UserContext);
-    const { accessToken, setUserToken } = useContext(UserTokenContext);
+    const {accessToken} = useAuth();
     const [role, setRole] = useState(null);
     const nav = useNavigation();
     useEffect(() => {

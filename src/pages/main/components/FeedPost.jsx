@@ -3,16 +3,18 @@ import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { theme } from '../../../styles/ThemeStyles';
 import { useNavigation } from '@react-navigation/native';
 import { PAGES } from '@navigation/constant';
+import { fastImage } from 'react-native-fast-image';
 
 const FeedPost = ({ id, name, title, profileUrl, thumbnailUrl, preview , navigation}) => {
     return (
         <View style={styles.postContainer}>
             <Pressable onPress={() => navigation.navigate(PAGES.MEETING_HISTORY, { historyId: id, title:title })}  >
             <View style={styles.userInfo}>
-                <Image 
-                    source={typeof profileUrl === 'string' ? { uri: profileUrl } : profileUrl} 
-                    style={styles.profileUrl} 
-                />
+                    <Image 
+                        as={fastImage}
+                        source={typeof profileUrl === 'string' ? { uri: profileUrl } : profileUrl} 
+                        style={styles.profileUrl} 
+                    />
                 <View style={styles.userInfoText}>
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.title}>{title}</Text>

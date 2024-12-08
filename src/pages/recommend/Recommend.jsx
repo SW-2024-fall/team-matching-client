@@ -142,7 +142,7 @@ const user = {
 const UserFeatureList = ['승부욕', '열정', '행복', '고양이'];
 
 export default function Recommend({ navigation }) {
-	const { accessToken, setUserToken } = useContext(UserTokenContext);
+	const {accessToken} = useAuth();
 	const [meeting, setMeeting] = useState(meeting1);
 	const [data,setData] = useState(null);
 	const [loading, setLoading] = useState(true);

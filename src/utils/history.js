@@ -11,6 +11,7 @@ export const getHistories = async () => {
             'Authorization': `Bearer ${accessToken}`, // JWT 포함
         }
     });
+
     return await response.json();
 }
 

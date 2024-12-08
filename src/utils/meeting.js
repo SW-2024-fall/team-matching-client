@@ -3,6 +3,7 @@ import { MEETING } from './endPoint';
 
 export const getMeetingById = async (id) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log("accessToken: ", accessToken);
     try {
         const response = await fetch(`${MEETING}/${id}`,
             {

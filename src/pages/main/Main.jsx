@@ -6,7 +6,6 @@ import { theme } from '../../styles/ThemeStyles';
 import StoryCircle from '@pages/main/components/StoryCircle';
 import FeedPost from '@pages/main/components/FeedPost';
 import { useEffect, useState } from 'react';
-import MyProfile from '../profile/MyProfile';
 import useFetch from '../../hooks/useFetch';
 import { getHistories } from '../../utils/history';
 
@@ -44,11 +43,11 @@ export default function Main({ navigation }) {
       
         {/* Feed Section: 모임장 이름 + 그 사람이 작성한 활동  */}
         <View style={styles.feedPostContainer}>
-          <ScrollView>
+          <View>
             {data.data.map((item, index) => (
               <FeedPost
                 key={index}
-                id={item.id}
+                id={item.id}x
                 name={item.writer.name}
                 title={item.meetingName}
                 profileUrl={item.writer.profileUrl}
@@ -57,7 +56,7 @@ export default function Main({ navigation }) {
                 navigation={navigation}
               />
             ))}
-          </ScrollView>
+          </View>
         </View>
       </View>
 }

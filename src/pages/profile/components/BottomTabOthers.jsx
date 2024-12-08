@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { theme } from '../../../styles/ThemeStyles';
 import MeetingItem from '@pages/profile/components/MeetingItem';
-import UserTokenContext from '../../../hooks/UserTokenContext';
+import { useAuth } from '../../../context/AuthProvider';
 import { PAGES } from '@navigation/constant';
-import { useContext } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const tabTitles = {
     모임: "참여한 모임 목록",
@@ -24,13 +24,14 @@ const BottomTabOthers = (id) => {
     const [selectedTab, setSelectedTab] = useState('모임'); // Default tab
     const [likedMeeting, setLikedMeeting] = useState([]); // Default tab
     const [scrappedMeeting, setScrappedMeeting] = useState(''); // Default tab
-    const {accessToken, setUserToken} = useContext(UserTokenContext);
+    const {accessToken} = useAuth();
     const [Data, setData] = useState({
         모임: [],
       });
 
       useEffect(() => {
           const fetchData = async () => {
+              const accessToken = await AsyncStorage.getItem('accessToken');
               try {
                   const response = await fetch(`http://localhost:8080/api/meetings/user/${id.id}`, { 
                       method: "GET",

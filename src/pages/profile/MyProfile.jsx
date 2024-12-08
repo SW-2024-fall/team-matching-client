@@ -1,14 +1,12 @@
 import { React, useState, useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import Layout from '@layout/layout';
 import ProfileInfo from '@pages/profile/components/ProfileInfo';
 import EditProfileButton from '@pages/profile/components/EditProfileButton.jsx';
 import { theme } from '../../styles/ThemeStyles';
 import { PAGES } from '@navigation/constant';
 import BottomTab from '@pages/profile/components/BottomTab';
-import profileImage from '@assets/testImage/frownyFace.png'
-import UserTokenContext from '../../hooks/UserTokenContext';
-import { useContext } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyProfile = ({ navigation }) => {
 
@@ -28,6 +26,7 @@ const MyProfile = ({ navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
           try {
+            const accessToken = await AsyncStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:8080/api/users`, { 
                 method: "GET",
                 headers: {'Authorization': `Bearer ${accessToken}`} 
@@ -72,11 +71,9 @@ const MyProfile = ({ navigation }) => {
         // 원하는 동작 추가 할 것. (프로필 수정 화면으로 이동)
     };
 
-    const { accessToken, setUserToken } = useContext(UserTokenContext);
-
     return (
         <Layout screen={PAGES.PROFILE} navigation={navigation}>
-            <View style={styles.profileContainer}>
+            <ScrollView style={styles.profileContainer}>
                 <ProfileInfo 
                     id={id}
                     name={name}
@@ -87,7 +84,7 @@ const MyProfile = ({ navigation }) => {
                     profileURL={profileUrl}
                 />
                 <EditProfileButton onPress={handleEditProfile} />
-            </View>
+            </ScrollView>
 
             {/* Bottom Tab 추가 */}
             <BottomTab />

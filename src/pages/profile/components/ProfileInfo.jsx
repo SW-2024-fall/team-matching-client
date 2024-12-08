@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import { theme } from '../../../styles/ThemeStyles';
+import { fastImage } from 'react-native-fast-image';
+import { useAuth } from '../../../context/AuthProvider';
 
 const ProfileInfo = ({ id, name, major, studentID, attendanceScore, features, profileURL }) => {
     console.log(attendanceScore);
     return (
         <View style={styles.profileContainer}>
             <Image 
+                as={fastImage}
                 source={profileURL ? { uri: profileURL } : null}
                 style={[styles.profileImage, !profileURL && { backgroundColor: theme.colors.grey.light }]}
             />
