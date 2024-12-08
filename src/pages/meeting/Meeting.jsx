@@ -18,8 +18,7 @@ import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import { Animated } from 'react-native';
 import useModal from '../../hooks/useModal';
-import MeetingCreate from './create/MeetingCreate';
-import MeetingHistoryCreate from '../meetingHistory/create/MeetingHistoryCreate';
+import { getMeetingById } from '../../utils/meeting';
 
 export default function Meeting() {
   const route = useRoute();
@@ -42,7 +41,7 @@ export default function Meeting() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`} });
+        const response = await getMeetingById(id);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
