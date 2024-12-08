@@ -87,9 +87,8 @@ const ImageContainer = styled.View`
   width:100%;  
 `;
 const StyledImage = styled.Image`
-  height:300px;
+  height:auto;
   width:100%;
-  resizeMode: cover;
 `;
 
 const Container = styled.ScrollView`
@@ -103,14 +102,15 @@ const Header = styled.View`
 const TabContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  height: 40px;
 `;
 
 const TabWrapper = styled(Pressable)`
   flex: 1;
   justify-content: center;
   align-items: center;
-  border-left-width: 1px;
-  border-right-width:1px;
+  border-left-width: 0.2px;
+  border-right-width:0.2px;
   border-color: white;
   padding:7px;
   margin:0;
@@ -119,6 +119,7 @@ const TabWrapper = styled(Pressable)`
 
 const Tab = styled.Text`
   color: ${({ isActive, theme }) => (isActive ? theme.font.color.primary : 'white')};
+  fontWeight:${({ isActive, theme }) => isActive ? theme.font.weight.bold : theme.font.weight.regular};
 `;
 
 

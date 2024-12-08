@@ -11,11 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native-svg";
 import UserContext from "../../hooks/UserContext";
 
-export default function MeetingRecord({ name, group, content, historyId , uri, thumbnailUrl}) {
+export default function MeetingRecord({ name, group, content, historyId , uri, thumbnailUrl, userRole}) {
     const previewText = content.length > 100 ? `${content.substring(0, 100)}...` : content;
     const { Modal, open, close } = useModal();
-    const myContext = useContext(UserContext);
-    console.log(myContext.userRole)
     const nav = useNavigation();
     const onPressDelete = async () => {
         try {
@@ -59,7 +57,7 @@ export default function MeetingRecord({ name, group, content, historyId , uri, t
 
                         </HeaderLeft>
                     </Pressable>
-                    {!menuVisible && myContext.userRole === "LEADER" &&<Pressable onPress={handlePress}>
+                    {!menuVisible && userRole === "LEADER" || userRole === "CO_LEADER" &&<Pressable onPress={handlePress}>
                         <WithLocalSvg asset={menu} />
                     </Pressable>}
 

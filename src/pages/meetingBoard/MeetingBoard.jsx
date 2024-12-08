@@ -220,6 +220,7 @@ justifyContent:center;
 alignItems:center;
 `;
 const CreateText = styled.Text`
+marginTop:-6px;
 color:white;
 fontWeight:200;
 fontSize:50px;

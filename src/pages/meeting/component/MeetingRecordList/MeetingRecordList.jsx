@@ -2,18 +2,20 @@ import { ActivityIndicator, View,Text } from "react-native";
 import MeetingRecord from "./MeetingRecord";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import UserTokenContext from '../../../../hooks/UserTokenContext';
-import { useContext } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FeedPost from "../../../main/components/FeedPost";
+import { useNavigation } from "@react-navigation/native";
 
-export default function MeetingRecordList({id}) {
+export default function MeetingRecordList({id, userRole}) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const {accessToken, setUserToken} = useContext(UserTokenContext);
+    const navigation = useNavigation();
 
     console.log(id);
     useEffect(() => {
         const fetchData = async () => {
+            const accessToken = await AsyncStorage.getItem('accessToken');
             try {
                 const response = await fetch(`http://localhost:8080/api/meetings/${id}/histories?page=0&size=1&sort=asc`, { 
                     method: "GET",
@@ -45,23 +47,23 @@ export default function MeetingRecordList({id}) {
     }
     return (
         <Container>
-            <View>
-                {data.map((item) => (
-                    <MeetingRecord
-                        key={item.id}
+            {data.map((item) => (
+                    // id, name, title, profileUrl, thumbnailUrl, preview , navigation, userRole="MEMBER"
+                    <FeedPost
+                        id={item.id}
                         name={item.writer.name}
-                        uri={item.writer.profileUrl}
-                        group={item.meetingName}
-                        content={item.content}
-                        historyId={item.id}
+                        profileUrl={item.writer.profileUrl}
+                        title={item.meetingName}
+                        preview={item.content}
                         thumbnailUrl={item.thumbnailUrl}
+                    userRole={userRole}
+                    navigation={navigation}
                     />
                 ))}
-            </View>
         </Container>
     )
 }
 
 const Container = styled.View`
-    margin:20px;
+    gap: 10px;
 `;

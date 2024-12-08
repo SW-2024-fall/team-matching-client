@@ -85,11 +85,12 @@ export default function Meeting() {
   if (data !== null) {
     return (
       // <MeetingHistory></MeetingHistory>
-      // <VerifyEmail></VerifyEmail>
+      // <VerifyEmail></VerifyEmail> 
       // <Register></Register>
       // <MeetingHistoryCreate></MeetingHistoryCreate>
       // <MeetingBoard></MeetingBoard>
       <Layout screen={PAGES.MEETING} title={title ? title : data.name}>
+              {activeTab === 2 && (userRole === "LEADER" || userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><PlusText>+</PlusText></PlusBtn>}
           <Container>
             <Header>
               {data.thumbnailUrls ? (
@@ -138,8 +139,7 @@ export default function Meeting() {
               {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe} userRole={userRole}></WatingMemberList>}
               {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
               {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userRole} re={re} setRe={setRe}></TeamMemberList>}
-              {activeTab === 2 && (userRole === "LEADER" || userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
-              {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
+              {activeTab === 2 && <MeetingRecordList id={id} userRole={userRole}></MeetingRecordList>}
           </MeetingContainer>
             
           </Container>
@@ -203,16 +203,27 @@ fontWeight:${(props) => props.theme.font.weight.bold};
     color:white;
 `;
 const PlusBtn = styled(Animated.createAnimatedComponent(styled.Pressable`
+  position:absolute;
+  bottom:20px;
+  right:20px;
   background-color: #007aff;
-  marginLeft:90%;
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
-  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  justify-content: flex-start;
   align-items: center;
 `))``;
+
+const PlusText = styled.Text`
+  marginTop:-8px;
+  fontSize:50px;
+  fontWeight:200;
+  color:white;
+`;
+
 const Container = styled.ScrollView`
-  flex:1;
+  width:100%;
+  height:100%;
 `;
 const Header = styled.View`
   width:100%;
