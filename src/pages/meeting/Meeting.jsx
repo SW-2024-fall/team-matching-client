@@ -32,10 +32,8 @@ export default function Meeting() {
   const nav = useNavigation();
   const { Modal, open, close } = useModal();
   const [re, setRe] = useState(false);
-  const userContextValues = {
-    userData: userData,
-    setUserData
-  }
+  const [userRole, setUserRole] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,9 +43,7 @@ export default function Meeting() {
         setMemberData(response.data.members);
         setIsLike(response.data.liked);
         setIsScrap(response.data.scraped);
-        setUserData({
-          userRole: memberRes.data
-        }) 
+        setUserRole(memberRes.data) 
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -76,13 +72,13 @@ export default function Meeting() {
   }
 
   const onPressFooterBtn = async () => {
-    if (userData.userRole === "EXTERNAL") {
+    if (userRole === "EXTERNAL") {
       postMeetingApplication(id);
     }
-    else if (userData.userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
+    else if (userRole === "MEMBER" || userData.usreRole === "CO_LEADER") {
       leaveMeeting(id);
     }
-    else if (userData.userRole === "REQUESTED") {
+    else if (userRole === "REQUESTED") {
       deleteMeetingApplication(id);
     }
   }
@@ -94,7 +90,6 @@ export default function Meeting() {
       // <MeetingHistoryCreate></MeetingHistoryCreate>
       // <MeetingBoard></MeetingBoard>
       <Layout screen={PAGES.MEETING} title={data.name}>
-        <UserContext.Provider value={userContextValues}>
           <Container>
             <Header>
               {data.thumbnailUrls ? (
@@ -116,7 +111,7 @@ export default function Meeting() {
             </TabContainer>
             {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} re={re} setRe={setRe}/>}
             {activeTab === 0 && <Line></Line>}
-            {activeTab === 0 && userData.userRole === "LEADER" &&
+            {activeTab === 0 && userRole === "LEADER" &&
               <View>
                 <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
                 <Modal>
@@ -129,23 +124,22 @@ export default function Meeting() {
                   </ModalFooter>
                 </Modal>
               </View>}
-            {activeTab === 0 && userData.userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
-            {activeTab === 0 && userData.userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
-            {activeTab === 0 && (userData.userRole === "CO_LEADER" || userData.userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
-            {activeTab === 0 && (userData.userRole === "LEADER") && <FooterBtn onPress={()=>nav.navigate(PAGES.MEETING_EDIT,{id: id})}><FooterBtnText>모임 수정하기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && (userRole === "CO_LEADER" || userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
+            {activeTab === 0 && (userRole === "LEADER") && <FooterBtn onPress={()=>nav.navigate(PAGES.MEETING_EDIT,{id: id})}><FooterBtnText>모임 수정하기</FooterBtnText></FooterBtn>}
             {/* {activeTab === 0 && <CommentView comments={comments} />}
           {activeTab === 0 && <CommentInputWrapper>
             <CommentInput placeholder="댓글 예시입니다."></CommentInput>
             <UploadBtnWraaper><WithLocalSvg
               asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
-            {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
-            {activeTab === 1 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
-            {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userData.userRole} re={re} setRe={setRe}></TeamMemberList>}
-            {activeTab === 2 && (userData.userRole === "LEADER" || userData.userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
+            {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
+            {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
+            {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userRole} re={re} setRe={setRe}></TeamMemberList>}
+            {activeTab === 2 && (userRole === "LEADER" || userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
             {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
             
           </Container>
-        </UserContext.Provider>
       </Layout>
     );
   }

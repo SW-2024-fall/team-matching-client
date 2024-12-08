@@ -82,7 +82,7 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
                         </Pressable>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
-                        {myContext.userData.userRole === "EXTERNAL" || myContext.userData.userRole === "REQUESTED" ? 
+                        {myContext.userRole === "EXTERNAL" || myContext.userRole === "REQUESTED" ? 
                         <WithLocalSvg asset={hand}/> : <WithLocalSvg asset={blueHand}/>}
                         
                         <HeaderFootText>  {meetingData.currentParticipants}/{meetingData.maxParticipant}</HeaderFootText>

@@ -93,12 +93,12 @@ export default function MemberComponent({ id, memberData, re, setRe}) {
                 <View>
                     <BaseInfoHeader>
                     <Pressable onPress={onPressProfile}><Name>{memberData.name}</Name></Pressable>
-                        {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
+                        {(myContext.userRole === "LEADER" || myContext.userRole === "CO_LEADER") &&
                         (memberData.role !== "CO_LEADER" && memberData.role !== "LEADER")&&
                             <OutPressable onPress={onPressUpgrade}>
                                 <OutText> 부모임장 승급 </OutText>
                             </OutPressable>}
-                        {(myContext.userData.userRole === "LEADER" || myContext.userData.userRole === "CO_LEADER") &&
+                        {(myContext.userRole === "LEADER" || myContext.userRole === "CO_LEADER") &&
                         (memberData.role !== "LEADER")&&
                             <OutPressable onPress={onPressOut}>
                                 <OutText>내보내기</OutText>
