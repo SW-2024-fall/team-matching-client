@@ -43,8 +43,7 @@ export default function Layout({ screen, title = '', children, navigation, Right
     <Wrapper>
         {Header}
         <Body>
-          {/* <View>{children}</View> */}
-          <ScrollView>{children}</ScrollView>
+          {children}
         </Body>
       {useAppbar && <Appbar navigation={navigation} />}
     </Wrapper>
