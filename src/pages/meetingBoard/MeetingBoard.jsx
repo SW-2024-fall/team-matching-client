@@ -4,7 +4,7 @@ import { PAGES } from '@navigation/constant';
 import Layout from '@layout/layout';
 import FilterIcon from '../../assets/filterIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
-import MeetingItem from './components/MeetingItem';
+import MeetingItem from '../profile/components/MeetingItem';
 import FilterModal from './components/FilterModal';
 import FloatingButton from './components/FloatingButton';
 import styled from 'styled-components';
@@ -21,7 +21,7 @@ function FilterBtn({ onOpen }) {
     );
 }
 
-export default async function MeetingBoard({ navigation }) {
+export default function MeetingBoard({ navigation }) {
     const [data, setData] = useState([]);  // 초기 값은 빈 배열
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -30,67 +30,30 @@ export default async function MeetingBoard({ navigation }) {
     const [page, setPage] = useState(0);
     const [maxPage, setMaxPage] = useState(0);
     const [pagedData, setPagedData] = useState(null);
-    useEffect(()=>{
-        console.log("page = "+page);
-        setPagedData(data.slice((page-1)*10 , page*10));
-    },[page,data])
     useEffect(() => {
-        console.log("accessToken: ", accessToken);
+        console.log("page = " + page);
+        setPagedData(data.slice((page - 1) * 10, page * 10));
+    }, [page, data])
+    useEffect(() => {
+        console.log("meetingBoard 입장");
         const fetchData = async () => {
             const accessToken = await AsyncStorage.getItem('accessToken');
             try {
                 // 모든 모임 목록을 가져오기
-                const response = await fetch(API_URL, { 
+                const response = await fetch(API_URL, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${accessToken}`, // JWT 포함
-                      },
-                 });
+                    },
+                });
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const json = await response.json();
-                setMaxPage(Math.ceil(json.data.length/10));
-                // 각 모임의 세부 정보를 비동기적으로 가져오기
-                const detailedData = await Promise.all(
-                    json.data.map(async (item) => {
-                        const meetingResponse = await fetch(`${API_URL}/${item.id}`,{
-                            method: 'GET',
-                            headers: {
-                              'Authorization': `Bearer ${accessToken}`, // JWT 포함
-                            },
-                        });
-                        const meetingDetailsText = await meetingResponse.text();
-                        const meetingDetails = JSON.parse(meetingDetailsText);
-                        const mergedItem = { ...item, 
-                            categories: meetingDetails.data.info.categories, 
-                            meetingType: meetingDetails.data.info.type,
-                            minParticipant: meetingDetails.data.info.minParticipant,
-                            maxParticipant: meetingDetails.data.info.maxParticipant,
-                            ...meetingDetails };
-                        return mergedItem;  // 기존 모임 데이터와 세부 정보 병합
-                        
-                    })
-                ).then((res)=>
-                    setData(res)
-                ).then(
-                    setPage(1)
-                ).then(
-                    // filteredData ? setPagedData(filteredData.slice((page-1)*10, page*10)):setPagedData(data.slice((page-1)*10, page*10))
-                ).then(
-                    // console.log("paged data = "+pagedData)
-                ).then(
-                    setLoading(false)
-                );
-                
-
-
-                // setData(detailedData);  // 상세 정보를 포함한 데이터를 상태에 저장
-                // const abc = await setPagedData().
-
-                // filteredData ? setPagedData(filteredData.slice((page-1)*10, page*10)):setPagedData(data.slice((page-1)*10, page*10))
-                
-                // setLoading(false);  // 로딩 완료
+                setMaxPage(Math.ceil(json.data.length / 10));
+                setData(json.data);
+                setPage(1);
+                setLoading(false);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -101,8 +64,8 @@ export default async function MeetingBoard({ navigation }) {
         fetchData();
     }, []);
 
-    if (loading) {
-        return <ActivityIndicator size="large" color="#000000" />; // 로딩 중일 때 인디케이터 표시
+    if (!data) {
+        return <ActivityIndicator size="large" color="#444444" />; // 로딩 중일 때 인디케이터 표시
     }
 
     if (error) {
@@ -115,7 +78,7 @@ export default async function MeetingBoard({ navigation }) {
         // 필터링 조건을 적용
         const newData = data.filter(item => {
             // 카테고리 필터
-            const meetsCategory = categories.length > 0 ? categories.some(category => item.categories.includes(category)) : true;
+            const meetsCategory = categories.length > 0 ? categories.some(category => item.categories?.includes(category)) : true;
             console.log("categories: ", categories, "item.categories: ", item.categories, "meetsCategory: ", meetsCategory);
     
             // 미팅 타입 필터 (meetingType이 설정된 경우에만 적용)
@@ -158,14 +121,28 @@ export default async function MeetingBoard({ navigation }) {
         navigation.navigate(PAGES.CREATE_MEETING);
     };
 
+    const goCreateMeeting = () => {
+        console.log("goCreateMeeting");
+        navigation.navigate(PAGES.MEETING_CREATE);
+    }
+
+    if (!data || data.length === 0) {
+        return <Layout screen={PAGES.MEETING_BOARD}>
+            <ActivityIndicator size="large" color="#444444" />
+        </Layout>;
+    }
+
     return (
         <Layout screen={PAGES.MEETING_BOARD} 
                 RightComponent={() => <FilterBtn onOpen={() => setFilterVisible(true)} />} style={styles.layout}>
             <View style={styles.container}>
-            <Header>
-                <CreatePressable onPress={()=>navigation.navigate(PAGES.MEETING_CREATE, {})}><CreateText>+</CreateText></CreatePressable>
-                <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
-            </Header>
+                <CreatePressable onPress={()=>goCreateMeeting()}>
+                    <CreateText>+</CreateText>
+                </CreatePressable>
+{/* 
+                <Header>
+                    <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
+                </Header> */}
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                     {/* {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
                         <MeetingItem 
@@ -206,9 +183,9 @@ const PageText = styled.Text`
 `;
 const PageContainer = styled.View`
     flexDirection:row;
-    justifyContent:space-between;
-    marginLeft:40%;
-    width:20%
+    justifyContent: center;
+    alignItems: center;
+    gap: 4px;
 `;
 const Header = styled.View`
 width:20%;
@@ -225,18 +202,21 @@ justifyContent:center;
 alignItems:center;
 `;
 const CreatePressable = styled.Pressable`
-width:30px;
-height:30px;
+zIndex:10;
+position:absolute;
+bottom:20px;
+right:20px;
+width:60px;
+height:60px;
 backgroundColor:${(props) => props.theme.colors.blue.primary};
-borderRadius:15px;
+borderRadius:30px;
 justifyContent:center;
 alignItems:center;
 `;
 const CreateText = styled.Text`
 color:white;
-fontWeight:900;
-
-marignBottom:10px;
+fontWeight:200;
+fontSize:50px;
 `;
 const styles = StyleSheet.create({
     layout: {

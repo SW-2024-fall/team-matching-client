@@ -6,26 +6,17 @@ import Login from '@pages/auth/login/Login';
 import Register from '@pages/auth/register/Register';
 import VerifyEmail from '@pages/auth/register/VerifyEmail';
 import Main from '../pages/main/Main.jsx';
-import MeetingBoard from '@pages/meetingBoard/MeetingBoard';
-import Meeting from '@pages/meeting/Meeting';
+import MeetingBoard from '../pages/meetingBoard/MeetingBoard';
+import Meeting from '../pages/meeting/Meeting';
 import MeetingCreate from '../pages/meeting/create/MeetingCreate';
-import MeetingHistory from '@pages/meetingHistory/MeetingHistory';
+import MeetingHistory from '../pages/meetingHistory/MeetingHistory';
 import MeetingHistoryCreate from '../pages/meetingHistory/create/MeetingHistoryCreate';
 import MyProfile from '../pages/profile/MyProfile';
 import ProfileEdit from '../pages/profile/edit/ProfileEdit';
-import { useAuth } from '../context/AuthProvider.jsx';
 import Recommend from '../pages/recommend/Recommend.jsx';
 import Profile from '../pages/profile/Profile.jsx';
 
 const Stack = createNativeStackNavigator();
-
-const AuthGuard = () => {
-  const { user } = useAuth();
-  if (!user) {
-    return <Login />;
-  }
-  return children;
-};
 
 export default function Navigation() {
   return (

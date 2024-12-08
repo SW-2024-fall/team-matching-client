@@ -27,6 +27,7 @@ export default function Main({ navigation }) {
   return (
     <Layout screen={PAGES.MAIN} navigation={navigation}>
       {/* <MyProfile></MyProfile> */}
+        {!data && <ActivityIndicator size="large" color="#444444" />}
         {data && 
 
         <View>

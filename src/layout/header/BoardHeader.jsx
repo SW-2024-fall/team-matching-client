@@ -7,7 +7,7 @@ export default function BoardHeader({ FilterComponent }) {
     <BaseHeader
       left={<GoBackBtn color={'white'} />}
       center={<Title title={'모임 모집 게시판'} color={'white'} />}
-      right={<FilterComponent />}
+      right={FilterComponent && <FilterComponent />}
       backgroundColor={theme.colors.blue.primary}
     />
   );

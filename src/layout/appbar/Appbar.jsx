@@ -4,7 +4,7 @@ import boardIcon from '@assets/boardIcon.svg';
 import meetingIcon from '@assets/meetingIcon.svg';
 import profileIcon from '@assets/profileIcon.svg';
 import { WithLocalSvg } from 'react-native-svg/css';
-import { PAGES } from '@navigation/constant';
+import { PAGES } from '../../navigation/constant';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthProvider';
 
@@ -50,7 +50,7 @@ export default function Appbar() {
   }
 
   const goProfile = () => {
-    console.log('goProfile');
+    console.log("goProfile");
     navigation.navigate(PAGES.MYPROFILE, {id: user.id});
   };
 

@@ -32,14 +32,24 @@ const MeetingItem = ({ item, onPress }) => {
                     </View>
                     <Text style={styles.itemPreview} numberOfLines={2}>{item.preview}</Text>
                     <View style={styles.participantsStartEndContainer}>
-                        <WithLocalSvg asset={likeIcon} width={14} height={14}/>
-                        <Text style={styles.itemLikeCount}>{item.likeCount}</Text>
-                        <WithLocalSvg asset={commentIcon} width={14} height={14}/>
-                        <Text style={styles.itemCommentCount}>{item.commentCount} </Text>
-                        <Text style={styles.itemCurrentParticipants}>{item.currentParticipants}</Text>
-                        <Text style={styles.itemMaxParticipants}> / {item.maxParticipants}명</Text>
-                        <Text style={styles.itemStartDate}>{item.startDate}</Text>
-                        <Text style={styles.itemEndDate}> ~ {item.endDate}</Text>
+                        <View style={styles.detailActionContainer}>
+                            <View style={styles.detailInfoContainer}>
+                                <WithLocalSvg asset={likeIcon} width={14} height={14}/>
+                                <Text style={styles.itemLikeCount}>{item.likeCount}</Text>
+                            </View>
+                            <View style={styles.detailInfoContainer}>
+                                <WithLocalSvg asset={commentIcon} width={14} height={14}/>
+                                <Text style={styles.itemCommentCount}>{item.commentCount} </Text>
+                            </View>
+                        </View>
+                        <View style={styles.detailInfoContainer}>
+                            <Text style={styles.itemCurrentParticipants}>{item.currentParticipants}</Text>
+                            <Text style={styles.itemMaxParticipants}> / {item.maxParticipant}명</Text>
+                        </View>
+                        <View style={styles.detailInfoContainer}>
+                            <Text style={styles.itemStartDate}>{item.startDate}</Text>
+                            <Text style={styles.itemEndDate}> ~ {item.endDate}</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -51,7 +61,7 @@ const styles = StyleSheet.create({
     itemContainer: {
         borderBottomColor: theme.colors.grey.light,
         backgroundColor: theme.colors.background.primary,
-        marginBottom: 8,
+        marginBottom: 12,
         flexDirection: 'row',
     },
     itemContent: {
@@ -79,7 +89,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 5,
     },
     itemName: {
         fontSize: theme.font.size.primary,
@@ -94,36 +103,45 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     itemPreview: {
-        fontSize: theme.font.size.small,
+        fontSize: theme.font.size.primary,
         color: theme.font.color.primary,
-        marginBottom: 5,
+        marginBottom: 2,
     },
     participantsStartEndContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        },
+        gap: 4,
+    },
+    detailActionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: 6,
+    },
+    detailInfoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: 1,
+    },
     itemCurrentParticipants: {
         fontSize: theme.font.size.xSmall,
         color: theme.font.color.primary,
-        marginRight: 0,
     },
     itemMaxParticipants: {
         fontSize: theme.font.size.xSmall,
         color: theme.font.color.light,
-        marginRight: 8,
     },
     itemLikeCount: {
         marginLeft: 4,
         fontSize: theme.font.size.xSmall,
         color: theme.colors.red.primary,
-        marginRight: 10,
     },
     itemCommentCount: {
         marginLeft: 4,
         fontSize: theme.font.size.xSmall,
         color: theme.colors.blue.primary,
-        marginRight: 10,
     },
     itemStartDate: {
         fontSize: theme.font.size.xSmall,

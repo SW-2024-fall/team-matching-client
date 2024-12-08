@@ -11,12 +11,11 @@ import SelectLabel from './components/SelectLabel';
 import RadioButtonGroup from './components/RadioButtonGroup';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import axios from 'axios';
-import UserTokenContext from '../../../hooks/UserTokenContext';
-import { useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRef } from 'react';
+
 export default function MeetingCreate() {
-  const {accessToken, setUserToken} = useContext(UserTokenContext);
   const nav = useNavigation();
 
   const [meetingId, setMeetingId] = useState('');
@@ -138,7 +137,8 @@ export default function MeetingCreate() {
   formData.append('meeting', {"string": JSON.stringify(meetingData), type: "application/json"});
 
 
-  try {
+    try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
     const response = await fetch('http://localhost:8080/api/meetings', {
       method: 'POST',
       headers: {
@@ -345,161 +345,165 @@ const removeTag = (tagToRemove) => {
       return markedDates;
     };
   
+  const inputRef = useRef(null);
+  
   return (
-    // <Layout screen={PAGES.MEETING_CREATE}>
+    <Layout screen={PAGES.MEETING_CREATE}>
        <ScrollView style={styles.container}>
       
-      <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
-      <RadioButtonGroup
-        options={['정기 모임', '일회성 모임']}
-        selectedOption={meetingType}
-        onSelect={setMeetingType}
-        selectedButtonStyle={styles.meetingTypeSelected}
-        buttonStyle={styles.meetingTypeDefault}
-      />
-      <Text style={[{topMargin: 20,}, styles.label]}>모임 이름을 설정해 주세요</Text>
-      <Input
-        placeholder="모임 이름"
-        value={meetingName}
-        onChangeText={setMeetingName}
-      />
-      
-
-      <SelectLabel style={styles.label} label= '모집글 제목을 설정해 주세요' />
-      <Input
-        placeholder="모집글 제목"
-        value={meetingTopic}
-        onChangeText={setMeetingTopic}
-      />
-
-<SelectLabel style={styles.label} label= '모임에 대해 설명해주세요' />
-      <Input
-        style={styles.descriptionInput}
-        multiline
-        placeholder='모임에 대한 설명을 최대한 상세하게 작성해주세요. 예시) 안녕하세요, 코틀린 개발에 관심 있는 여러분! 우리 "코틀린 개발자 모임"에서 함께 성장하고 네트워킹할 수 있는 기회를 제공합니다. 이 모임은 코틀린을 사용하는 개발자들이 지식을 공유하고, 최신 트렌드를 논의하며, 실제 프로젝트 경험을 나누는 장입니다.'
-        value={meetingDescription}
-        onChangeText={setMeetingDescription}
-      />
-
-<SelectLabel style={styles.label} label= '추가 모임 정보가 있으면 입력해주세요' />
-      <Input
-        placeholder="참가비 2만원 (사용 내역 공개)"
-        value={additionalInfo}
-        onChangeText={setadditionalInfo}
-      />
-      
-      <SelectLabel style={styles.label} label= '모임에 대한 특징을 넣어주세요 (#해시_태그)' />
-<View style={styles.tagListContainer}>
-  {isEditing ? (
-    <TextInput
-      style={styles.defaultTag}
-      placeholder="#입력하기"
-      value={inputValue}
-      onChangeText={setInputValue}
-      onSubmitEditing={addTag} // 엔터키로 태그 추가
-      autoFocus // 입력 필드 자동 포커스
-      onBlur={() => setIsEditing(false)}
-    />
-  ) : (
-  <TouchableOpacity style={styles.defaultTag} onPress={() => setIsEditing(true)}>
-    <Text style={styles.tagText}>#해시_태그</Text>
-  </TouchableOpacity>
-  )}
-  {tags.map((tag, index) => (
-    <TouchableOpacity key={index} style={styles.tag} onPress = {()=>removeTag(tag)}>
-      <Text style={styles.tagText}>{'#'+tag}</Text>
-    </TouchableOpacity>
-  ))}
-</View>
-      <SelectLabel style={styles.label} label= '어떤 모임인가요?' />
-      <View style={styles.imageGroup}>
-        {['인문학/책/글', '사진/영상', '운동', '외국/언어', '음악/악기', '댄스/무용', '공연/축제', '캠핑/여행', '봉사활동', '학술/연구', '면접/취준', '게임/오락'].map((type) => (
-                  <ImageButton
-                  key={type}
-                  title={type}
-                  onPress={() => handleMeetingTypeSelect(type)}
-                  imageSource={imageSources[type]} // image path REQUIRED!!
-                  isSelected={selectedMeetingTypes.includes(type)}
-                  style = {styles.ImageButton}
-                />
-        ))}
-      </View>
-
-      <Text style={styles.label}>날짜를 선택해주세요</Text>
-      <Calendar
-        // 달력 설정
-        onDayPress={onDayPress}
-        markedDates={getMarkedDates()}
-        markingType={'multi-dot'} // 여러 마킹 지원
-        style={styles.calendar}
-      />
-
-      {errorMessage ? (
-        <Text style={styles.errorMessage} > {errorMessage}</Text>
-      ) : null}
-      
-      {meetingType === '정기 모임' && (
-<>
-      <Text style={styles.label}>요일을 선택해 주세요</Text>
-
-      <View style={styles.dayGroup}>
-        {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
-          <DayButton 
-            key={day} 
-            day={day} 
-            selected={selectedDays.includes(day)} 
-            onPress={() => handleDaySelect(day)} 
+          <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
+          <RadioButtonGroup
+            options={['정기 모임', '일회성 모임']}
+            selectedOption={meetingType}
+            onSelect={setMeetingType}
+            selectedButtonStyle={styles.meetingTypeSelected}
+            buttonStyle={styles.meetingTypeDefault}
           />
-        ))}
-      </View>
-  </>
-)}    
+          <Text style={[{topMargin: 20,}, styles.label]}>모임 이름을 설정해 주세요</Text>
+          <Input
+            placeholder="모임 이름"
+            value={meetingName}
+            onChangeText={(text) => {
+              setMeetingName(text);
+            }}
+          />
+          
 
-      <Text style={styles.label}>모임 시간을 선택해 주세요</Text>
-     <View style={styles.timePickerContainer}>
-      <TouchableOpacity style={styles.timePicker} onPress={showStartPicker}>
-        <Text style={styles.timeText}>{startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+          <SelectLabel style={styles.label} label= '모집글 제목을 설정해 주세요' />
+          <Input
+            placeholder="모집글 제목"
+            value={meetingTopic}
+            onChangeText={setMeetingTopic}
+          />
+
+    <SelectLabel style={styles.label} label= '모임에 대해 설명해주세요' />
+          <Input
+            style={styles.descriptionInput}
+            multiline
+            placeholder='모임에 대한 설명을 최대한 상세하게 작성해주세요. 예시) 안녕하세요, 코틀린 개발에 관심 있는 여러분! 우리 "코틀린 개발자 모임"에서 함께 성장하고 네트워킹할 수 있는 기회를 제공합니다. 이 모임은 코틀린을 사용하는 개발자들이 지식을 공유하고, 최신 트렌드를 논의하며, 실제 프로젝트 경험을 나누는 장입니다.'
+            value={meetingDescription}
+            onChangeText={setMeetingDescription}
+          />
+
+    <SelectLabel style={styles.label} label= '추가 모임 정보가 있으면 입력해주세요' />
+          <Input
+            placeholder="참가비 2만원 (사용 내역 공개)"
+            value={additionalInfo}
+            onChangeText={setadditionalInfo}
+          />
+          
+          <SelectLabel style={styles.label} label= '모임에 대한 특징을 넣어주세요 (#해시_태그)' />
+    <View style={styles.tagListContainer}>
+      {isEditing ? (
+        <TextInput
+          style={styles.defaultTag}
+          placeholder="#입력하기"
+          value={inputValue}
+          onChangeText={setInputValue}
+          onSubmitEditing={addTag} // 엔터키로 태그 추가
+          autoFocus // 입력 필드 자동 포커스
+          onBlur={() => setIsEditing(false)}
+        />
+      ) : (
+      <TouchableOpacity style={styles.defaultTag} onPress={() => setIsEditing(true)}>
+        <Text style={styles.tagText}>#해시_태그</Text>
       </TouchableOpacity>
-      <Text> ~ </Text>
-      <TouchableOpacity style={styles.timePicker} onPress={showEndPicker}>
-        <Text style={styles.timeText}>{endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-      </TouchableOpacity>
+      )}
+      {tags.map((tag, index) => (
+        <TouchableOpacity key={index} style={styles.tag} onPress = {()=>removeTag(tag)}>
+          <Text style={styles.tagText}>{'#'+tag}</Text>
+        </TouchableOpacity>
+      ))}
     </View>
-      <DateTimePickerModal
-        isVisible={isStartPickerVisible}
-        mode="time"
-        onConfirm={handleStartConfirm}
-        onCancel={hideStartPicker}
-      />
-      <DateTimePickerModal
-        isVisible={isEndPickerVisible}
-        mode="time"
-        onConfirm={handleEndConfirm}
-        onCancel={hideEndPicker}
-      />
-      <Text style={styles.label}>참여자 선택 방식을 선택해 주세요</Text>
-      <RadioButtonGroup
-        options={['선착순 모임', '모임장 수락/거절']}
-        selectedOption={participantMethod}
-        onSelect={setParticipantMethod}
-        selectedButtonStyle={styles.particpantMethodSelected}
-        buttonStyle={styles.participantMethodDefault}
-      />
-      
-      <Text style={styles.headLabel}> 모임 대표 사진 </Text>
-      <View style={styles.imgcontainer}>
-      <TouchableOpacity onPress={handleChoosePhoto} style={styles.button}>
-        {profileImg ? (
-          <Image source={{uri: profileImg}} style={styles.image} />
-        ) : (
-          <Text style={styles.buttonText}>기본 프로필</Text>
-        )}
-      </TouchableOpacity>
-      </View>
-      <Button title="다음" onPress={handleNext} isNextButton={true} />
-      
-    </ScrollView>
-    // </Layout>
+          <SelectLabel style={styles.label} label= '어떤 모임인가요?' />
+          <View style={styles.imageGroup}>
+            {['인문학/책/글', '사진/영상', '운동', '외국/언어', '음악/악기', '댄스/무용', '공연/축제', '캠핑/여행', '봉사활동', '학술/연구', '면접/취준', '게임/오락'].map((type) => (
+                      <ImageButton
+                      key={type}
+                      title={type}
+                      onPress={() => handleMeetingTypeSelect(type)}
+                      imageSource={imageSources[type]} // image path REQUIRED!!
+                      isSelected={selectedMeetingTypes.includes(type)}
+                      style = {styles.ImageButton}
+                    />
+            ))}
+          </View>
+
+          <Text style={styles.label}>날짜를 선택해주세요</Text>
+          <Calendar
+            // 달력 설정
+            onDayPress={onDayPress}
+            markedDates={getMarkedDates()}
+            markingType={'multi-dot'} // 여러 마킹 지원
+            style={styles.calendar}
+          />
+
+          {errorMessage ? (
+            <Text style={styles.errorMessage} > {errorMessage}</Text>
+          ) : null}
+          
+          {meetingType === '정기 모임' && (
+    <>
+          <Text style={styles.label}>요일을 선택해 주세요</Text>
+
+          <View style={styles.dayGroup}>
+            {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
+              <DayButton 
+                key={day} 
+                day={day} 
+                selected={selectedDays.includes(day)} 
+                onPress={() => handleDaySelect(day)} 
+              />
+            ))}
+          </View>
+      </>
+    )}    
+
+          <Text style={styles.label}>모임 시간을 선택해 주세요</Text>
+        <View style={styles.timePickerContainer}>
+          <TouchableOpacity style={styles.timePicker} onPress={showStartPicker}>
+            <Text style={styles.timeText}>{startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+          </TouchableOpacity>
+          <Text> ~ </Text>
+          <TouchableOpacity style={styles.timePicker} onPress={showEndPicker}>
+            <Text style={styles.timeText}>{endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+          </TouchableOpacity>
+        </View>
+          <DateTimePickerModal
+            isVisible={isStartPickerVisible}
+            mode="time"
+            onConfirm={handleStartConfirm}
+            onCancel={hideStartPicker}
+          />
+          <DateTimePickerModal
+            isVisible={isEndPickerVisible}
+            mode="time"
+            onConfirm={handleEndConfirm}
+            onCancel={hideEndPicker}
+          />
+          <Text style={styles.label}>참여자 선택 방식을 선택해 주세요</Text>
+          <RadioButtonGroup
+            options={['선착순 모임', '모임장 수락/거절']}
+            selectedOption={participantMethod}
+            onSelect={setParticipantMethod}
+            selectedButtonStyle={styles.particpantMethodSelected}
+            buttonStyle={styles.participantMethodDefault}
+          />
+          
+          <Text style={styles.headLabel}> 모임 대표 사진 </Text>
+          <View style={styles.imgcontainer}>
+          <TouchableOpacity onPress={handleChoosePhoto} style={styles.button}>
+            {profileImg ? (
+              <Image source={{uri: profileImg}} style={styles.image} />
+            ) : (
+              <Text style={styles.buttonText}>기본 프로필</Text>
+            )}
+          </TouchableOpacity>
+          </View>
+          <Button title="다음" onPress={handleNext} isNextButton={true} />
+          
+        </ScrollView>
+    </Layout>
   );
 }
 

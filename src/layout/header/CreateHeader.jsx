@@ -1,6 +1,8 @@
 import BaseHeader from '@layout/header/BaseHeader';
 import { Pressable } from 'react-native';
 import styled from 'styled-components';
+import { useNavigation } from '@react-navigation/native';
+import { theme } from '../../styles/ThemeStyles';
 
 const HeaderText = styled.Text`
   font-size: ${(props) => props.theme.font.size.primary};
@@ -9,7 +11,7 @@ const HeaderText = styled.Text`
 `;
 
 export default function CreateHeader() {
-  const nav = useNavigation();
+  const navigation = useNavigation();
   function Cancel() {
     return (
       <Pressable onPress={() => navigation.pop()}>
