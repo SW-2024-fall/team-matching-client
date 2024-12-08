@@ -135,16 +135,14 @@ export default function MeetingBoard({ navigation }) {
             console.log("item.minParticipants", item.minParticipant,"item.maxParticipants", item.maxParticipant, "min: ", minParticipants, "max: ", maxParticipants, "meetsParticipants: ", meetsParticipants);
     
             // 조건 결합
-            const result = 
-                (meetsCategory || meetsCategory === null) &&
-                (meetsMeetingType === null || meetsMeetingType) &&
-                (meetsParticipants === null || meetsParticipants);
+            const result = meetsCategory && meetsMeetingType && meetsParticipants;
             console.log("result: ", result);
     
             return result;
         });
 
         setFilteredData(newData);  // 필터링된 데이터 저장
+        console.log("data"+filteredData)
         setFilterVisible(false);  // 필터 모달 닫기
     };
 
@@ -168,20 +166,14 @@ export default function MeetingBoard({ navigation }) {
                 <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
             </Header>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    {/* {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
-                        <MeetingItem 
-                            key={item.id} 
-                            item={item} 
-                            onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title:item.name })} 
-                        />
-                    ))} */}
-                    {pagedData.map((item) => (
-                        <MeetingItem 
-                            key={item.id} 
-                            item={item} 
-                            onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title:item.name })} 
-                        />
-                    ))}
+                {/* Filtered data is displayed if available, otherwise pagedData */}
+                {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
+                    <MeetingItem
+                        key={item.id}
+                        item={item}
+                        onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })}
+                    />
+                ))}
                 </ScrollView>
                 <FilterModal 
                     visible={filterVisible} 

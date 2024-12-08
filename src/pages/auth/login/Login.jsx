@@ -31,7 +31,7 @@ const LoginScreen = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // JSON 형식으로 전송
-        },
+        },  
         body: JSON.stringify({
           email: email,
           password: password,
