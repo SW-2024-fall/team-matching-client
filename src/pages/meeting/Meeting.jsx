@@ -135,7 +135,7 @@ export default function Meeting() {
               <CommentInput placeholder="댓글 예시입니다."></CommentInput>
               <UploadBtnWraaper><WithLocalSvg
                 asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
-              {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
+              {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe} userRole={userRole}></WatingMemberList>}
               {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
               {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userRole} re={re} setRe={setRe}></TeamMemberList>}
               {activeTab === 2 && (userRole === "LEADER" || userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}

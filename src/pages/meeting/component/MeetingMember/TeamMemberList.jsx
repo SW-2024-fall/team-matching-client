@@ -8,16 +8,14 @@ export default function TeamMemberList({ id, memberList, userRole , re, setRe}) 
     <Container>
       <Header>구성원</Header>
       {memberList && memberList.map((member, index) => (
-        <MemberComponent key={index} id={id} memberData={member} re={re} setRe={setRe} ></MemberComponent>
+        <MemberComponent key={index} id={id} memberData={member} re={re} setRe={setRe} userRole={userRole}></MemberComponent>
       ))}
     </Container>
   )
 }
 const Container = styled.View`
-  marginTop:20px;
 `;
 const Header = styled.Text`
   fontSize:${(props) => props.theme.font.size.large};
   fontWeight:${(props) => props.theme.font.weight.bold};
-  marginLeft:20px;
 `;
