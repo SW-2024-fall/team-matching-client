@@ -74,13 +74,14 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
                 <HeaderContent>{meetingData.content}</HeaderContent>
                 <HeaderFooter>
                     <HeaderFooterLeft>
-                        <Pressable onPress={onPressLike} >
-                            <HeaderFootText>{isLike ? <WithLocalSvg asset={like} /> : <WithLocalSvg asset={notLike} />} {meetingData.likes}    </HeaderFootText>
-
-                        </Pressable>
-                        <Pressable onPress={onPressScrap}>
-                            <HeaderFootText>{isScrap ? <WithLocalSvg asset={scrap} /> : <WithLocalSvg asset={notScrap} />} {meetingData.scraps}</HeaderFootText>
-                        </Pressable>
+                        <HeaderFootAction onPress={onPressLike} >
+                            {isLike ? <WithLocalSvg asset={like} /> : <WithLocalSvg asset={notLike} />}
+                            <HeaderFootText> {meetingData.likes}    </HeaderFootText>
+                        </HeaderFootAction>
+                        <HeaderFootAction onPress={onPressScrap}>
+                            {isScrap ? <WithLocalSvg asset={scrap} /> : <WithLocalSvg asset={notScrap} />}
+                            <HeaderFootText> {meetingData.scraps}</HeaderFootText>
+                        </HeaderFootAction>
                     </HeaderFooterLeft>
                     <HeaderFooterRight>
                         {userRole === "EXTERNAL" || userRole === "REQUESTED" ? 
@@ -110,23 +111,21 @@ export default function MeetingInfo({id, meetingData, isLike, isScrap, re, setRe
 }
 
 const Container = styled.View`
-    margin:20px;
+    gap: 12px;
 `;
 const Header = styled.View`
-
+    gap: 16px;
 `;
 
 const HeaderTitle = styled.Text`
     fontWeight:${(props) => props.theme.font.weight.bold};
     fontSize:${(props) => props.theme.font.size.large};
     color:${(props) => props.theme.font.color.primary};
-    marginBottom:8px;
 `;
 const HeaderContent = styled.Text`
     fontWeight:${(props) => props.theme.font.weight.regular};
     fontSize:${(props) => props.theme.font.size.primary};
     color:${(props) => props.theme.font.color.primary};
-    marginBottom:8px;
 `;
 const HeaderFooter = styled.View`
     flexDirection:row;
@@ -135,6 +134,13 @@ const HeaderFooter = styled.View`
 const HeaderFooterRight = styled.View`
     flexDirection:row;
 `;
+
+const HeaderFootAction = styled.Pressable`
+    flexDirection:row;  
+    gap: 2px;
+    alignItems:center;
+`;
+
 const HeaderFootText = styled.Text`
     fontWeight:${(props) => props.theme.font.weight.regular};
     fontSize:${(props) => props.theme.font.size.primary};

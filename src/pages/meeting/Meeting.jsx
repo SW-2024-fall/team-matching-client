@@ -108,42 +108,50 @@ export default function Meeting() {
                 <Tab isActive={activeTab === 1}>구성원</Tab></TabWrapper>
               <TabWrapper isActive={activeTab === 2} onPress={() => handleTabPress(2)}>
                 <Tab isActive={activeTab === 2}>활동 내역</Tab></TabWrapper>
-            </TabContainer>
-            {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} re={re} setRe={setRe} userRole={userRole}/>}
-            {activeTab === 0 && <Line></Line>}
-            {activeTab === 0 && userRole === "LEADER" &&
-              <View>
-                <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
-                <Modal>
-                  <ModalHeader>
-                    <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
-                  </ModalHeader>
-                  <ModalFooter>
-                    <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
-                    <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
-                  </ModalFooter>
-                </Modal>
-              </View>}
-            {activeTab === 0 && userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
-            {activeTab === 0 && userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
-            {activeTab === 0 && (userRole === "CO_LEADER" || userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
-            {activeTab === 0 && (userRole === "LEADER") && <FooterBtn onPress={()=>nav.navigate(PAGES.MEETING_EDIT,{id: id})}><FooterBtnText>모임 수정하기</FooterBtnText></FooterBtn>}
-            {/* {activeTab === 0 && <CommentView comments={comments} />}
-          {activeTab === 0 && <CommentInputWrapper>
-            <CommentInput placeholder="댓글 예시입니다."></CommentInput>
-            <UploadBtnWraaper><WithLocalSvg
-              asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
-            {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
-            {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
-            {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userRole} re={re} setRe={setRe}></TeamMemberList>}
-            {activeTab === 2 && (userRole === "LEADER" || userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
-            {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
+          </TabContainer>
+          <MeetingContainer>
+
+              {activeTab === 0 && <MeetingInfo id={id} meetingData={data} isLike={isLike} isScrap={isScrap} re={re} setRe={setRe} userRole={userRole}/>}
+              {/* {activeTab === 0 && <Line></Line>} */}
+              {activeTab === 0 && userRole === "LEADER" &&
+                <View>
+                  <FooterBtn onPress={open}><FooterBtnText>이 모임 삭제하기</FooterBtnText></FooterBtn>
+                  <Modal>
+                    <ModalHeader>
+                      <ModalLable>해당 모임을 삭제하시겠습니까?</ModalLable>
+                    </ModalHeader>
+                    <ModalFooter>
+                      <Pressable><ModalYes onPress={onPressDeleteMeeting}>예</ModalYes></Pressable>
+                      <Pressable><ModalNo onPress={close}>아니오</ModalNo></Pressable>
+                    </ModalFooter>
+                  </Modal>
+                </View>}
+              {activeTab === 0 && userRole === "EXTERNAL" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청하기</FooterBtnText></FooterBtn>}
+              {activeTab === 0 && userRole === "REQUESTED" && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>참여 신청 취소하기</FooterBtnText></FooterBtn>}
+              {activeTab === 0 && (userRole === "CO_LEADER" || userRole === "MEMBER") && <FooterBtn onPress={onPressFooterBtn}><FooterBtnText>이 모임 나가기</FooterBtnText></FooterBtn>}
+              {activeTab === 0 && (userRole === "LEADER") && <FooterBtn onPress={()=>nav.navigate(PAGES.MEETING_EDIT,{id: id})}><FooterBtnText>모임 수정하기</FooterBtnText></FooterBtn>}
+              {/* {activeTab === 0 && <CommentView comments={comments} />}
+            {activeTab === 0 && <CommentInputWrapper>
+              <CommentInput placeholder="댓글 예시입니다."></CommentInput>
+              <UploadBtnWraaper><WithLocalSvg
+                asset={uploadBtn} /></UploadBtnWraaper></CommentInputWrapper>} */}
+              {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && <WatingMemberList memberList={memberData.requested} id={id} re={re} setRe={setRe}></WatingMemberList>}
+              {activeTab === 1 && (userRole === "LEADER" || userRole === "CO_LEADER") && memberData.requested.length !== 0 && <Line></Line>}
+              {activeTab === 1 && <TeamMemberList id={id} memberList={memberData.member} userRole={userRole} re={re} setRe={setRe}></TeamMemberList>}
+              {activeTab === 2 && (userRole === "LEADER" || userRole === "CO_LEADER") &&<PlusBtn onPress={()=>nav.navigate(PAGES.MEETING_HISTORY_CREATE,{id: id})}><Text>+</Text></PlusBtn>}
+              {activeTab === 2 && <MeetingRecordList id={id}></MeetingRecordList>}
+          </MeetingContainer>
             
           </Container>
       </Layout>
     );
   }
 }
+
+const MeetingContainer = styled.View`
+  padding: 16px;
+`;
+
 const ImageContainer = styled.View`
   height:auto;
   width:100%;  
@@ -181,12 +189,11 @@ const ModalNo = styled.Text`
   color:#FF576B;
     `;
 const FooterBtn = styled.Pressable`
+  marginTop: 16px;
+  width: 100%;
   justifyConter:center;
   alignItems:center;
   backgroundColor:${(props) => props.theme.colors.blue.primary};
-  marginLeft:20px;
-  marginRight:20px;
-  marginTop:5px;
   borderRadius:14px;
   padding:10px;
 `;
@@ -219,14 +226,15 @@ const Line = styled.View`
 const TabContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  height: 40px;
 `;
 
 const TabWrapper = styled(Pressable)`
   flex: 1;
   justify-content: center;
   align-items: center;
-  border-left-width: 1px;
-  border-right-width:1px;
+  border-left-width: 0.2px;
+  border-right-width:0.2px;
   border-color: white;
   padding:7px;
   margin:0;
@@ -235,6 +243,7 @@ const TabWrapper = styled(Pressable)`
 
 const Tab = styled.Text`
   color: ${({ isActive, theme }) => (isActive ? theme.font.color.primary : 'white')};
+  fontWeight:${({ isActive, theme }) => isActive ? theme.font.weight.bold : theme.font.weight.regular};
 `;
 
 const CommentInputWrapper = styled.View`
