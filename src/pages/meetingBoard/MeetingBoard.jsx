@@ -131,7 +131,7 @@ export default function MeetingBoard({ navigation }) {
 
     if (!data || data.length === 0) {
         return <Layout screen={PAGES.MEETING_BOARD}>
-            <ActivityIndicator size="large" color="#444444" />
+            <ActivityIndicator size="large" color="#444444"   style={{marginTop:100}}/>
         </Layout>;
     }
 

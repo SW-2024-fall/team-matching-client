@@ -33,7 +33,7 @@ export default function MeetingHistory() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#444444" />; // 로딩 중일 때 인디케이터 표시
+    return <ActivityIndicator size="large" color="#444444"   style={{marginTop:100}}/>; // 로딩 중일 때 인디케이터 표시
   }
 
   if (error) {

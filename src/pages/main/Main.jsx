@@ -21,7 +21,7 @@ export default function Main({ navigation }) {
   }, [user]);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#333333" />; // 로딩 중일 때 인디케이터 표시
+    return <ActivityIndicator size="large" color="#333333"  style={{marginTop:100}}/>; // 로딩 중일 때 인디케이터 표시
   }
 
   return (
