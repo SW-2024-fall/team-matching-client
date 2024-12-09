@@ -47,6 +47,7 @@ export default function MeetingRecordList({id, userRole}) {
     }
     return (
         <Container>
+            {data.length === 0 && <Text style={{ fontSize: 14, textAlign: 'center', marginTop: 200, color: '#444444' }}>모임 기록이 없습니다.</Text>}
             {data.map((item) => (
                     // id, name, title, profileUrl, thumbnailUrl, preview , navigation, userRole="MEMBER"
                     <FeedPost

@@ -207,15 +207,15 @@ const PlusBtn = styled(Animated.createAnimatedComponent(styled.Pressable`
   bottom:20px;
   right:20px;
   background-color: #007aff;
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
   justify-content: flex-start;
   align-items: center;
 `))``;
 
 const PlusText = styled.Text`
-  marginTop:-8px;
+  marginTop:2px;
   fontSize:50px;
   fontWeight:200;
   color:white;

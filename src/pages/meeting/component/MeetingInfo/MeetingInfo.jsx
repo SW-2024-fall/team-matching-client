@@ -14,6 +14,8 @@ import notScrap from '../../../../assets/notScrap.svg';
 import blueHand from '../../../../assets/blueHand.svg';
 import UserContext from "../../hooks/UserContext";
 import UserTokenContext from "../../../../hooks/UserTokenContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const daysToKoreanText = (days) => {
     const dayMap = {
       MONDAY: '월',

@@ -12,7 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import { PAGES } from "../../../../navigation/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function MemberComponent({ id, memberData, re, setRe, userRole}) {
+export default function MemberComponent({ id, memberData, re, setRe, userRole }) {
+    const [data, setData] = useState(null);
     const nav = useNavigation();
     useEffect(() => {
         const fetchData = async () => {
@@ -26,8 +27,8 @@ export default function MemberComponent({ id, memberData, re, setRe, userRole}) 
             const memberRes = await fetch(`http://localhost:8080/api/meetings/${id}/members/my-role`, { method: "GET",headers: {'Authorization': `Bearer ${accessToken}`}});
             const memberJson = await memberRes.json()
             setData(json.data.info);
-          } catch (error) {
-            setError(error.message);
+            } catch (error) {
+                console.error("Error 모임원 정보 조회", error);
           } finally {
           }
         };
