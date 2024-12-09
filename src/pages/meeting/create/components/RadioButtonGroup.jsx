@@ -23,7 +23,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    marginTop: 8,
     marginBottom: 20,
+    gap: 10,
   },
 });
 

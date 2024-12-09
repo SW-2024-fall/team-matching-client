@@ -14,6 +14,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRef } from 'react';
+import { ThemeProvider } from 'styled-components';
+
 
 export default function MeetingCreate() {
   const nav = useNavigation();
@@ -340,7 +342,9 @@ const removeTag = (tagToRemove) => {
         dateRange.forEach((date) => {
           markedDates[date] = { selected: true, color: 'blue' };
         });
-      }
+      } else if (meetingType === '정기 모임' && startDate ) {
+        markedDates[startDate] = { selected: true, marked: true, dotColor: 'blue' };
+      } 
   
       return markedDates;
     };
@@ -349,7 +353,9 @@ const removeTag = (tagToRemove) => {
   
   return (
     // <Layout screen={PAGES.MEETING_CREATE}>
-       <ScrollView style={styles.container}>
+    <ScrollView style={styles.container}>
+      
+      <View style={{height: 20}} />
       
           <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
           <RadioButtonGroup
@@ -392,7 +398,7 @@ const removeTag = (tagToRemove) => {
             onChangeText={setadditionalInfo}
           />
           
-          <SelectLabel style={styles.label} label= '모임에 대한 특징을 넣어주세요 (#해시_태그)' />
+    <SelectLabel style={styles.label} label= '모임에 대한 특징을 넣어주세요 (#해시_태그)' />
     <View style={styles.tagListContainer}>
       {isEditing ? (
         <TextInput
@@ -429,6 +435,7 @@ const removeTag = (tagToRemove) => {
             ))}
           </View>
 
+      <View>
           <Text style={styles.label}>날짜를 선택해주세요</Text>
           <Calendar
             // 달력 설정
@@ -437,24 +444,28 @@ const removeTag = (tagToRemove) => {
             markingType={'multi-dot'} // 여러 마킹 지원
             style={styles.calendar}
           />
+          </View>
 
           {errorMessage ? (
             <Text style={styles.errorMessage} > {errorMessage}</Text>
           ) : null}
           
           {meetingType === '정기 모임' && (
-    <>
-          <Text style={styles.label}>요일을 선택해 주세요</Text>
+        <>
+          <View>
+            <Text style={styles.label}>요일을 선택해 주세요</Text>
 
-          <View style={styles.dayGroup}>
-            {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
-              <DayButton 
-                key={day} 
-                day={day} 
-                selected={selectedDays.includes(day)} 
-                onPress={() => handleDaySelect(day)} 
-              />
-            ))}
+            <View style={styles.dayGroup}>
+              {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
+                <DayButton 
+                  key={day} 
+                  day={day} 
+                  selected={selectedDays.includes(day)} 
+                  onPress={() => handleDaySelect(day)} 
+                />
+              ))}
+
+          </View>
           </View>
       </>
     )}    
@@ -496,11 +507,18 @@ const removeTag = (tagToRemove) => {
             {profileImg ? (
               <Image source={{uri: profileImg}} style={styles.image} />
             ) : (
-              <Text style={styles.buttonText}>기본 프로필</Text>
+              <Text style={styles.buttonText}>+</Text>
             )}
           </TouchableOpacity>
-          </View>
-          <Button title="다음" onPress={handleNext} isNextButton={true} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="취소" onPress={handleNext} isNextButton={true} selected={false} style={styles.completeButton}/>
+        <Button title="다음" onPress={handleNext} isNextButton={true} selected={true} style={styles.completeButton}/>
+      </View>
+        <View style={{ height: 50, width: 100}} >
+        </View>
+      
+          
           
         </ScrollView>
     // </Layout>
@@ -511,6 +529,16 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     marginTop: 20,
+    backgroundColor: '#FFFFFF',
+    gap: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  completeButton: {
+    width: '45%',
   },
   title: {
     fontSize: 20,
@@ -529,11 +557,17 @@ const styles = StyleSheet.create({
   },
   dayGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 10,
     marginTop: 10,
+    marginBottom: 20,
   },
   selectText: {
     color: '#666A73',
+  },
+  buttonText: {
+    color: '#666A73',
+    fontSize: 30,
+    fontWeight: 'light',
   },
   meetingType: {
     borderRadius: 12,
@@ -544,9 +578,8 @@ const styles = StyleSheet.create({
   descriptionInput: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
+    borderRadius: 12,
     padding: 10,
-    marginTop: 5,
     minHeight: 80,
     flexGrow: 1,
     textAlignVertical: 'top',
@@ -587,41 +620,32 @@ const styles = StyleSheet.create({
   defaultTag: {
     borderRadius: 12,
     borderColor: '#B0B8C1',
-    height: 35,
     borderWidth: 1,
-    padding: 5,
-    marginRight: 5,
-    marginBottom: 5,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    alignSelf: 'flex-start',
+    padding: 10,
   },
   tagListContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 10,
+    gap: 10,
   },
   tag: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#333D48',
-    borderRadius: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginRight: 5,
-    marginBottom: 5,
-    height: 35,
-    justifyContent: 'center',
-    alignSelf: 'flex-start'
+    borderRadius: 12,
+    padding: 10,
   },
   tagText: {
     color: '#333D48',
     textAlign: 'center',
+    fontSize: 12,
   },
   imageGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between', // 가로로 배열
     flexWrap: 'wrap', // 여러 줄로 감싸기
+    marginBottom: 20,
   },
   ImageButton: {
     width: '13%',
@@ -654,7 +678,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#0082FF'
   },
   calendar: {
-    marginVertical: 20,
+    marginTop: 8,
+    marginBottom: 20,
   },
   errorMessage: {
     color: 'red',
@@ -667,14 +692,14 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 10,
     borderWidth: 1,
-    borderColor: '#333D4B',
+    borderColor: '#E5E8EB',
     borderRadius: 12,
     width: 70,
     height: 70,
     marginBottom: 30,
-    justifyContent: 'center',
+    paddingTop: 15,
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#E5E8EB',
   },
   image: {
     width: 70,
