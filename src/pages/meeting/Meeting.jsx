@@ -16,7 +16,7 @@ import Register from '../auth/register/Register';
 import MeetingRecordList from './component/MeetingRecordList/MeetingRecordList';
 import { Animated } from 'react-native';
 import useModal from '../../hooks/useModal';
-import { getMeetingById, getMeetingMemberRole } from '../../utils/meeting';
+import { getMeetingById, getMeetingMemberRole, deleteMeeting, postMeetingApplication, deleteMeetingApplication, leaveMeeting } from '../../utils/meeting';
 
 export default function Meeting() {
   const route = useRoute();
@@ -32,6 +32,7 @@ export default function Meeting() {
   const { Modal, open, close } = useModal();
   const [re, setRe] = useState(false);
   const [userRole, setUserRole] = useState(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
