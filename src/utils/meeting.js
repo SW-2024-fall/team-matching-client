@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MEETING } from './endPoint';
+import { Alert } from 'react-native';
 
 export const getMeetingById = async (id) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -39,8 +40,7 @@ export const deleteMeeting = async (id) => {
                 method: "DELETE",
                 headers: { 'Authorization': `Bearer ${accessToken}` }
             });
-        if (!response.ok) { throw new Error("Failed to delete the meeting"); }
-        return await response.json();
+        Alert.alert('성공','모임삭제되었습니다');
     } catch (error) {
         console.log("Error deleting the meeting:", error);
         throw error;
@@ -71,8 +71,7 @@ export const leaveMeeting = async (id) => {
                 method: "DELETE",
                 headers: { 'Authorization': `Bearer ${accessToken}` }
             });
-        if (!response.ok) { throw new Error("Failed to 모임탈퇴"); }
-        else{Alert.alert('성공','모임 탈퇴되었습니다'); setRe(!re)}
+        Alert.alert('성공','모임탈퇴되었습니다');
     } catch (error) {
         console.log("Error 모임탈퇴:", error);
         throw error;
@@ -83,10 +82,7 @@ export const deleteMeetingApplication = async (id) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     try {
         const response = await fetch(`${MEETING}/${id}/members/application`, { method: "DELETE" ,headers: {'Authorization': `Bearer ${accessToken}`}});
-        if (!response.ok) {
-          throw new Error("Failed to 모인 신청 해제");
-        }
-        else{Alert.alert('성공','모임신청이 취소되었습니다'); setRe(!re)}
+        Alert.alert('성공','모임신청이 취소되었습니다');
     } catch (error) {
         console.log("Error 모임신청 해제:", error);
         throw error;
