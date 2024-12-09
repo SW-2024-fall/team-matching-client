@@ -241,9 +241,10 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 15,
     },
     scrollContainer: {
+        marginVertical: 15,
+        paddingHorizontal: 15,
         flexGrow: 1,
     },
     floatingButton: {
