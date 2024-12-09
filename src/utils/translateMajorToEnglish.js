@@ -1,3 +1,5 @@
+import { Major } from '../pages/const/Major';
+
 export function translateMajorToEnglish(koreanName) {
     const entries = Object.entries(Major);
     for (const [englishName, name] of entries) {
