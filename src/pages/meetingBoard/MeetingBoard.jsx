@@ -167,7 +167,7 @@ export default function MeetingBoard({ navigation }) {
                     <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
                 </Header> */}
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
+                {(filteredData.length > 0 ? filteredData : pagedData).reverse().map((item) => (
                     <MeetingItem
                         key={item.id}
                         item={item}

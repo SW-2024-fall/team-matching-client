@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 12,
-        marginRight: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -83,6 +82,7 @@ const styles = StyleSheet.create({
     textContainer: {
         flex: 1,
         justifyContent: 'center',
+        marginLeft: 10,
         gap: 4,
     },
     nameFeaturesContainer: {
