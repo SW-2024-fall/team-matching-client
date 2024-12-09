@@ -174,19 +174,19 @@ export default function MeetingBoard({ navigation }) {
                         onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })}
                     />
                 ))}
+                    <PageContainer>
+                        {maxPage >0 && <Pressable onPress={()=>setPage(1)}><PageText isPage={page===1}>1</PageText></Pressable>}
+                        {maxPage >1 && <Pressable onPress={()=>setPage(2)}><PageText isPage={page===2}>2</PageText></Pressable>}
+                        {maxPage >2 && <Pressable onPress={()=>setPage(3)}><PageText isPage={page===3}>3</PageText></Pressable>}
+                        {maxPage >3 && <Pressable onPress={()=>setPage(4)}><PageText isPage={page===4}>4</PageText></Pressable>}
+                        {maxPage >4 && <Pressable onPress={()=>setPage(5)}><PageText isPage={page===5}>5</PageText></Pressable>}
+                    </PageContainer>
                 </ScrollView>
                 <FilterModal 
                     visible={filterVisible} 
                     onClose={() => setFilterVisible(false)} 
                     onApply={handleFilterApply} 
                 />
-                <PageContainer>
-                    {maxPage >0 && <Pressable onPress={()=>setPage(1)}><PageText isPage={page===1}>1</PageText></Pressable>}
-                    {maxPage >1 && <Pressable onPress={()=>setPage(2)}><PageText isPage={page===2}>2</PageText></Pressable>}
-                    {maxPage >2 && <Pressable onPress={()=>setPage(3)}><PageText isPage={page===3}>3</PageText></Pressable>}
-                    {maxPage >3 && <Pressable onPress={()=>setPage(4)}><PageText isPage={page===4}>4</PageText></Pressable>}
-                    {maxPage >4 && <Pressable onPress={()=>setPage(5)}><PageText isPage={page===5}>5</PageText></Pressable>}
-                </PageContainer>
             </View>
             {/* <FloatingButton onPress={handleFloatingButtonPress} style={styles.floatingButton} /> */}
         </Layout>

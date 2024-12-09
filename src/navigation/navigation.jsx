@@ -22,7 +22,7 @@ const Stack = createNativeStackNavigator();
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={PAGES.MAIN} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={PAGES.LOGIN} screenOptions={{ headerShown: false }}>
         <Stack.Screen name={PAGES.LOGIN} component={Login} />
         <Stack.Screen name={PAGES.REGISTER} component={Register} />
         <Stack.Screen name={PAGES.VERIFY_EMAIL} component={VerifyEmail} />
