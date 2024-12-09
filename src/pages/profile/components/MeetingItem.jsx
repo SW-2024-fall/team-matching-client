@@ -15,8 +15,8 @@ const MeetingItem = ({ item, onPress }) => {
                         { backgroundColor: item.image ? 'transparent' : theme.colors.grey.light }
                     ]}
                 >
-                    {item.image ? (
-                        <Image source={{ uri: item.image }} style={styles.imageContainer} />
+                    {item.thumbnailUrl ? (
+                        <Image source={{ uri: item.thumbnailUrl }} style={styles.imageContainer} />
                     ) : (
                         <Text style={styles.placeholderText}>No Image</Text>
                     )}

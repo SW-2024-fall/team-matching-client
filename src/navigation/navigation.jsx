@@ -10,6 +10,7 @@ import MeetingBoard from '../pages/meetingBoard/MeetingBoard';
 import Meeting from '../pages/meeting/Meeting';
 import MeetingCreate from '../pages/meeting/create/MeetingCreate';
 import MeetingHistory from '../pages/meetingHistory/MeetingHistory';
+import MeetingEdit from '../pages/meeting/edit/MeetingEdit';
 import MeetingHistoryCreate from '../pages/meetingHistory/create/MeetingHistoryCreate';
 import MyProfile from '../pages/profile/MyProfile';
 import ProfileEdit from '../pages/profile/edit/ProfileEdit';
@@ -28,6 +29,7 @@ export default function Navigation() {
         <Stack.Screen name={PAGES.MAIN} component={Main} />
         <Stack.Screen name={PAGES.MEETING} component={Meeting} />
         <Stack.Screen name={PAGES.MEETING_CREATE} component={MeetingCreate} />
+        <Stack.Screen name={PAGES.MEETING_EDIT} component={MeetingEdit} />
         <Stack.Screen name={PAGES.MEETING_HISTORY} component={MeetingHistory} />
         <Stack.Screen name={PAGES.MEETING_HISTORY_CREATE} component={MeetingHistoryCreate} />
         <Stack.Screen name={PAGES.MEETING_BOARD} component={MeetingBoard} />

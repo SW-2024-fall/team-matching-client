@@ -348,7 +348,7 @@ const removeTag = (tagToRemove) => {
   const inputRef = useRef(null);
   
   return (
-    <Layout screen={PAGES.MEETING_CREATE}>
+    // <Layout screen={PAGES.MEETING_CREATE}>
        <ScrollView style={styles.container}>
       
           <Text style={styles.label}>모임 유형을 선택해 주세요</Text>
@@ -503,13 +503,14 @@ const removeTag = (tagToRemove) => {
           <Button title="다음" onPress={handleNext} isNextButton={true} />
           
         </ScrollView>
-    </Layout>
+    // </Layout>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    marginTop: 20,
   },
   title: {
     fontSize: 20,

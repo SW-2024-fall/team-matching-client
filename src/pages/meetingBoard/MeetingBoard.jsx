@@ -39,6 +39,10 @@ export default function MeetingBoard({ navigation }) {
         const fetchData = async () => {
             const accessToken = await AsyncStorage.getItem('accessToken');
             try {
+                if (!accessToken) {
+                    throw new Error('Access token not found');
+                }
+    
                 // 모든 모임 목록을 가져오기
                 const response = await fetch(API_URL, {
                     method: 'GET',
@@ -46,23 +50,53 @@ export default function MeetingBoard({ navigation }) {
                         'Authorization': `Bearer ${accessToken}`, // JWT 포함
                     },
                 });
+    
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+    
                 const json = await response.json();
-                setMaxPage(Math.ceil(json.data.length / 10));
-                setData(json.data);
+    
+                // 각 모임의 세부 정보를 비동기적으로 가져오기
+                const detailedData = await Promise.all(
+                    json.data.map(async (item) => {
+                        const meetingResponse = await fetch(`${API_URL}/${item.id}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`, // JWT 포함
+                            },
+                        });
+    
+                        if (!meetingResponse.ok) {
+                            throw new Error('Failed to fetch meeting details');
+                        }
+    
+                        const meetingDetails = await meetingResponse.json();
+                        return {
+                            ...item,
+                            categories: meetingDetails.data.info.categories,
+                            meetingType: meetingDetails.data.info.type,
+                            minParticipant: meetingDetails.data.info.minParticipant,
+                            maxParticipant: meetingDetails.data.info.maxParticipant,
+                            ...meetingDetails,
+                        }; // 기존 모임 데이터와 세부 정보 병합
+                    })
+                );
+    
+                // 상태 업데이트
+                setData(detailedData);
+                setMaxPage(Math.ceil(detailedData.length / 10));
                 setPage(1);
-                setLoading(false);
             } catch (error) {
                 setError(error.message);
             } finally {
-                // setLoading(false);
+                setLoading(false);
             }
         };
-
+    
         fetchData();
     }, []);
+    
 
     if (!data) {
         return <ActivityIndicator size="large" color="#444444" />; // 로딩 중일 때 인디케이터 표시
@@ -75,50 +109,36 @@ export default function MeetingBoard({ navigation }) {
     const handleFilterApply = (filters) => {
         const { categories, meetingType, minParticipants, maxParticipants } = filters;
     
-        // 필터링 조건을 적용
         const newData = data.filter(item => {
-            // 카테고리 필터
-            const meetsCategory = categories.length > 0 ? categories.some(category => item.categories?.includes(category)) : true;
+            const meetsCategory = categories.length > 0 
+                ? categories.some(category => item.categories?.includes(category)) 
+                : true;
             console.log("categories: ", categories, "item.categories: ", item.categories, "meetsCategory: ", meetsCategory);
-    
-            // 미팅 타입 필터 (meetingType이 설정된 경우에만 적용)
             const meetsMeetingType = meetingType ? item.meetingType === meetingType : true;
-            console.log("item.meetingType", item.meetingType, " meetingType: ", meetingType, "meetsMeetingType: ", meetsMeetingType);
-    
-            // 참가자 수 필터
             const meetsParticipants = 
-            (minParticipants !== undefined && maxParticipants !== undefined) // 둘 다 선택되었을 때
-                ? item.minParticipant >= minParticipants && item.maxParticipant <= maxParticipants
-                : (minParticipants !== undefined) // minParticipants만 선택된 경우
-                    ? item.minParticipant >= minParticipants
-                    : (maxParticipants !== undefined) // maxParticipants만 선택된 경우
-                        ? item.maxParticipant <= maxParticipants
-                        : true; // 선택되지 않으면 true 반환
+                (minParticipants !== undefined && maxParticipants !== undefined) 
+                    ? item.minParticipant >= minParticipants && item.maxParticipant <= maxParticipants
+                    : (minParticipants !== undefined)
+                        ? item.minParticipant >= minParticipants
+                        : (maxParticipants !== undefined)
+                            ? item.maxParticipant <= maxParticipants
+                            : true;
             console.log("item.minParticipants", item.minParticipant,"item.maxParticipants", item.maxParticipant, "min: ", minParticipants, "max: ", maxParticipants, "meetsParticipants: ", meetsParticipants);
     
-            // 조건 결합
-            const result = 
-                (meetsCategory || meetsCategory === null) &&
-                (meetsMeetingType === null || meetsMeetingType) &&
-                (meetsParticipants === null || meetsParticipants);
-            console.log("result: ", result);
-    
+            const result = meetsCategory && meetsMeetingType && meetsParticipants;
+
+            
+            console.log("data"+data);
+            console.log("Res"+result);
             return result;
+            
         });
-
-        setFilteredData(newData);  // 필터링된 데이터 저장
-        setFilterVisible(false);  // 필터 모달 닫기
+        
+        console.log("newsdata"+newData);
+        setFilteredData(newData); 
+        console.log("Filtered Data: ", newData); // 필터링된 데이터를 바로 로그로 확인
+        setFilterVisible(false);
     };
-
-    const renderItem = ({ item }) => (
-        <MeetingItem 
-            item={item} 
-            onPress={() => {
-                console.log("meetingBoard item.id: ", item.id, "item.name: ", item.name);
-                navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })
-            }} 
-        />
-    );
 
     const handleFloatingButtonPress = () => {
         navigation.navigate(PAGES.CREATE_MEETING);
@@ -147,23 +167,13 @@ export default function MeetingBoard({ navigation }) {
                     <FilterPressable onPress = {()=>setFilterVisible(true)}><WithLocalSvg asset={FilterIcon}/></FilterPressable>
                 </Header> */}
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    {/* {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
-                        <MeetingItem 
-                            key={item.id} 
-                            item={item} 
-                            onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title:item.name })} 
-                        />
-                    ))} */}
-                    {pagedData.map((item) => (
-                        <MeetingItem 
-                            key={item.id} 
-                            item={item} 
-                            onPress={() => {
-                                console.log("meetingBoard item.id: ", item.id, "item.name: ", item.name);
-                                navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })
-                            }} 
-                        />
-                    ))}
+                {(filteredData.length > 0 ? filteredData : pagedData).map((item) => (
+                    <MeetingItem
+                        key={item.id}
+                        item={item}
+                        onPress={() => navigation.navigate(PAGES.MEETING, { id: item.id, title: item.name })}
+                    />
+                ))}
                 </ScrollView>
                 <FilterModal 
                     visible={filterVisible} 

@@ -9,6 +9,7 @@ import ImageButton from './components/ImageButton';
 import * as ImagePicker from 'expo-image-picker'
 import SelectLabel from './components/SelectLabel';
 import RadioButtonGroup from './components/RadioButtonGroup';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Calendar } from 'react-native-calendars';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
@@ -16,7 +17,7 @@ import UserTokenContext from '../../../hooks/UserTokenContext';
 import { useContext } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 export default function MeetingEdit() {
-  const {accessToken, setUserToken} = useContext(UserTokenContext);
+
   const nav = useNavigation();
   const route = useRoute();
   const { id } = route.params;
@@ -53,8 +54,10 @@ export default function MeetingEdit() {
 
 
   useEffect(() => {
+    console.log("meetingedit");
     const fetchData = async () => {
       try {
+        const accessToken = await AsyncStorage.getItem('accessToken');
         const response = await fetch(`http://localhost:8080/api/meetings/${id}`, { 
           method: "GET",
           headers: {'Authorization': `Bearer ${accessToken}`} 
@@ -156,7 +159,8 @@ export default function MeetingEdit() {
           type: 'image/jpg', // MIME 타입
         });
       }
-
+      
+    const apiMeetingCategory = (json.data.info.categories).map((type) => MEETING_CATEGORY[type]);
   const meetingData = {
     name: meetingName,
     title: meetingTitle,
@@ -173,13 +177,14 @@ export default function MeetingEdit() {
     startTime: startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}),
     endTime: endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}),
     meta: meetingDescription,
-    applicationMethod: apiapplicationMethod,
+    applicationMethod: participantMethod,
   };
 
   formData.append('meeting', {"string": JSON.stringify(meetingData), type: "application/json"});
 
 
   try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
     const response = await fetch('http://localhost:8080/api/meetings', {
       method: 'PUT',
       headers: {
@@ -525,11 +530,11 @@ const removeTag = (tagToRemove) => {
         buttonStyle={styles.participantMethodDefault}
       />
       
-      <Text style={styles.headLabel}> 프로필 사진 </Text>
+      <Text style={styles.headLabel}> 모임 대표 사진 </Text>
       <View style={styles.imgcontainer}>
       <TouchableOpacity onPress={handleChoosePhoto} style={styles.button}>
         {profileImg ? (
-          <Image source={{profileImg}} style={styles.image} />
+          <Image source={{uri : profileImg}} style={styles.image} />
         ) : (
           <Text style={styles.buttonText}>기본 프로필</Text>
         )}
